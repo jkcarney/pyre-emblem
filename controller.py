@@ -1,4 +1,5 @@
 import time
+from unit import Unit
 
 import pyautogui
 from enum import Enum
@@ -58,9 +59,6 @@ class FEController:
         manhattan_x = x - self.cursor_x
         manhattan_y = y - self.cursor_y
 
-        print(manhattan_x)
-        print(manhattan_y)
-
         if manhattan_x > 0:
             self.input(Hotkeys.DPAD_RIGHT, abs(manhattan_x))
         elif manhattan_x < 0:
@@ -73,6 +71,12 @@ class FEController:
 
         self.cursor_x = x
         self.cursor_y = y
+
+    def move_unit_to_position(self, unit: Unit, desired_x, desired_y):
+        self.move_cursor_to_position(unit.x, unit.y)
+        self.input(Hotkeys.A_BUTTON)
+        self.move_cursor_to_position(desired_x, desired_y)
+        self.input(Hotkeys.A_BUTTON)
 
     def input(self, button: Hotkeys, n=1):
         """
