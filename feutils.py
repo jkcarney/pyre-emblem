@@ -1,19 +1,3 @@
-class_dict = {
-    0x01B0: 'Lord', 0x0204: 'Lord', 0x0258: 'Lord', 0x03A8: 'Knight Lord', 0x03FC: 'Blade Lord',
-    0x0450: 'Great Lord', 0x04A4: 'Mercenary', 0x04F8: 'Mercenary', 0x054C: 'Hero', 0x05A0: 'Hero',
-    0x05F4: 'Myrmidon', 0x0648: 'Myrmidon', 0x069C: 'Swordmaster', 0x06F0: 'Swordmaster', 0x0744: 'Fighter',
-    0x0798: 'Warrior', 0x07EC: 'Knight', 0x0840: 'Knight', 0x0894: 'General', 0x08E8: 'General', 0x093C: 'Archer',
-    0x0990: 'Archer', 0x09E4: 'Sniper', 0x0A38: 'Sniper', 0x0A8C: 'Monk', 0x0AE0: 'Cleric', 0x0B34: 'Bishop',
-    0x0B88: 'Bishop', 0x0BDC: 'Mage', 0x0C30: 'Mage', 0x0C84: 'Sage', 0x0CD8: 'Sage', 0x0D2C: 'Shaman',
-    0x0D80: 'Shaman', 0x0DD4: 'Druid', 0x0E28: 'Druid', 0x0E7C: 'Cavalier', 0x0ED0: 'Cavalier', 0x0F24: 'Paladin',
-    0x0F78: 'Paladin', 0x0FCC: 'Troubadour', 0x1020: 'Valkyrie', 0x1074: 'Nomad', 0x10c8: 'Nomad',
-    0x111c: 'Nomad Trooper', 0x1170: 'Nomad Trooper', 0x11c4: 'Pegasus Knight', 0x1218: 'Falcoknight',
-    0x126c: 'Wyvern Rider', 0x12c0: 'Wyvern Rider', 0x1314: 'Wyvern Lord', 0x1368: 'Wyvern Lord', 0x13bc: 'Soldier',
-    0x1410: 'Brigand', 0x1464: 'Pirate', 0x14b8: 'Berserker', 0x150c: 'Thief', 0x1560: 'Thief', 0x15b4: 'Assassin',
-    0x165c: 'Dancer', 0x16b0: 'Bard', 0x1704: 'Archsage', 0x1758: 'Magic Seal', 0x17ac: 'Tent',
-    0x1800: 'Dark Druid', 0x1854: 'Fire Dragon'
-}
-
 character_dict = {
     0xce4c: 'Eliwood', 0xce80: 'Hector', 0xceb4: 'Lyn', 0xcee8: 'Raven', 0xcf1c: 'Geitz',
     0xcf50: 'Guy', 0xcf84: 'Karel', 0xcfb8: 'Dorcas', 0xcfec: 'Bartre', 0xd020: 'Citizen',
@@ -108,69 +92,143 @@ item_dict = {
 }
 
 class_dict = {
-    0x1b0: 'Lord', 0x204: 'Lord', 0x258: 'Lord', 0x3a8: 'Knight Lord', 0x3fc: 'Blade Lord', 0x450: 'Great Lord',
-    0x4a4: 'Mercenary', 0x54c: 'Hero', 0x5a0: 'Hero', 0x5f4: 'Myrmidon', 0x648: 'Myrmidon', 0x69c: 'Swordmaster',
-    0x6f0: 'Swordmaster', 0x744: 'Fighter', 0x798: 'Warrior', 0x7ec: 'Knight', 0x840: 'Knight', 0x894: 'General',
-    0x8e8: 'General', 0x93c: 'Archer', 0x990: 'Archer', 0x9e4: 'Sniper', 0xa38: 'Sniper', 0xa8c: 'Monk',
-    0xae0: 'Cleric', 0xb34: 'Bishop', 0xb88: 'Bishop', 0xbdc: 'Mage', 0xc30: 'Mage', 0xc84: 'Sage', 0xcd8: 'Sage',
-    0xd2c: 'Shaman', 0xd80: 'Shaman', 0xdd4: 'Druid', 0xe28: 'Druid', 0xe7c: 'Cavalier', 0xed0: 'Cavalier',
-    0xf24: 'Paladin', 0xf78: 'Paladin', 0xfcc: 'Troubadour', 0x1020: 'Valkyrie', 0x1074: 'Nomad', 0x10c8: 'Nomad',
-    0x111c: 'Nomad Trooper', 0x1170: 'Nomad Trooper', 0x11c4: 'Pegasus Knight', 0x1218: 'Falcoknight',
-    0x126c: 'Wyvern Rider', 0x12c0: 'Wyvern Rider', 0x1314: 'Wyvern Lord', 0x1368: 'Wyvern Lord', 0x13bc: 'Soldier',
-    0x1410: 'Brigand', 0x1464: 'Pirate', 0x14b8: 'Berserker', 0x150c: 'Thief', 0x1560: 'Thief', 0x15b4: 'Assassin',
+    0x1b0: 'Lord (Eliwood)', 0x204: 'Lord (Lyn)', 0x258: 'Lord (Hector)', 0x3a8: 'Knight Lord', 0x3fc: 'Blade Lord',
+    0x450: 'Great Lord', 0x4a4: 'Mercenary',
+    0x54c: 'Male Hero', 0x5a0: 'Female Hero',
+    0x5f4: 'Male Myrmidon', 0x648: 'Female Myrmidon',
+    0x69c: 'Male Swordmaster', 0x6f0: 'Female Swordmaster',
+    0x744: 'Fighter', 0x798: 'Warrior',
+    0x7ec: 'Male Knight', 0x840: 'Female Knight', 0x894: 'Male General', 0x8e8: 'Female General',
+    0x93c: 'Male Archer', 0x990: 'Female Archer', 0x9e4: 'Male Sniper', 0xa38: 'Female Sniper',
+    0xa8c: 'Monk', 0xae0: 'Cleric', 0xb34: 'Male Bishop', 0xb88: 'Female Bishop',
+    0xbdc: 'Male Mage', 0xc30: 'Female Mage', 0xc84: 'Male Sage', 0xcd8: 'Female Sage',
+    0xd2c: 'Male Shaman', 0xd80: 'Female Shaman', 0xdd4: 'Male Druid', 0xe28: 'Female Druid',
+    0xe7c: 'Male Cavalier', 0xed0: 'Female Cavalier', 0xf24: 'Male Paladin', 0xf78: 'Female Paladin',
+    0xfcc: 'Troubadour', 0x1020: 'Valkyrie',
+    0x1074: 'Male Nomad', 0x10c8: 'Female Nomad', 0x111c: 'Male Nomad Trooper', 0x1170: 'Female Nomad Trooper',
+    0x11c4: 'Pegasus Knight', 0x1218: 'Falcoknight',
+    0x126c: 'Male Wyvern Rider', 0x12c0: 'Female Wyvern Rider',
+    0x1314: 'Male Wyvern Lord', 0x1368: 'Female Wyvern Lord',
+    0x13bc: 'Soldier',
+    0x1410: 'Brigand', 0x1464: 'Pirate', 0x14b8: 'Berserker',
+    0x150c: 'Male Thief', 0x1560: 'Female Thief', 0x15b4: 'Assassin',
     0x165c: 'Dancer', 0x16b0: 'Bard', 0x1704: 'Archsage', 0x1758: 'Magic Seal', 0x17ac: 'Tent', 0x1800: 'Dark Druid',
-    0x1854: 'Fire Dragon', 0x19a4: 'Bramimond', 0x1b9c: 'Corsair'
+    0x1854: 'Fire Dragon', 0x19a4: 'Bramimond', 0x1b9c: 'Corsair', 0x1E90: 'Wagon'
+}
+
+movement_dict = {
+    'Lord (Eliwood)': 5, 'Lord (Lyn)': 5, 'Lord (Hector)': 5,
+    'Blade Lord': 6, 'Knight Lord': 7, 'Great Lord': 5,
+    'Bard': 5, 'Dancer': 5, 'Prince': 5,
+    'Tent': 0, 'Wagon': 5, 'Soldier': 5,
+    'Male Cavalier': 7, 'Female Cavalier': 7,
+    'Male Paladin': 8, 'Female Paladin': 8,
+    'Male Knight': 4, 'Female Knight': 4,
+    'Male General': 5, 'Female General': 5,
+    'Male Mercenary': 5, 'Female Mercenary': 5,
+    'Male Hero': 6, 'Female Hero': 6,
+    'Male Myrmidon': 5, 'Female Myrmidon': 5,
+    'Male Swordmaster': 6, 'Female Swordmaster': 6,
+    'Male Thief': 6, 'Female Thief': 6,
+    'Assassin': 6,
+    'Male Archer': 5, 'Female Archer': 5,
+    'Male Sniper': 6, 'Female Sniper': 6,
+    'Male Nomad': 7, 'Female Nomad': 7,
+    'Male Nomad Trooper': 7, 'Female Nomad Trooper': 7,
+    'Male Wyvern Rider': 7, 'Female Wyvern Rider': 7,
+    'Male Wyvern Lord': 8, 'Female Wyvern Lord': 8,
+    'Male Mage': 5, 'Female Mage': 5,
+    'Male Sage': 6, 'Female Sage': 6,
+    'Monk': 5, 'Cleric': 5,
+    'Male Bishop': 6, 'Female Bishop': 6,
+    'Male Shaman': 5, 'Female Shaman': 5,
+    'Male Druid': 6, 'Female Druid': 6,
+    'Fighter': 5, 'Warrior': 6, 'Brigand': 5, 'Pirate': 5, 'Corsair': 5, 'Berserker': 6,
+    'Pegasus Knight': 7, 'Falcoknight': 8, 'Troubadour': 7, 'Valkyrie': 8, 'Magic Seal': 6,
+    'Archsage': 6, 'Dark Druid': 6, 'Bramimond': 5, 'Fire Dragon': 0
+}
+
+character_constitution_dict = {
+    'Lyn': 5, 'Sain': 9, 'Kent': 9, 'Florina': 4, 'Wil': 6, 'Dorcas': 14, 'Serra': 4, 'Erk': 5, 'Rath': 8, 'Matthew': 7,
+    'Nils': 3, 'Lucius': 6, 'Wallace': 15, 'Eliwood': 7, 'Lowen': 10, 'Marcus': 11, 'Rebecca': 5, 'Bartre': 13,
+    'Hector': 13, 'Oswin': 14, 'Guy': 5, 'Merlinus': 25, 'Priscilla': 4, 'Raven': 8, 'Lucius': 6, 'Canas': 7,
+    'Dart': 10, 'Fiora': 5, 'Legault': 9, 'Ninian': 4, 'Isadora': 6, 'Heath': 9, 'Hawkeye': 16, 'Geitz': 13,
+    'Farina': 5, 'Pent': 8, 'Louise': 6, 'Karel': 9, 'Harken': 11, 'Nino': 3, 'Jaffar': 8, 'Vaida': 12, 'Karla': 7,
+    'Renault': 9, 'Athos': 9
+}
+
+job_constitution_dict = {
+    'Lord (Eliwood)': 5, 'Lord (Lyn)': 7, 'Lord (Hector)': 13,
+    'Blade Lord': 6, 'Knight Lord': 9, 'Great Lord': 15,
+    'Bard': 3, 'Dancer': 4, 'Prince': 7,
+    'Tent': 25, 'Wagon': 25, 'Soldier': 6,
+    'Male Cavalier': 9, 'Female Cavalier': 9,
+    'Male Paladin': 11, 'Female Paladin': 9,
+    'Male Knight': 13, 'Female Knight': 10,
+    'Male General': 15, 'Female General': 11,
+    'Male Mercenary': 9, 'Female Mercenary': 8,
+    'Male Hero': 10, 'Female Hero': 9,
+    'Male Myrmidon': 8, 'Female Myrmidon': 5,
+    'Male Swordmaster': 9, 'Female Swordmaster': 7,
+    'Male Thief': 6, 'Female Thief': 5,
+    'Assassin': 6,
+    'Male Archer': 7, 'Female Archer': 5,
+    'Male Sniper': 8, 'Female Sniper': 6,
+    'Male Nomad': 7, 'Female Nomad': 5,
+    'Male Nomad Trooper': 8, 'Female Nomad Trooper': 6,
+    'Male Wyvern Rider': 10, 'Female Wyvern Rider': 9,
+    'Male Wyvern Lord': 11, 'Female Wyvern Lord': 10,
+    'Male Mage': 6, 'Female Mage': 3,
+    'Male Sage': 7, 'Female Sage': 4,
+    'Monk': 6, 'Cleric': 4,
+    'Male Bishop': 7, 'Female Bishop': 5,
+    'Male Shaman': 7, 'Female Shaman': 3,
+    'Male Druid': 8, 'Female Druid': 4,
+    'Fighter': 11, 'Warrior': 13, 'Brigand': 12, 'Pirate': 10, 'Corsair': 10, 'Berserker': 13,
+    'Pegasus Knight': 5, 'Falcoknight': 6, 'Troubadour': 5, 'Valkyrie': 6, 'Magic Seal': 7,
+    'Archsage': 9, 'Dark Druid': 10, 'Bramimond': 6, 'Fire Dragon': 25
 }
 
 
 def class_table(class_code):
-    """
-    Retrieves the class of a character from a class code
-
-    :param class_code: the hexadecimal class code
-    :return: The class as a string
-    """
+    # TODO: may need to make this more robust, ie it can accept hex code as string, int, w/e
     return class_dict[class_code]
 
 
 def item_table(item_code):
-    """
-    Retrieves the item associated with the item code
-
-    :param item_code:
-    :return:
-    """
+    # TODO: may need to make this more robust, ie it can accept hex code as string, int, w/e
     return item_dict[item_code]
 
 
-def constitution_table(character_code):
+def character_constitution_table(character_name):
     """
-    Retrieves the constitution of a character based on the character code.
+    Gets the constitution of a character from their name
+    Use this for playable characters
+    :param character_name
+    """
+    # TODO: may need to make this more robust, ie it can accept hex code as string, int, w/e
+    return character_constitution_dict[character_name]
 
-    :param character_code:
+
+def job_constitution_table(job):
+    """
+    Gets the constituion of a character from the class bases
+    Use this for enemy units
+    :param job:
     :return:
     """
-    pass
+    return job_constitution_dict[job]
 
 
 def character_name_table(character_code):
-    """
-    Retrieves the name of a character based on the character code
-    :param character_code: the hexadecimal character code
-    :return: the name of the associated character as a string
-    """
+    # TODO: may need to make this more robust, ie it can accept hex code as string, int, w/e
     return character_dict[character_code]
 
 
 def item_table(item_code):
+    # TODO: may need to make this more robust, ie it can accept hex code as string, int, w/e
     return item_dict[item_code]
 
 
 def movement_table(job):
-    """
-    Retrieves the movement of the job passed in
-
-    :param job:
-    :return:
-    """
-    pass
+    return movement_dict[job]
