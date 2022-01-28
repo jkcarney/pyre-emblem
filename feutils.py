@@ -1,4 +1,4 @@
-character_dict = {
+_character_dict = {
     0xce4c: 'Eliwood', 0xce80: 'Hector', 0xceb4: 'Lyn', 0xcee8: 'Raven', 0xcf1c: 'Geitz',
     0xcf50: 'Guy', 0xcf84: 'Karel', 0xcfb8: 'Dorcas', 0xcfec: 'Bartre', 0xd020: 'Citizen',
     0xd054: 'Oswin', 0xd088: 'Fargus', 0xd0bc: 'Wil', 0xd0f0: 'Rebecca', 0xd124: 'Louise',
@@ -59,7 +59,7 @@ character_dict = {
     0xffa8: 'Lloyd', 0xffdc: 'Linus'
 }
 
-item_dict = {
+_item_dict = {
     0x0: 'Nothing', 0x1: 'Iron Sword', 0x2: 'Slim Sword', 0x3: 'Steel Sword', 0x4: 'Silver Sword',
     0x5: 'Iron Blade', 0x6: 'Steel Blade', 0x7: 'Silver Blade', 0x8: 'Poison Sword', 0x9: 'Rapier',
     0xa: 'Mani Katti', 0xb: 'Brave Sword', 0xc: 'Wo Dao', 0xd: 'Killing Edge', 0xe: 'Armorslayer',
@@ -91,7 +91,7 @@ item_dict = {
     0x93: 'Reinfleche', 0x94: 'Heavy spear', 0x95: 'Short spear', 0x96: 'Ocean seal', 0x99: 'Wind Sword'
 }
 
-class_dict = {
+_class_dict = {
     0x1b0: 'Lord (Eliwood)', 0x204: 'Lord (Lyn)', 0x258: 'Lord (Hector)', 0x3a8: 'Knight Lord', 0x3fc: 'Blade Lord',
     0x450: 'Great Lord', 0x4a4: 'Mercenary',
     0x54c: 'Male Hero', 0x5a0: 'Female Hero',
@@ -116,7 +116,7 @@ class_dict = {
     0x1854: 'Fire Dragon', 0x19a4: 'Bramimond', 0x1b9c: 'Corsair', 0x1E90: 'Wagon'
 }
 
-movement_dict = {
+_movement_dict = {
     'Lord (Eliwood)': 5, 'Lord (Lyn)': 5, 'Lord (Hector)': 5,
     'Blade Lord': 6, 'Knight Lord': 7, 'Great Lord': 5,
     'Bard': 5, 'Dancer': 5, 'Prince': 5,
@@ -148,7 +148,7 @@ movement_dict = {
     'Archsage': 6, 'Dark Druid': 6, 'Bramimond': 5, 'Fire Dragon': 0
 }
 
-character_constitution_dict = {
+_character_constitution_dict = {
     'Lyn': 5, 'Sain': 9, 'Kent': 9, 'Florina': 4, 'Wil': 6, 'Dorcas': 14, 'Serra': 4, 'Erk': 5, 'Rath': 8, 'Matthew': 7,
     'Nils': 3, 'Lucius': 6, 'Wallace': 15, 'Eliwood': 7, 'Lowen': 10, 'Marcus': 11, 'Rebecca': 5, 'Bartre': 13,
     'Hector': 13, 'Oswin': 14, 'Guy': 5, 'Merlinus': 25, 'Priscilla': 4, 'Raven': 8, 'Lucius': 6, 'Canas': 7,
@@ -157,7 +157,7 @@ character_constitution_dict = {
     'Renault': 9, 'Athos': 9
 }
 
-job_constitution_dict = {
+_job_constitution_dict = {
     'Lord (Eliwood)': 5, 'Lord (Lyn)': 7, 'Lord (Hector)': 13,
     'Blade Lord': 6, 'Knight Lord': 9, 'Great Lord': 15,
     'Bard': 3, 'Dancer': 4, 'Prince': 7,
@@ -192,12 +192,12 @@ job_constitution_dict = {
 
 def class_table(class_code):
     # TODO: may need to make this more robust, ie it can accept hex code as string, int, w/e
-    return class_dict[class_code]
+    return _class_dict[class_code]
 
 
 def item_table(item_code):
     # TODO: may need to make this more robust, ie it can accept hex code as string, int, w/e
-    return item_dict[item_code]
+    return _item_dict[item_code]
 
 
 def character_constitution_table(character_name):
@@ -207,7 +207,7 @@ def character_constitution_table(character_name):
     :param character_name
     """
     # TODO: may need to make this more robust, ie it can accept hex code as string, int, w/e
-    return character_constitution_dict[character_name]
+    return _character_constitution_dict[character_name]
 
 
 def job_constitution_table(job):
@@ -217,18 +217,18 @@ def job_constitution_table(job):
     :param job:
     :return:
     """
-    return job_constitution_dict[job]
+    return _job_constitution_dict[job]
 
 
 def character_name_table(character_code):
     # TODO: may need to make this more robust, ie it can accept hex code as string, int, w/e
-    return character_dict[character_code]
+    return _character_dict[character_code]
 
 
 def item_table(item_code):
     # TODO: may need to make this more robust, ie it can accept hex code as string, int, w/e
-    return item_dict[item_code]
+    return _item_dict[item_code]
 
 
 def movement_table(job):
-    return movement_dict[job]
+    return _movement_dict[job]
