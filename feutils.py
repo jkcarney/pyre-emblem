@@ -98,7 +98,8 @@ def character_name_table(character_code):
                       '0xfe3c': 'Bandit', '0xfe70': 'Bandit', '0xfea4': 'Bern', '0xfed8': 'Guardian',
                       '0xff0c': 'Morph', '0xff40': 'Guardian', '0xff74': 'Black Fang',
                       '0xffa8': 'Lloyd', '0xffdc': 'Linus'}
-    print(character_dict[character_code])
+    return character_dict[character_code]
+
 
 def movement_table(job):
     """
