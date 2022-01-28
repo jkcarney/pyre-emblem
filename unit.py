@@ -5,6 +5,7 @@ class Unit:
     def __init__(self, character_code, x, y, level, job_code, hp_max,
                  strength, skill, spd, luck, defense, res):
         self.character_code = character_code
+        self.name = feutils.character_name_table(character_code)
         self.x = x
         self.y = y
         self.level = level
