@@ -1,3 +1,5 @@
+from item import ItemType, WeaponType, TomeType
+
 _character_dict = {
     0xce4c: 'Eliwood', 0xce80: 'Hector', 0xceb4: 'Lyn', 0xcee8: 'Raven', 0xcf1c: 'Geitz',
     0xcf50: 'Guy', 0xcf84: 'Karel', 0xcfb8: 'Dorcas', 0xcfec: 'Bartre', 0xd020: 'Citizen',
@@ -89,6 +91,38 @@ _item_dict = {
     0x89: 'Heaven seal', 0x8a: 'Emblem seal', 0x8b: 'Fell contract', 0x8c: 'Sol Katti', 0x8d: 'Wolf Beil',
     0x8e: 'Ereshkigal', 0x8f: 'Flametongue', 0x90: 'Regal blade', 0x91: 'Rex Hasta', 0x92: 'Basilikos',
     0x93: 'Reinfleche', 0x94: 'Heavy spear', 0x95: 'Short spear', 0x96: 'Ocean seal', 0x99: 'Wind Sword'
+}
+
+_item_type_dict = {
+    0x0: ItemType.NOTHING, 0x1: ItemType.WEAPON, 0x2: ItemType.WEAPON, 0x3: ItemType.WEAPON, 0x4: ItemType.WEAPON,
+    0x5: ItemType.WEAPON, 0x6: ItemType.WEAPON, 0x7: ItemType.WEAPON, 0x8: ItemType.WEAPON, 0x9: ItemType.WEAPON,
+    0xa: ItemType.WEAPON, 0xb: ItemType.WEAPON, 0xc: ItemType.WEAPON, 0xd: ItemType.WEAPON, 0xe: ItemType.WEAPON,
+    0xf: ItemType.WEAPON, 0x10: ItemType.WEAPON, 0x11: ItemType.WEAPON, 0x12: ItemType.WEAPON, 0x13: ItemType.WEAPON,
+    0x14: ItemType.WEAPON, 0x15: ItemType.WEAPON, 0x16: ItemType.WEAPON, 0x17: ItemType.WEAPON, 0x18: ItemType.WEAPON,
+    0x19: ItemType.WEAPON, 0x1a: ItemType.WEAPON, 0x1b: ItemType.WEAPON, 0x1c: ItemType.WEAPON, 0x1d: ItemType.WEAPON,
+    0x1e: ItemType.WEAPON, 0x1f: ItemType.WEAPON, 0x20: ItemType.WEAPON, 0x21: ItemType.WEAPON, 0x22: ItemType.WEAPON,
+    0x23: ItemType.WEAPON, 0x24: ItemType.WEAPON, 0x25: ItemType.WEAPON, 0x26: ItemType.WEAPON, 0x27: ItemType.WEAPON,
+    0x28: ItemType.WEAPON, 0x29: ItemType.WEAPON, 0x2a: ItemType.WEAPON, 0x2b: ItemType.WEAPON, 0x2c: ItemType.WEAPON,
+    0x2d: ItemType.WEAPON, 0x2e: ItemType.WEAPON, 0x2f: ItemType.WEAPON, 0x30: ItemType.WEAPON, 0x31: ItemType.WEAPON,
+    0x32: ItemType.WEAPON, 0x33: ItemType.WEAPON, 0x34: ItemType.WEAPON, 0x35: ItemType.WEAPON, 0x36: ItemType.WEAPON,
+    0x37: ItemType.TOME, 0x38: ItemType.TOME, 0x39: ItemType.TOME, 0x3a: ItemType.TOME, 0x3b: ItemType.TOME, 0x3c: ItemType.TOME,
+    0x3d: ItemType.TOME, 0x3e: ItemType.TOME, 0x3f: ItemType.TOME, 0x40: ItemType.TOME, 0x41: ItemType.TOME, 0x42: ItemType.TOME,
+    0x43: ItemType.TOME, 0x44: ItemType.TOME, 0x45: ItemType.TOME, 0x46: ItemType.TOME, 0x47: ItemType.TOME, 0x48: ItemType.TOME,
+    0x49: ItemType.TOME, 0x4a: ItemType.STAFF, 0x4b: ItemType.STAFF, 0x4c: ItemType.STAFF, 0x4d: ItemType.STAFF, 0x4e: ItemType.STAFF,
+    0x4f: ItemType.STAFF, 0x50: ItemType.STAFF, 0x51: ItemType.STAFF, 0x52: ItemType.STAFF, 0x53: ItemType.STAFF, 0x54: ItemType.STAFF,
+    0x55: ItemType.STAFF, 0x56: ItemType.STAFF, 0x57: ItemType.STAFF, 0x58: ItemType.STAFF, 0x59: ItemType.WEAPON, 0x5a: ItemType.UNUSED,
+    0x5b: ItemType.UNUSED, 0x5c: ItemType.UNUSED, 0x5d: ItemType.UNUSED, 0x5e: ItemType.UNUSED, 0x5f: ItemType.UNUSED,
+    0x60: ItemType.UNUSED, 0x61: ItemType.UNUSED, 0x62: ItemType.UNUSED, 0x63: ItemType.UNUSED, 0x64: ItemType.UNUSED,
+    0x65: ItemType.UNUSED, 0x66: ItemType.UNUSED, 0x67: ItemType.UNUSED, 0x68: ItemType.UNUSED, 0x69: ItemType.UNUSED,
+    0x6a: ItemType.UNUSED, 0x6b: ItemType.HEAL_CONSUMABLE, 0x6c: ItemType.HEAL_CONSUMABLE, 0x6d: ItemType.UNUSED, 0x6e: ItemType.UNUSED,
+    0x6f: ItemType.UNUSED, 0x70: ItemType.UNUSED, 0x71: ItemType.UNUSED, 0x72: ItemType.UNUSED, 0x73: ItemType.UNUSED,
+    0x74: ItemType.UNUSED, 0x75: ItemType.UNUSED, 0x77: ItemType.WEAPON, 0x78: ItemType.UNUSED, 0x79: ItemType.UNUSED,
+    0x7a: ItemType.UNUSED, 0x7b: ItemType.UNUSED, 0x7c: ItemType.UNUSED, 0x7d: ItemType.UNUSED, 0x7e: ItemType.UNUSED,
+    0x7f: ItemType.UNUSED, 0x80: ItemType.WEAPON, 0x81: ItemType.WEAPON, 0x82: ItemType.WEAPON, 0x83: ItemType.WEAPON,
+    0x84: ItemType.WEAPON, 0x85: ItemType.WEAPON, 0x86: ItemType.TOME, 0x87: ItemType.UNUSED, 0x88: ItemType.UNUSED,
+    0x89: ItemType.UNUSED, 0x8a: ItemType.UNUSED, 0x8b: ItemType.UNUSED, 0x8c: ItemType.WEAPON, 0x8d: ItemType.WEAPON,
+    0x8e: ItemType.WEAPON, 0x8f: ItemType.WEAPON, 0x90: ItemType.WEAPON, 0x91: ItemType.WEAPON, 0x92: ItemType.WEAPON,
+    0x93: ItemType.WEAPON, 0x94: ItemType.WEAPON, 0x95: ItemType.WEAPON, 0x96: ItemType.UNUSED, 0x99: ItemType.WEAPON
 }
 
 _class_dict = {

@@ -1,0 +1,500 @@
+{
+  "0": {
+    "Iron Sword": {
+      "range": "1",
+      "weight": 5,
+      "might": 5,
+      "hit": 90,
+      "crit": 0
+    },
+    "Slim Sword": {
+      "range": "1",
+      "weight": 2,
+      "might": 3,
+      "hit": 100,
+      "crit": 5
+    },
+    "Emblem Blade": {
+      "range": "1",
+      "weight": 5,
+      "might": 5,
+      "hit": 90,
+      "crit": 0
+    },
+    "Poison Sword": {
+      "range": "1",
+      "weight": 6,
+      "might": 3,
+      "hit": 70,
+      "crit": 0
+    },
+    "Steel Sword": {
+      "range": "1",
+      "weight": 10,
+      "might": 8,
+      "hit": 75,
+      "crit": 0
+    },
+    "Iron Blade": {
+      "range": "1",
+      "weight": 12,
+      "might": 9,
+      "hit": 70,
+      "crit": 0
+    },
+    "Armourslayer": {
+      "range": "1",
+      "weight": 11,
+      "might": 8,
+      "hit": 80,
+      "crit": 0
+    },
+    "Longsword": {
+      "range": "1",
+      "weight": 11,
+      "might": 6,
+      "hit": 85,
+      "crit": 0
+    },
+    "Wo Dao": {
+      "range": "1",
+      "weight": 5,
+      "might": 8,
+      "hit": 75,
+      "crit": 35
+    },
+    "Steel Blade": {
+      "range": "1",
+      "weight": 14,
+      "might": 11,
+      "hit": 65,
+      "crit": 0
+    },
+    "Killing Edge": {
+      "range": "1",
+      "weight": 7,
+      "might": 9,
+      "hit": 75,
+      "crit": 30
+    },
+    "Wyrmslayer": {
+      "range": "1",
+      "weight": 5,
+      "might": 7,
+      "hit": 75,
+      "crit": 0
+    },
+    "Light Brand": {
+      "range": "1,2",
+      "weight": 9,
+      "might": 9,
+      "hit": 70,
+      "crit": 0
+    },
+    "Lancereaver": {
+      "range": "1",
+      "weight": 9,
+      "might": 9,
+      "hit": 75,
+      "crit": 5
+    },
+    "Brave Sword": {
+      "range": "1",
+      "weight": 12,
+      "might": 9,
+      "hit": 75,
+      "crit": 0
+    },
+    "Wind Sword": {
+      "range": "1,2",
+      "weight": 9,
+      "might": 9,
+      "hit": 70,
+      "crit": 0
+    },
+    "Silver Sword": {
+      "range": "1",
+      "weight": 8,
+      "might": 13,
+      "hit": 80,
+      "crit": 0
+    },
+    "Silver Blade": {
+      "range": "1",
+      "weight": 13,
+      "might": 14,
+      "hit": 60,
+      "crit": 0
+    },
+    "Runesword": {
+      "range": "1,2",
+      "weight": 11,
+      "might": 12,
+      "hit": 65,
+      "crit": 0
+    },
+    "Regal Blade": {
+      "range": "1",
+      "weight": 9,
+      "might": 20,
+      "hit": 85,
+      "crit": 0
+    },
+    "Mani Katti": {
+      "range": "1",
+      "weight": 3,
+      "might": 8,
+      "hit": 80,
+      "crit": 20
+    },
+    "Rapier": {
+      "range": "1",
+      "weight": 5,
+      "might": 7,
+      "hit": 95,
+      "crit": 10
+    },
+    "Durandal": {
+      "range": "1",
+      "weight": 16,
+      "might": 17,
+      "hit": 90,
+      "crit": 0
+    },
+    "Sol Katti": {
+      "range": "1",
+      "weight": 14,
+      "might": 12,
+      "hit": 95,
+      "crit": 25
+    }
+  },
+  "1": {
+    "Iron Lance": {
+      "range": "1",
+      "weight": 8,
+      "might": 7,
+      "hit": 80,
+      "crit": 0
+    },
+    "Slim Lance": {
+      "range": "1",
+      "weight": 4,
+      "might": 4,
+      "hit": 85,
+      "crit": 5
+    },
+    "Javelin": {
+      "range": "1,2",
+      "weight": 11,
+      "might": 6,
+      "hit": 65,
+      "crit": 0
+    },
+    "Emblem Lance": {
+      "range": "1",
+      "weight": 8,
+      "might": 7,
+      "hit": 80,
+      "crit": 0
+    },
+    "Poison Lance": {
+      "range": "1",
+      "weight": 8,
+      "might": 4,
+      "hit": 65,
+      "crit": 0
+    },
+    "Steel Lance": {
+      "range": "1",
+      "weight": 13,
+      "might": 10,
+      "hit": 70,
+      "crit": 0
+    },
+    "Heavy Spear": {
+      "range": "1",
+      "weight": 14,
+      "might": 9,
+      "hit": 70,
+      "crit": 0
+    },
+    "Horseslayer": {
+      "range": "1",
+      "weight": 13,
+      "might": 7,
+      "hit": 70,
+      "crit": 0
+    },
+    "Short Spear": {
+      "range": "1,2",
+      "weight": 12,
+      "might": 9,
+      "hit": 60,
+      "crit": 0
+    },
+    "Killer Lance": {
+      "range": "1",
+      "weight": 9,
+      "might": 10,
+      "hit": 70,
+      "crit": 30
+    },
+    "Axereaver": {
+      "range": "1",
+      "weight": 11,
+      "might": 10,
+      "hit": 70,
+      "crit": 5
+    },
+    "Brave Lance": {
+      "range": "1",
+      "weight": 14,
+      "might": 10,
+      "hit": 70,
+      "crit": 0
+    },
+    "Spear": {
+      "range": "1,2",
+      "weight": 10,
+      "might": 12,
+      "hit": 70,
+      "crit": 5
+    },
+    "Silver Lance": {
+      "range": "1",
+      "weight": 10,
+      "might": 14,
+      "hit": 75,
+      "crit": 0
+    },
+    "Rex Hasta": {
+      "range": "1",
+      "weight": 11,
+      "might": 21,
+      "hit": 80,
+      "crit": 0
+    }
+  },
+  "2": {
+    "Hand Axe": {
+      "range": "1,2",
+      "weight": 12,
+      "might": 7,
+      "hit": 60,
+      "crit": 0
+    },
+    "Iron Axe": {
+      "range": "1",
+      "weight": 10,
+      "might": 8,
+      "hit": 75,
+      "crit": 0
+    },
+    "Emblem Axe": {
+      "range": "1",
+      "weight": 10,
+      "might": 8,
+      "hit": 75,
+      "crit": 0
+    },
+    "Steel Axe": {
+      "range": "1",
+      "weight": 15,
+      "might": 11,
+      "hit": 65,
+      "crit": 0
+    },
+    "Devil Axe": {
+      "range": "1",
+      "weight": 18,
+      "might": 18,
+      "hit": 55,
+      "crit": 0
+    },
+    "Poison Axe": {
+      "range": "1",
+      "weight": 10,
+      "might": 4,
+      "hit": 60,
+      "crit": 0
+    },
+    "Halberd": {
+      "range": "1",
+      "weight": 15,
+      "might": 10,
+      "hit": 60,
+      "crit": 0
+    },
+    "Hammer": {
+      "range": "1",
+      "weight": 15,
+      "might": 10,
+      "hit": 55,
+      "crit": 0
+    },
+    "Dragon Axe": {
+      "range": "1",
+      "weight": 11,
+      "might": 10,
+      "hit": 60,
+      "crit": 0
+    },
+    "Killer Axe": {
+      "range": "1",
+      "weight": 11,
+      "might": 11,
+      "hit": 65,
+      "crit": 30
+    },
+    "Swordreaver": {
+      "range": "1",
+      "weight": 13,
+      "might": 11,
+      "hit": 65,
+      "crit": 5
+    },
+    "Swordslayer": {
+      "range": "1",
+      "weight": 13,
+      "might": 11,
+      "hit": 80,
+      "crit": 5
+    },
+    "Brave Axe": {
+      "range": "1",
+      "weight": 16,
+      "might": 10,
+      "hit": 65,
+      "crit": 0
+    },
+    "Tomahawk": {
+      "range": "1,2",
+      "weight": 14,
+      "might": 13,
+      "hit": 65,
+      "crit": 0
+    },
+    "Silver Axe": {
+      "range": "1",
+      "weight": 12,
+      "might": 15,
+      "hit": 70,
+      "crit": 0
+    },
+    "Basilikos": {
+      "range": "1",
+      "weight": 13,
+      "might": 22,
+      "hit": 75,
+      "crit": 0
+    },
+    "Wolf Beil": {
+      "range": "1",
+      "weight": 10,
+      "might": 10,
+      "hit": 75,
+      "crit": 5
+    },
+    "Armads": {
+      "range": "1",
+      "weight": 18,
+      "might": 18,
+      "hit": 85,
+      "crit": 0
+    }
+  },
+  "3": {
+    "Iron Bow": {
+      "range": "2",
+      "weight": 5,
+      "might": 6,
+      "hit": 85,
+      "crit": 0
+    },
+    "Emblem Bow": {
+      "range": "2",
+      "weight": 5,
+      "might": 6,
+      "hit": 85,
+      "crit": 0
+    },
+    "Ballista": {
+      "range": "3,10",
+      "weight": 20,
+      "might": 8,
+      "hit": 70,
+      "crit": 0
+    },
+    "Killer Ballista": {
+      "range": "3,10",
+      "weight": 20,
+      "might": 12,
+      "hit": 65,
+      "crit": 10
+    },
+    "Iron Ballista": {
+      "range": "3,15",
+      "weight": 20,
+      "might": 13,
+      "hit": 60,
+      "crit": 0
+    },
+    "Poison Bow": {
+      "range": "2",
+      "weight": 5,
+      "might": 4,
+      "hit": 65,
+      "crit": 0
+    },
+    "Short Bow": {
+      "range": "2",
+      "weight": 3,
+      "might": 5,
+      "hit": 85,
+      "crit": 10
+    },
+    "Longbow": {
+      "range": "2,3",
+      "weight": 10,
+      "might": 5,
+      "hit": 65,
+      "crit": 0
+    },
+    "Steel Bow": {
+      "range": "2",
+      "weight": 9,
+      "might": 9,
+      "hit": 70,
+      "crit": 0
+    },
+    "Killer Bow": {
+      "range": "2",
+      "weight": 7,
+      "might": 9,
+      "hit": 75,
+      "crit": 30
+    },
+    "Brave Bow": {
+      "range": "2",
+      "weight": 12,
+      "might": 10,
+      "hit": 70,
+      "crit": 0
+    },
+    "Silver Bow": {
+      "range": "2",
+      "weight": 6,
+      "might": 13,
+      "hit": 75,
+      "crit": 0
+    },
+    "Rienfleche": {
+      "range": "2",
+      "weight": 7,
+      "might": 20,
+      "hit": 80,
+      "crit": 0
+    }
+  }
+}

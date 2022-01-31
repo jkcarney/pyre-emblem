@@ -1,0 +1,10 @@
+{
+  "Vulnerary" : {
+    "uses": 3,
+    "heal_amount": 10
+  },
+  "Elixir": {
+    "uses": 3,
+    "heal_amount": 999
+  }
+}

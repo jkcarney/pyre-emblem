@@ -1,0 +1,18 @@
+{
+  "Heal": {
+    "range": "1",
+    "heal_amount": "MAG + 10"
+  },
+  "Mend": {
+    "range": "1",
+    "heal_amount": "MAG + 20"
+  },
+  "Recover": {
+    "range": "1",
+    "heal_amount": "999"
+  },
+  "Physic": {
+    "range": "1, Mag/2",
+    "heal_amount": "MAG + 10"
+  }
+}
