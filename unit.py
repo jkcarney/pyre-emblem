@@ -5,7 +5,7 @@ import item
 class Unit:
     def __init__(self, character_code, x, y, level, job_code, hp_max,
                  strength, skill, spd, luck, defense, res, ally,
-                 inventory_codes : list):
+                 inventory_codes: list):
         self.character_code = character_code
         self.x = x
         self.y = y

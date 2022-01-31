@@ -10,3 +10,10 @@ class Item:
 
         self.info = feutils.item_info_lookup(self.name, self.item_type)
 
+
+def construct_unit_inventory(inventory_codes: list):
+    inventory = []
+    for code in inventory_codes:
+        inventory.append(Item(code))
+    return inventory
+
