@@ -1,25 +1,12 @@
 import feutils
-from enum import Enum
+import item_type
 
 
-class ItemType(Enum):
-    WEAPON = 0,
-    STAFF = 1,
-    TOME = 2,
-    HEAL_CONSUMABLE = 3,
-    NOTHING = 4,
-    UNUSED = 5
+class Item:
+    def __init__(self, item_code):
+        self.item_code = item_code
+        self.name = feutils.item_table(item_code)
+        self.item_type = feutils.item_type_table(item_code)
 
-
-class WeaponType(Enum):
-    SWORD = 0,
-    LANCE = 1,
-    AXE = 2,
-    BOW = 3
-
-
-class TomeType(Enum):
-    ANIMA = 0,
-    LIGHT = 1,
-    DARK = 2
+        self.info = feutils.item_info_lookup(self.name, self.item_type)
 

@@ -1,4 +1,5 @@
-from item import ItemType, WeaponType, TomeType
+from item_type import ItemType, WeaponType, TomeType
+import json
 
 _character_dict = {
     0xce4c: 'Eliwood', 0xce80: 'Hector', 0xceb4: 'Lyn', 0xcee8: 'Raven', 0xcf1c: 'Geitz',
@@ -224,6 +225,23 @@ _job_constitution_dict = {
 }
 
 
+def item_info_lookup(item_name, item_type):
+    if item_type == ItemType.WEAPON:
+        file = 'items/weapon.json'
+    elif item_type == ItemType.STAFF:
+        file = 'items/staff.json'
+    elif item_type == ItemType.TOME:
+        file = 'items/tomes.json'
+    elif item_type == ItemType.HEAL_CONSUMABLE:
+        file = 'items/heal_consumable.json'
+    else:
+        return None
+
+    with open(file) as f:
+        data = json.load(f)
+        return data[item_name]
+
+
 def class_table(class_code):
     # TODO: may need to make this more robust, ie it can accept hex code as string, int, w/e
     return _class_dict[class_code]
@@ -266,3 +284,7 @@ def item_table(item_code):
 
 def movement_table(job):
     return _movement_dict[job]
+
+
+def item_type_table(item_code):
+    return _item_type_dict[item_code]

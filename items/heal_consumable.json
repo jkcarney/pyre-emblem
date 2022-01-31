@@ -1,10 +1,12 @@
 {
   "Vulnerary" : {
     "uses": 3,
-    "heal_amount": 10
+    "heal_amount": 10,
+    "enum_type": 3
   },
   "Elixir": {
     "uses": 3,
-    "heal_amount": 999
+    "heal_amount": 999,
+    "enum_type": 3
   }
 }

@@ -1,18 +1,22 @@
 {
   "Heal": {
     "range": "1",
-    "heal_amount": "MAG + 10"
+    "heal_amount": "MAG + 10",
+    "enum_type": 1
   },
   "Mend": {
     "range": "1",
-    "heal_amount": "MAG + 20"
+    "heal_amount": "MAG + 20",
+    "enum_type": 1
   },
   "Recover": {
     "range": "1",
-    "heal_amount": "999"
+    "heal_amount": "999",
+    "enum_type": 1
   },
   "Physic": {
     "range": "1, Mag/2",
-    "heal_amount": "MAG + 10"
+    "heal_amount": "MAG + 10",
+    "enum_type": 1
   }
 }
