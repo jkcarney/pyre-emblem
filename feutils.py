@@ -151,6 +151,43 @@ _class_dict = {
     0x1854: 'Fire Dragon', 0x19a4: 'Bramimond', 0x1b9c: 'Corsair', 0x1E90: 'Wagon'
 }
 
+_valid_move_types = ['Foot', 'Armours', 'Knights1', 'Knights2', 'Nomads', 'NomadTroopers', 'Fighters', 'Bandits',
+                     'Pirates', 'Mages', 'Fliers']
+
+_job_movement_type = {
+    'Lord (Eliwood)': "Foot", 'Lord (Lyn)': "Foot", 'Lord (Hector)': "Foot",
+    'Blade Lord': "Foot", 'Knight Lord': 'Knights2', 'Great Lord': 'Armours',
+    'Bard': "Foot", 'Dancer': "Foot", 'Prince': "Foot",
+    'Tent': "Foot", 'Wagon': "Foot", 'Soldier': "Foot",
+    'Male Cavalier': 'Knights1', 'Female Cavalier': 'Knights1',
+    'Male Paladin': 'Knights2', 'Female Paladin': 'Knights2',
+    'Male Knight': 'Armours', 'Female Knight': 'Armours',
+    'Male General': 'Armours', 'Female General': 'Armours',
+    'Male Mercenary': "Foot", 'Female Mercenary': "Foot",
+    'Male Hero': "Foot", 'Female Hero': "Foot",
+    'Male Myrmidon': "Foot", 'Female Myrmidon': "Foot",
+    'Male Swordmaster': "Foot", 'Female Swordmaster': "Foot",
+    'Male Thief': "Foot", 'Female Thief': "Foot",
+    'Assassin': "Foot",
+    'Male Archer': "Foot", 'Female Archer': "Foot",
+    'Male Sniper': "Foot", 'Female Sniper': "Foot",
+    'Male Nomad': 'Nomads', 'Female Nomad': 'Nomads',
+    'Male Nomad Trooper': 'NomadTroopers', 'Female Nomad Trooper': 'NomadTroopers',
+    'Male Wyvern Rider': 'Fliers', 'Female Wyvern Rider': 'Fliers',
+    'Male Wyvern Lord': 'Fliers', 'Female Wyvern Lord': 'Fliers',
+    'Male Mage': 'Mages', 'Female Mage': 'Mages',
+    'Male Sage': 'Mages', 'Female Sage': 'Mages',
+    'Monk': 'Mages', 'Cleric': 'Mages',
+    'Male Bishop': 'Mages', 'Female Bishop': 'Mages',
+    'Male Shaman': 'Mages', 'Female Shaman': 'Mages',
+    'Male Druid': 'Mages', 'Female Druid': 'Mages',
+    'Fighter': 'Fighters', 'Warrior': 'Fighters', 'Brigand': 'Bandits', 'Pirate': 'Pirates',
+    'Corsair': 'Pirates', 'Berserker': 'Bandits',
+    'Pegasus Knight': 'Fliers', 'Falcoknight': 'Fliers',
+    'Troubadour': 'Knights1', 'Valkyrie': 'Knights2', 'Magic Seal': 'Mages',
+    'Archsage': 'Mages', 'Dark Druid': 'Mages', 'Bramimond': 'Mages', 'Fire Dragon': 'Foot'
+}
+
 _movement_dict = {
     'Lord (Eliwood)': 5, 'Lord (Lyn)': 5, 'Lord (Hector)': 5,
     'Blade Lord': 6, 'Knight Lord': 7, 'Great Lord': 5,
@@ -227,19 +264,23 @@ _job_constitution_dict = {
 
 def item_info_lookup(item_name, item_type):
     if item_type == ItemType.WEAPON:
-        file = 'items/weapon.json'
+        file = 'jsons/weapon.json'
     elif item_type == ItemType.STAFF:
-        file = 'items/staff.json'
+        file = 'jsons/staff.json'
     elif item_type == ItemType.TOME:
-        file = 'items/tomes.json'
+        file = 'jsons/tomes.json'
     elif item_type == ItemType.HEAL_CONSUMABLE:
-        file = 'items/heal_consumable.json'
+        file = 'jsons/heal_consumable.json'
     else:
         return None
 
     with open(file) as f:
         data = json.load(f)
         return data[item_name]
+
+
+def job_terrain_group(job):
+    return _job_movement_type[job]
 
 
 def class_table(class_code):

@@ -24,6 +24,7 @@ class Unit:
         self.name = feutils.character_name_table(self.character_code)
         self.job = feutils.class_table(job_code)
         self.move = feutils.movement_table(self.job)
+        self.terrain_group = feutils.job_terrain_group(self.job)
 
         if ally:
             self.con = feutils.character_constitution_table(self.name)
