@@ -2,6 +2,9 @@ import random
 import numpy as np
 from matplotlib import pyplot, colors
 import copy
+
+from numpy import arange
+
 import feutils
 from map import Map, Tile, get_random_tile_name
 
@@ -64,7 +67,7 @@ class OutdoorMapFactory:
 
         self.grass_water_factory = MapLayerFactory(5, 2, 7, 3, 8)
         self.forest_factory = MapLayerFactory(5, 2, 6, 4, 7)
-        self.mountain_factory = MapLayerFactory(5, 1, 8, 4, 8)
+        self.mountain_factory = MapLayerFactory(2, 3, 8, 3, 8)
 
     def generate_map(self):
         x = random.randint(self.x_min, self.x_max)
@@ -74,14 +77,39 @@ class OutdoorMapFactory:
         forest_grid = self.forest_factory.generate_binary_map(x, y)
         mountain_grid = self.mountain_factory.generate_binary_map(x, y)
 
-        return mountain_grid
+        final_map = np.ndarray((x, y), dtype='<U8')
+        number_map = np.ndarray((x, y))
+
+        for i in range(x):
+            for j in range(y):
+                #Alive represents lake, dead represents plains
+                if grass_water_grid[i, j]:
+                    final_map[i, j] = 'Lake'
+                    number_map[i, j] = 1
+                else:
+                    final_map[i, j] = 'Plain'
+                    number_map[i, j] = 0
+
+                if final_map[i, j] == 'Plain' and forest_grid[i, j]:
+                    final_map[i, j] = 'Forest'
+                    number_map[i, j] = 2
+
+                if final_map[i, j] != 'Lake' and mountain_grid[i, j]:
+                    final_map[i, j] = 'Mountain'
+                    number_map[i, j] = 3
+
+        return final_map, number_map
 
 
-factory = OutdoorMapFactory(7, 12, 7, 12)
-outer_grid = factory.generate_map()
-print(outer_grid)
-colormap = colors.ListedColormap(["green", "blue"])
-pyplot.figure(figsize=(5,5))
-pyplot.imshow(outer_grid, cmap=colormap)
-pyplot.show()
+if __name__ == '__main__':
+    factory = OutdoorMapFactory(7, 12, 7, 12)
+    fe_map, number_map = factory.generate_map()
+    print(fe_map)
 
+    colormap = colors.ListedColormap(["green", "blue", "darkgreen", "brown"])
+
+    pyplot.imshow(number_map,
+                  cmap=colormap,
+                  origin='lower',
+                  interpolation='none')
+    pyplot.show()
