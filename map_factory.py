@@ -6,20 +6,14 @@ import feutils
 from map import Map, Tile, get_random_tile_name
 
 
-class MapFactory:
-    def __init__(self, x_min, x_max, y_min, y_max, iterations, live_low, live_high, birth_low, birth_high):
-        self.x_min, self.x_max = x_min, x_max
-        self.y_min, self.y_max = y_min, y_max
-
+class MapLayerFactory:
+    def __init__(self, iterations, live_low, live_high, birth_low, birth_high):
         self.live_low, self.live_high = live_low, live_high
         self.birth_low, self.birth_high = birth_low, birth_high
 
         self.iterations = iterations
 
-    def generate_map(self):
-        x = random.randint(self.x_min, self.x_max)
-        y = random.randint(self.y_min, self.y_max)
-
+    def generate_binary_map(self, x, y):
         ground_grid = self.generate_ground(x, y)
         return ground_grid
 
@@ -63,10 +57,27 @@ class MapFactory:
         return neighbors
 
 
-#factory = MapFactory(7, 12, 7, 12, 5, 1, 8, 4, 7) # Good for forests!
+class OutdoorMapFactory:
+    def __init__(self, x_min, x_max, y_min, y_max, ):
+        self.x_min, self.x_max = x_min, x_max
+        self.y_min, self.y_max = y_min, y_max
 
-factory = MapFactory(7, 12, 7, 12, 5, 2, 7, 3, 8) # Really good for water/grass gen!!!!
+        self.grass_water_factory = MapLayerFactory(5, 2, 7, 3, 8)
+        self.forest_factory = MapLayerFactory(5, 2, 6, 4, 7)
+        self.mountain_factory = MapLayerFactory(5, 1, 8, 4, 8)
 
+    def generate_map(self):
+        x = random.randint(self.x_min, self.x_max)
+        y = random.randint(self.y_min, self.y_max)
+
+        grass_water_grid = self.grass_water_factory.generate_binary_map(x, y)
+        forest_grid = self.forest_factory.generate_binary_map(x, y)
+        mountain_grid = self.mountain_factory.generate_binary_map(x, y)
+
+        return mountain_grid
+
+
+factory = OutdoorMapFactory(7, 12, 7, 12)
 outer_grid = factory.generate_map()
 print(outer_grid)
 colormap = colors.ListedColormap(["green", "blue"])

@@ -5,7 +5,7 @@ from PIL import Image
 
 
 def get_random_tile_name():
-    return
+    return ''
 
 
 class Map:
