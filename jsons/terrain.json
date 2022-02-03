@@ -1,19 +1,4 @@
 {
-  "\u2014": {
-    "avoid": 0,
-    "def": 0,
-    "Foot": 999,
-    "Armours": 999,
-    "Knights1": 999,
-    "Knights2": 999,
-    "Nomads": 999,
-    "NomadTroopers": 999,
-    "Fighters": 999,
-    "Bandits": 999,
-    "Pirates": 999,
-    "Mages": 999,
-    "Fliers": 1
-  },
   "Cliff": {
     "avoid": 0,
     "def": 0,

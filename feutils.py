@@ -261,6 +261,12 @@ _job_constitution_dict = {
     'Archsage': 9, 'Dark Druid': 10, 'Bramimond': 6, 'Fire Dragon': 25
 }
 
+def tile_info_lookup(tile_name):
+    file = 'jsons/terrain.json'
+    with open(file) as f:
+        data = json.load(f)
+        return data[tile_name]
+
 
 def item_info_lookup(item_name, item_type):
     if item_type == ItemType.WEAPON:
