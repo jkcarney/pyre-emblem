@@ -98,7 +98,7 @@ class OutdoorMapFactory:
                     final_map[i, j] = 'Mountain'
                     number_map[i, j] = 3
 
-        return final_map, number_map
+        return Map(x, y, final_map), number_map
 
 
 if __name__ == '__main__':
