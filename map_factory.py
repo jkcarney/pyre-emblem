@@ -6,7 +6,7 @@ import copy
 from numpy import arange
 
 import feutils
-from map import Map, Tile, get_random_tile_name
+from map import Map, Tile
 
 
 class MapLayerFactory:

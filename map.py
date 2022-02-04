@@ -1,7 +1,19 @@
 import feutils
 
-def get_random_tile_name():
-    return ''
+
+class Tile:
+    def __init__(self, tile_name):
+        self.name = tile_name
+        tile_data = feutils.tile_info_lookup(tile_name)
+        self.avoid = tile_data['avoid']
+        self.defense = tile_data['def']
+        del tile_data['avoid']
+        del tile_data['def']
+
+        self.movement_costs = tile_data
+
+    def __str__(self):
+        return self.name
 
 
 class Map:
@@ -21,20 +33,8 @@ class Map:
             result += '\n'
         return result
 
+    def get_tile(self, x, y) -> Tile:
+        return self.grid[x][y]
 
-class Tile:
-    def __init__(self, tile_name):
-        self.name = tile_name
-        tile_data = feutils.tile_info_lookup(tile_name)
-        self.avoid = tile_data['avoid']
-        self.defense = tile_data['def']
-        del tile_data['avoid']
-        del tile_data['def']
-
-        self.movement_costs = tile_data
-
-    def __str__(self):
-        return self.name
-
-
-
+    def get_tile_movement_costs(self, x, y):
+        return self.grid[x][y].movement_costs
