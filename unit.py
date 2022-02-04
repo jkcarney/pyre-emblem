@@ -1,5 +1,7 @@
 import feutils
-import item
+from item import Item
+from item_type import *
+from map import Map
 
 
 class Unit:
@@ -47,5 +49,65 @@ class CombatSummary:
         self.attacker_summary = attacker_summary
         self.defender_summary = defender_summary
 
-    def get_combat_stats(self, attacker: Unit, defender: Unit):
+    def get_combat_stats(self, attacker: Unit, defender: Unit, tile_map: Map):
         pass
+
+    def weapon_triangle_bonus(self, attacker_item: Item, defender_item: Item):
+        attk_enum = WeaponType(attacker_item.info['enum_type'])
+        def_enum = WeaponType(defender_item.info['enum_type'])
+
+        if attk_enum == WeaponType.SWORD:
+            if def_enum == WeaponType.AXE:
+                return 1, 0.15
+            elif def_enum == WeaponType.LANCE:
+                return -1, -0.15
+            else:
+                return 0, 0.0
+
+        if attk_enum == WeaponType.LANCE:
+            if def_enum == WeaponType.SWORD:
+                return 1, 0.15
+            elif def_enum == WeaponType.AXE:
+                return -1, -0.15
+            else:
+                return 0, 0.0
+
+        if attk_enum == WeaponType.AXE:
+            if def_enum == WeaponType.LANCE:
+                return 1, 0.15
+            elif def_enum == WeaponType.SWORD:
+                return -1, -0.15
+            else:
+                return 0, 0.0
+
+        return 0, 0.0
+
+    def magic_triangle_bonus(self, attacker_tome: Item, defender_tome: Item):
+        attk_enum = TomeType(attacker_tome.info['enum_type'])
+        def_enum = TomeType(defender_tome.info['enum_type'])
+
+        if attk_enum == TomeType.ANIMA:
+            if def_enum == TomeType.LIGHT:
+                return 1, 0.15
+            elif def_enum == TomeType.DARK:
+                return -1, -0.15
+            else:
+                return 0, 0.0
+
+        if attk_enum == TomeType.LIGHT:
+            if def_enum == TomeType.DARK:
+                return 1, 0.15
+            elif def_enum == TomeType.ANIMA:
+                return -1, -0.15
+            else:
+                return 0, 0.0
+
+        if attk_enum == TomeType.DARK:
+            if def_enum == TomeType.ANIMA:
+                return 1, 0.15
+            elif def_enum == TomeType.LIGHT:
+                return -1, -0.15
+            else:
+                return 0, 0.0
+
+        return 0, 0.0

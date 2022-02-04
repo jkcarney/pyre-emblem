@@ -10,6 +10,10 @@ from map import Map, Tile
 
 
 class MapLayerFactory:
+    """
+    Generates a matrix of booleans based upon the game of live algorithm.
+    Used in map generation
+    """
     def __init__(self, iterations, live_low, live_high, birth_low, birth_high):
         self.live_low, self.live_high = live_low, live_high
         self.birth_low, self.birth_high = birth_low, birth_high
@@ -17,10 +21,22 @@ class MapLayerFactory:
         self.iterations = iterations
 
     def generate_binary_map(self, x, y):
+        """
+        Generates a map based on the game of life algorithm of size x and y
+        :param x:
+        :param y:
+        :return: A matrix of boolean values, 1 representing alive cells, 0 representing dead cells
+        """
         ground_grid = self.generate_ground(x, y)
         return ground_grid
 
     def generate_ground(self, x, y):
+        """
+        Iterates through a randomly generated grid of size x and y
+        :param x:
+        :param y:
+        :return: A matrix of boolean values, 1 representing alive cells, 0 representing dead cells
+        """
         grid = np.ndarray((x, y))
         self.populate_randomly(grid, x, y)
 
@@ -30,11 +46,21 @@ class MapLayerFactory:
         return grid
 
     def populate_randomly(self, grid, x, y):
+        """
+        Populates a grid of size x and y with random bool values
+        :param grid: a numpy matrix
+        :param x:
+        :param y:
+        """
         for i in range(x):
             for j in range(y):
                 grid[i, j] = bool(random.getrandbits(1))
 
     def advance_generation(self, grid):
+        """
+        Advances the grid one generation according to the game of life algorithm
+        :param grid: the matrix to advance
+        """
         grid_clone = copy.deepcopy(grid)
 
         for i in range(len(grid_clone)):
@@ -50,6 +76,13 @@ class MapLayerFactory:
                         grid[i, j] = False
 
     def count_alive_neighbors(self, grid, x, y):
+        """
+        Counts the alive neighbors (including self) at indices x and y
+        :param grid: The grid where x and y lives
+        :param x:
+        :param y:
+        :return: the count of alive neighbors
+        """
         neighbors = 0
         for i in range(-1, 1):
             for j in range(-1, 1):
@@ -61,15 +94,22 @@ class MapLayerFactory:
 
 
 class OutdoorMapFactory:
-    def __init__(self, x_min, x_max, y_min, y_max, ):
+    """
+    Generates an outdoor style map utilizing 3 map layer factories and combines them
+    """
+    def __init__(self, x_min, x_max, y_min, y_max):
         self.x_min, self.x_max = x_min, x_max
         self.y_min, self.y_max = y_min, y_max
 
         self.grass_water_factory = MapLayerFactory(5, 2, 7, 3, 8)
-        self.forest_factory = MapLayerFactory(5, 2, 6, 4, 7)
+        self.forest_factory = MapLayerFactory(4, 2, 6, 4, 7)
         self.mountain_factory = MapLayerFactory(2, 3, 8, 3, 8)
 
     def generate_map(self):
+        """
+        Generates a new map according to the maplayerfactories
+        :return: a tuple. the first item is a new grid of Tile objects, the 2nd is a grid of numbers
+        """
         x = random.randint(self.x_min, self.x_max)
         y = random.randint(self.y_min, self.y_max)
 
