@@ -1,6 +1,6 @@
 {
   "Cliff": {
-    "avoid": 0,
+    "avoid": 0.0,
     "def": 0,
     "Foot": 999,
     "Armours": 999,
@@ -15,7 +15,7 @@
     "Fliers": 1
   },
   "Fence": {
-    "avoid": 0,
+    "avoid": 0.0,
     "def": 0,
     "Foot": 999,
     "Armours": 999,
@@ -30,7 +30,7 @@
     "Fliers": 1
   },
   "Snag": {
-    "avoid": 0,
+    "avoid": 0.0,
     "def": 0,
     "Foot": 999,
     "Armours": 999,
@@ -45,7 +45,7 @@
     "Fliers": 1
   },
   "Wall": {
-    "avoid": 0,
+    "avoid": 0.0,
     "def": 0,
     "Foot": 999,
     "Armours": 999,
@@ -60,7 +60,7 @@
     "Fliers": 999
   },
   "Door": {
-    "avoid": 0,
+    "avoid": 0.0,
     "def": 0,
     "Foot": 999,
     "Armours": 999,
@@ -75,7 +75,7 @@
     "Fliers": 999
   },
   "Wall (weak)": {
-    "avoid": 0,
+    "avoid": 0.0,
     "def": 0,
     "Foot": 999,
     "Armours": 999,
@@ -90,7 +90,7 @@
     "Fliers": 999
   },
   "Plain": {
-    "avoid": 0,
+    "avoid": 0.0,
     "def": 0,
     "Foot": 1,
     "Armours": 1,
@@ -105,7 +105,7 @@
     "Fliers": 1
   },
   "Road": {
-    "avoid": 0,
+    "avoid": 0.0,
     "def": 0,
     "Foot": 1,
     "Armours": 1,
@@ -120,7 +120,7 @@
     "Fliers": 1
   },
   "Floor": {
-    "avoid": 0,
+    "avoid": 0.0,
     "def": 0,
     "Foot": 1,
     "Armours": 1,
@@ -135,7 +135,7 @@
     "Fliers": 1
   },
   "Stairs": {
-    "avoid": 0,
+    "avoid": 0.0,
     "def": 0,
     "Foot": 1,
     "Armours": 1,
@@ -150,7 +150,7 @@
     "Fliers": 1
   },
   "Deck": {
-    "avoid": 0,
+    "avoid": 0.0,
     "def": 0,
     "Foot": 1,
     "Armours": 1,
@@ -165,7 +165,7 @@
     "Fliers": 1
   },
   "Bridge": {
-    "avoid": 0,
+    "avoid": 0.0,
     "def": 0,
     "Foot": 1,
     "Armours": 1,
@@ -180,7 +180,7 @@
     "Fliers": 1
   },
   "Ruins (village)": {
-    "avoid": 0,
+    "avoid": 0.0,
     "def": 0,
     "Foot": 2,
     "Armours": 2,
@@ -195,7 +195,7 @@
     "Fliers": 1
   },
   "River": {
-    "avoid": 0,
+    "avoid": 0.0,
     "def": 0,
     "Foot": 5,
     "Armours": 999,
@@ -210,7 +210,7 @@
     "Fliers": 1
   },
   "Sand": {
-    "avoid": 5,
+    "avoid": 0.05,
     "def": 0,
     "Foot": 1,
     "Armours": 1,
@@ -225,7 +225,7 @@
     "Fliers": 1
   },
   "Desert": {
-    "avoid": 5,
+    "avoid": 0.05,
     "def": 0,
     "Foot": 2,
     "Armours": 3,
@@ -240,7 +240,7 @@
     "Fliers": 1
   },
   "House": {
-    "avoid": 6,
+    "avoid": 0.06,
     "def": 0,
     "Foot": 1,
     "Armours": 1,
@@ -255,7 +255,7 @@
     "Fliers": 1
   },
   "Shop": {
-    "avoid": 6,
+    "avoid": 0.06,
     "def": 0,
     "Foot": 1,
     "Armours": 1,
@@ -270,7 +270,7 @@
     "Fliers": 1
   },
   "Arena": {
-    "avoid": 6,
+    "avoid": 0.06,
     "def": 0,
     "Foot": 1,
     "Armours": 1,
@@ -285,7 +285,7 @@
     "Fliers": 1
   },
   "Village": {
-    "avoid": 6,
+    "avoid": 0.06,
     "def": 0,
     "Foot": 1,
     "Armours": 1,
@@ -300,7 +300,7 @@
     "Fliers": 1
   },
   "Ruins": {
-    "avoid": 6,
+    "avoid": 0.06,
     "def": 0,
     "Foot": 1,
     "Armours": 1,
@@ -315,7 +315,7 @@
     "Fliers": 1
   },
   "Sea": {
-    "avoid": 6,
+    "avoid": 0.06,
     "def": 0,
     "Foot": 999,
     "Armours": 999,
@@ -330,7 +330,7 @@
     "Fliers": 1
   },
   "Lake": {
-    "avoid": 6,
+    "avoid": 0.06,
     "def": 0,
     "Foot": 999,
     "Armours": 999,
@@ -345,7 +345,7 @@
     "Fliers": 1
   },
   "Forest": {
-    "avoid": 20,
+    "avoid": 0.20,
     "def": 1,
     "Foot": 2,
     "Armours": 2,
@@ -360,7 +360,7 @@
     "Fliers": 1
   },
   "Pillar": {
-    "avoid": 20,
+    "avoid": 0.20,
     "def": 1,
     "Foot": 2,
     "Armours": 2,
@@ -375,7 +375,7 @@
     "Fliers": 1
   },
   "Mountain": {
-    "avoid": 30,
+    "avoid": 0.30,
     "def": 1,
     "Foot": 4,
     "Armours": 999,
@@ -390,7 +390,7 @@
     "Fliers": 1
   },
   "Peak": {
-    "avoid": 40,
+    "avoid": 0.40,
     "def": 2,
     "Foot": 999,
     "Armours": 999,
@@ -405,7 +405,7 @@
     "Fliers": 1
   },
   "Fort": {
-    "avoid": 20,
+    "avoid": 0.20,
     "def": 2,
     "Foot": 2,
     "Armours": 2,
@@ -420,7 +420,7 @@
     "Fliers": 1
   },
   "Gate": {
-    "avoid": 20,
+    "avoid": 0.20,
     "def": 3,
     "Foot": 1,
     "Armours": 1,
@@ -435,7 +435,7 @@
     "Fliers": 1
   },
   "Throne": {
-    "avoid": 20,
+    "avoid": 0.20,
     "def": 2,
     "Foot": 1,
     "Armours": 1,

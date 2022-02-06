@@ -3,160 +3,160 @@
     "range": "1,2",
     "weight": 4,
     "might": 5,
-    "hit": 90,
-    "crit": 0,
+    "hit": 0.90,
+    "crit": 0.0,
     "enum_type": 0
   },
   "Thunder": {
     "range": "1,2",
     "weight": 6,
     "might": 8,
-    "hit": 80,
-    "crit": 5,
+    "hit": 0.80,
+    "crit": 0.05,
     "enum_type": 0
   },
   "Elfire": {
     "range": "1,2",
     "weight": 10,
     "might": 10,
-    "hit": 85,
-    "crit": 0,
+    "hit": 0.85,
+    "crit": 0.0,
     "enum_type": 0
   },
   "Bolting": {
     "range": "3,10",
     "weight": 20,
     "might": 12,
-    "hit": 60,
-    "crit": 0,
+    "hit": 0.60,
+    "crit": 0.0,
     "enum_type": 0
   },
   "Fimbulvetr": {
     "range": "1,2",
     "weight": 12,
     "might": 13,
-    "hit": 80,
-    "crit": 0,
+    "hit": 0.80,
+    "crit": 0.0,
     "enum_type": 0
   },
   "Excalibur": {
     "range": "1,2",
     "weight": 13,
     "might": 18,
-    "hit": 90,
-    "crit": 10,
+    "hit": 0.90,
+    "crit": 0.1,
     "enum_type": 0
   },
   "Forblaze": {
     "range": "1,2",
     "weight": 11,
     "might": 14,
-    "hit": 85,
-    "crit": 5,
+    "hit": 0.85,
+    "crit": 0.05,
     "enum_type": 0
   },
   "Flux": {
     "range": "1,2",
     "weight": 8,
     "might": "7",
-    "hit": 80,
-    "crit": 0,
+    "hit": 0.80,
+    "crit": 0.0,
     "enum_type": 2
   },
   "Luna": {
     "range": "1,2",
     "weight": 12,
     "might": "0",
-    "hit": 95,
-    "crit": 20,
+    "hit": 0.95,
+    "crit": 0.20,
     "enum_type": 2
   },
   "Nosferatu": {
     "range": "1,2",
     "weight": 14,
     "might": "10",
-    "hit": 70,
-    "crit": 0,
+    "hit": 0.70,
+    "crit": 0.0,
     "enum_type": 2
   },
   "Fenrir": {
     "range": "1,2",
     "weight": 18,
     "might": "15",
-    "hit": 70,
-    "crit": 0,
+    "hit": 0.70,
+    "crit": 0.0,
     "enum_type": 2
   },
   "Gespenst": {
     "range": "1,2",
     "weight": 20,
     "might": "23",
-    "hit": 80,
-    "crit": 0,
+    "hit": 0.80,
+    "crit": 0.0,
     "enum_type": 2
   },
   "Ereshkigal": {
     "range": "1,2",
     "weight": 12,
     "might": "20",
-    "hit": 95,
-    "crit": 0,
+    "hit": 0.95,
+    "crit": 0.0,
     "enum_type": 2
   },
   "Lightning": {
     "range": "1,2",
     "weight": 6,
     "might": 4,
-    "hit": 95,
-    "crit": 5,
+    "hit": 0.95,
+    "crit": 0.05,
     "enum_type": 1
   },
   "Shine": {
     "range": "1,2",
     "weight": 8,
     "might": 6,
-    "hit": 90,
-    "crit": 8,
+    "hit": 0.90,
+    "crit": 0.08,
     "enum_type": 1
   },
   "Divine": {
     "range": "1,2",
     "weight": 12,
     "might": 8,
-    "hit": 85,
-    "crit": 10,
+    "hit": 0.85,
+    "crit": 0.1,
     "enum_type": 1
   },
   "Purge": {
     "range": "3,10",
     "weight": 20,
     "might": 10,
-    "hit": 75,
-    "crit": 5,
+    "hit": 0.75,
+    "crit": 0.05,
     "enum_type": 1
   },
   "Aura": {
     "range": "1,2",
     "weight": 15,
     "might": 12,
-    "hit": 85,
-    "crit": 15,
+    "hit": 0.85,
+    "crit": 0.15,
     "enum_type": 1
   },
   "Aureola": {
     "range": "1,2",
     "weight": 14,
     "might": 15,
-    "hit": 90,
-    "crit": 5,
+    "hit": 0.90,
+    "crit": 0.05,
     "enum_type": 1
   },
   "Luce": {
     "range": "1,2",
     "weight": 16,
     "might": 16,
-    "hit": 95,
-    "crit": 25,
+    "hit": 0.95,
+    "crit": 0.25,
     "enum_type": 1
   }
 }
