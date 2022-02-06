@@ -1,9 +1,17 @@
 import feutils
 import item
+import enum
+import random
 from unit import Unit
 from item import Item
 from item_type import *
 from map import Map
+
+
+class CombatResults(Enum):
+    ATTACKER_DEATH = 0
+    DEFENDER_DEATH = 1
+    NO_DEATH = 2
 
 
 class Combat:
@@ -189,11 +197,19 @@ def calculate_avoid(unit: Unit, tile_map: Map):
 def calculate_hit_chance(attacker: Unit, defender: Unit, tile_map: Map):
     """
     Main function used to calculate the chance that attacker will hit defender on tile_map
+    If the attacker's range is less than the defenders range, then the hit chance will be zero
+
     :param attacker: The unit who is attacking
     :param defender: The unit who is defending
     :param tile_map: The map in which the combat is taking place
     :return: The chance between 0.0 and 1.0 for attacker to hit defender in combat
     """
+    distance = tile_map.manhattan_distance(attacker.x, attacker.y, defender.x, defender.y)
+    atk_range = list(attacker.inventory[0].info['range'].split(','))
+
+    if str(distance) not in atk_range:
+        return 0.0
+
     accuracy = calculate_accuracy(attacker, defender)
     avoid = calculate_avoid(defender, tile_map)
     return min(max(0.0, accuracy - avoid), 1.0)
@@ -233,3 +249,91 @@ def get_combat_stats(attacker: Unit, defender: Unit, tile_map: Map):
     defender_combat = Combat(defender_hit_chance, defender_might, defender_crit_chance, defender_doubling)
     return CombatSummary(attacker, defender, attacker_combat, defender_combat)
 
+
+def roll_random_chance():
+    """
+    Averages two random floats between 0.0 and 1.0, n and k
+
+    Something interesting to note about Fire Emblem combat randomness, from the FE wiki:
+
+    "Note that in all games starting from Fire Emblem: The Binding Blade, the Random Number Generator generates
+    two numbers instead of one for hit chance, and the average of the numbers is the true hit value; in other words,
+    a displayed hit (hit shown on screen) of 75 will actually hit on any two numbers whose average is less than or equal
+    to 75. The effect on overall accuracy of attacks makes a sigmoid effect: it becomes exceedingly rare for an
+    accurate attack (90+ hit) to miss, while inaccurate attacks (Hit lesser than 50) will land far less often
+    than its hit rate would suggest"
+
+
+    :return: A float between 0.0 and 1.0, with the above statement in mind
+    """
+    n = random.random()
+    k = random.random()
+    return (n + k) / 2
+
+
+def simulate_combat(summary: CombatSummary):
+    """
+    Simulates the combat between two units
+
+    :param summary: The CombatSummary generated from get_combat_stats
+    :return:
+    """
+    # Hit 1
+    hit_chance = roll_random_chance()
+    if hit_chance <= summary.attacker_summary.hit_chance:
+        dmg = summary.attacker_summary.might
+
+        crit_chance = roll_random_chance()
+        if crit_chance <= summary.attacker_summary.crit_chance:
+            dmg *= 3
+
+        summary.defender.take_dmg(dmg)
+
+    if summary.defender.current_hp <= 0:
+        return CombatResults.DEFENDER_DEATH
+
+    # Hit 2
+    hit_chance = roll_random_chance()
+    if hit_chance <= summary.defender_summary.hit_chance:
+        dmg = summary.defender_summary.might
+
+        crit_chance = roll_random_chance()
+        if crit_chance <= summary.defender_summary.crit_chance:
+            dmg *= 3
+
+        summary.attacker.take_dmg(dmg)
+
+    if summary.attacker.current_hp <= 0:
+        return CombatResults.ATTACKER_DEATH
+
+    # Hit 3
+    if summary.attacker_summary.doubling:
+        hit_chance = roll_random_chance()
+        if hit_chance <= summary.attacker_summary.hit_chance:
+            dmg = summary.attacker_summary.might
+
+            crit_chance = roll_random_chance()
+            if crit_chance <= summary.attacker_summary.crit_chance:
+                dmg *= 3
+
+            summary.defender.take_dmg(dmg)
+
+        if summary.defender.current_hp <= 0:
+            return CombatResults.DEFENDER_DEATH
+
+    # Hit 4
+    if summary.defender_summary.doubling:
+        hit_chance = roll_random_chance()
+        if hit_chance <= summary.defender_summary.hit_chance:
+            dmg = summary.defender_summary.might
+
+            crit_chance = roll_random_chance()
+            if crit_chance <= summary.defender_summary.crit_chance:
+                dmg *= 3
+
+            summary.attacker.take_dmg(dmg)
+
+        if summary.attacker.current_hp <= 0:
+            return CombatResults.ATTACKER_DEATH
+
+    return CombatResults.NO_DEATH

@@ -35,3 +35,26 @@ class Unit:
         else:
             self.con = feutils.job_constitution_table(self.job)
 
+    def equip_item(self, index):
+        self.inventory[0], self.inventory[index] = self.inventory[index], self.inventory[0]
+
+    def use_item(self, index):
+        inventory_item = self.inventory[index]
+        if inventory_item.item_type == ItemType.HEAL_CONSUMABLE:
+            self.heal(inventory_item.info['heal_amount'])
+            inventory_item.info['uses'] -= 1
+
+            if inventory_item.info['uses'] == 0:
+                del self.inventory[index]
+
+            return True
+
+        else:
+            return False
+
+    def heal(self, amount):
+        self.current_hp = min(self.current_hp + amount, self.hp_max)
+
+    def take_dmg(self, amount):
+        self.current_hp -= amount
+

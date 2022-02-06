@@ -38,3 +38,11 @@ class Map:
 
     def get_tile_movement_costs(self, x, y):
         return self.grid[x][y].movement_costs
+
+    def manhattan_distance(self, x1, y1, x2, y2):
+        if x1 >= self.x or x2 >= self.x:
+            raise IndexError('Tried to access indices out of map bounds (x coord)')
+        if y1 >= self.y or y2 >= self.y:
+            raise IndexError('Tried to access indices out of map bounds (y coord)')
+
+        return abs(x1 - x2) + abs(y1 - y2)
