@@ -189,7 +189,7 @@ _job_movement_type = {
 }
 
 _movement_dict = {
-    'Lord (Eliwood)': 5, 'Lord (Lyn)': 5, 'Lord (Hector)': 5,
+    'Lord (Eliwood)': 5, 'Lord (Lyn)': 8, 'Lord (Hector)': 5,
     'Blade Lord': 6, 'Knight Lord': 7, 'Great Lord': 5,
     'Bard': 5, 'Dancer': 5, 'Prince': 5,
     'Tent': 0, 'Wagon': 5, 'Soldier': 5,

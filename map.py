@@ -12,6 +12,9 @@ class Tile:
 
         self.movement_costs = tile_data
 
+    def get_unit_cost(self, terrain_group):
+        return self.movement_costs[terrain_group]
+
     def __str__(self):
         return self.name
 
@@ -46,3 +49,37 @@ class Map:
             raise IndexError('Tried to access indices out of map bounds (y coord)')
 
         return abs(x1 - x2) + abs(y1 - y2)
+
+    def get_valid_move_coordinates(self, unit):
+        movement = unit.move
+        terrain_group = unit.terrain_group
+        valid_tiles = {(unit.x, unit.y)}
+
+        self.__calculate_tile__(unit.x + 1, unit.y, movement, terrain_group, 0, valid_tiles)
+        self.__calculate_tile__(unit.x - 1, unit.y, movement, terrain_group, 0, valid_tiles)
+        self.__calculate_tile__(unit.x, unit.y + 1, movement, terrain_group, 0, valid_tiles)
+        self.__calculate_tile__(unit.x, unit.y - 1, movement, terrain_group, 0, valid_tiles)
+
+        return valid_tiles
+
+    def __calculate_tile__(self, x, y, movement, terrain_group, accumulated_cost, valid_tiles):
+        accumulated_cost += self.grid[x][y].get_unit_cost(terrain_group)
+
+        if accumulated_cost > movement:
+            return
+
+        if x < 0 or x >= self.x:
+            return
+
+        if y < 0 or y >= self.y:
+            return
+
+        print(f'ADDING COORDINATES: {x} , {y}')
+        print(f'\tACCUMULATED COST: {accumulated_cost}')
+
+        valid_tiles.add((x, y))
+
+        self.__calculate_tile__(x + 1, y, movement, terrain_group, accumulated_cost, valid_tiles)
+        self.__calculate_tile__(x - 1, y, movement, terrain_group, accumulated_cost, valid_tiles)
+        self.__calculate_tile__(x, y + 1, movement, terrain_group, accumulated_cost, valid_tiles)
+        self.__calculate_tile__(x, y - 1, movement, terrain_group, accumulated_cost, valid_tiles)
