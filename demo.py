@@ -10,8 +10,8 @@ import item
 if __name__ == "__main__":
     #lyn_hit_count = 0
     #for i in range(1001):
-    lyn = Unit(0xceb4, 0, 0, 2, 0x0204, 17, 6, 8, 10, 6, 2, 0, 0, True, [0x1, 0x6b])
-    bandit = Unit(0xe9b8, 0, 1, 2, 0x1410, 21, 4, 1, 4, 0, 3, 0, 0, False, [0x1f])
+    lyn = Unit(0xceb4, 0, 0, 2, 0x0204, 17, 6, 8, 10, 6, 2, 0, 0, True, [0x1, 0x6b], True)
+    bandit = Unit(0xe9b8, 0, 1, 2, 0x1410, 21, 4, 1, 4, 0, 3, 0, 0, False, [0x1f], False)
 
     map_factory = OutdoorMapFactory(10, 10, 10, 10)
     fe_map,num_map = map_factory.generate_map()

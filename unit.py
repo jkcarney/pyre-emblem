@@ -8,7 +8,9 @@ from map import Map
 class Unit:
     def __init__(self, character_code, x, y, level, job_code, hp_max,
                  strength, skill, spd, luck, defense, res, magic, ally,
-                 inventory_codes: list):
+                 inventory_codes: list, terminal_condition):
+        self.terminal_condition = terminal_condition
+
         self.character_code = character_code
         self.x = x
         self.y = y
@@ -37,6 +39,24 @@ class Unit:
 
     def equip_item(self, index):
         self.inventory[0], self.inventory[index] = self.inventory[index], self.inventory[0]
+
+    def get_attack_range(self):
+        atk_range = set()
+
+        for i in self.inventory:
+            if item.item_type == ItemType.WEAPON or item.item_type == ItemType.TOME:
+                item_ranges = list(map(int, i.info['range'].split(',')))
+                for r in item_ranges:
+                    atk_range.add(r)
+
+        return sorted(list(atk_range))
+
+    def has_consumable(self):
+        for i in self.inventory:
+            if i.item_type == ItemType.HEAL_CONSUMABLE:
+                return True
+
+        return False
 
     def use_item(self, index):
         inventory_item = self.inventory[index]

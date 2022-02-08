@@ -50,9 +50,70 @@ class Map:
 
         return abs(x1 - x2) + abs(y1 - y2)
 
+    def valid_actions_at_position(self, unit, all_units, x, y):
+        """
+        Assuming unit was at coordinates x and y, what are the valid actions they could take?
+
+        This function does not verify that the unit, given their current position, movement stat, and movement class,
+        could move to position x and y
+
+        Units can always wait at a given space, while the usability of items is limited to if they have any left to
+        use. Attacking is also limited to enemy units within any of their items attack range
+
+        :param unit: The unit who's actions we are checking
+        :param x: The theoretical x position of the unit
+        :param y: The theoretical y position of the unit
+        :return: A list of actions the unit can take. ('Wait', and/or 'Item', and/or 'Attack')
+        """
+        valid_actions = ['Wait']
+        if unit.has_consumable():
+            valid_actions.append('Item')
+
+        if self.get_attackable_units(unit, all_units, x, y) is not []:
+            valid_actions.append('Attack')
+
+        return valid_actions
+
+    def get_attackable_units(self, unit, all_units: list, x = None, y = None):
+        """
+        Gets all attackable units within range of unit.
+
+        x and y are optional parameters. If specified, it will check if unit could attack any units at the
+        given x and y. Otherwise, it defaults to the unit's current x and y
+
+        :param all_units: All the units currently in the game
+        :param unit: The unit whos attack range we are checking
+        :param x: optional x to check from
+        :param y: optional y to check from
+        :return:
+        """
+        attackable_units = []
+
+        if x is None or y is None:
+            x, y = unit.x, unit.y
+
+        atk_range = unit.get_attack_range()
+        for candidate in all_units:
+            # Checks to see if the candidate and unit are on opposing teams
+            if candidate.ally != unit.ally:
+                distance = self.manhattan_distance(x, y, candidate.x, candidate.y)
+                if distance in atk_range:
+                    attackable_units.append(candidate)
+
+        return attackable_units
+
     def get_valid_move_coordinates(self, unit):
+        """
+        Retrieves all the tiles the unit could move to given their current position, movement stat, and movement class,
+        as a set of tuples representing x y pairs
+
+        :param unit: The unit who we are checking
+        :return: A set of tuples that represent x y pairs
+        """
         movement = unit.move
         terrain_group = unit.terrain_group
+
+        # The tile the unit is standing on is always assumed to be a valid move tile.
         valid_tiles = {(unit.x, unit.y)}
 
         self.__calculate_tile__(unit.x + 1, unit.y, movement, terrain_group, 0, valid_tiles)
@@ -73,9 +134,6 @@ class Map:
 
         if y < 0 or y >= self.y:
             return
-
-        print(f'ADDING COORDINATES: {x} , {y}')
-        print(f'\tACCUMULATED COST: {accumulated_cost}')
 
         valid_tiles.add((x, y))
 
