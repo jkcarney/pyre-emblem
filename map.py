@@ -1,4 +1,5 @@
 import feutils
+from action import Action
 
 
 class Tile:
@@ -65,12 +66,15 @@ class Map:
         :param y: The theoretical y position of the unit
         :return: A list of actions the unit can take. ('Wait', and/or 'Item', and/or 'Attack')
         """
-        valid_actions = ['Wait']
-        if unit.has_consumable():
-            valid_actions.append('Item')
+        valid_actions = [Action('Wait', None)]
 
-        if self.get_attackable_units(unit, all_units, x, y) is not []:
-            valid_actions.append('Attack')
+        all_consumables = unit.get_all_consumables()
+        for consumable in all_consumables:
+            valid_actions.append(Action('Item', consumable))
+
+        attackable_units = self.get_attackable_units(unit, all_units, x, y)
+        for u in attackable_units:
+            valid_actions.append(Action('Attack', u))
 
         return valid_actions
 

@@ -58,6 +58,14 @@ class Unit:
 
         return False
 
+    def get_all_consumables(self):
+        consums = []
+        for i in self.inventory:
+            if i.item_type == ItemType.HEAL_CONSUMABLE:
+                consums.append(i)
+
+        return consums
+
     def use_item(self, index):
         inventory_item = self.inventory[index]
         if inventory_item.item_type == ItemType.HEAL_CONSUMABLE:
