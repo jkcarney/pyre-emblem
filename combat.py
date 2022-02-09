@@ -101,11 +101,9 @@ def calculate_triangle_bonus(attacker: Unit, defender: Unit):
     :return: a tuple, index 0 represents dmg bonus/loss, index 1 represents avoid bonus/loss
     """
     if attacker.inventory[0].item_type == ItemType.WEAPON and defender.inventory[0].item_type == ItemType.WEAPON:
-        triangle_bonus = weapon_triangle_bonus(attacker.inventory[0], defender.inventory[0])
+        return weapon_triangle_bonus(attacker.inventory[0], defender.inventory[0])
     elif attacker.inventory[0].item_type == ItemType.TOME and defender.inventory[0].item_type == ItemType.TOME:
-        triangle_bonus = magic_triangle_bonus(attacker.inventory[0], defender.inventory[0])
-    return triangle_bonus
-
+        return magic_triangle_bonus(attacker.inventory[0], defender.inventory[0])
 
 def calculate_crit_avoid(unit: Unit):
     """

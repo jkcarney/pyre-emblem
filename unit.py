@@ -66,6 +66,9 @@ class Unit:
 
         return consums
 
+    def goto(self, new_x, new_y):
+        self.x, self.y = new_x, new_y
+
     def use_item(self, index):
         inventory_item = self.inventory[index]
         if inventory_item.item_type == ItemType.HEAL_CONSUMABLE:
