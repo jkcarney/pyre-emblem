@@ -51,7 +51,7 @@ class Map:
 
         return abs(x1 - x2) + abs(y1 - y2)
 
-    def valid_actions_at_position(self, unit, all_units, x, y):
+    def valid_actions_at_position(self, unit, enemy_units, x, y):
         """
         Assuming unit was at coordinates x and y, what are the valid actions they could take?
 
@@ -61,6 +61,7 @@ class Map:
         Units can always wait at a given space, while the usability of items is limited to if they have any left to
         use. Attacking is also limited to enemy units within any of their items attack range
 
+        :param enemy_units: The units who we will check to see if we can attack
         :param unit: The unit who's actions we are checking
         :param x: The theoretical x position of the unit
         :param y: The theoretical y position of the unit
@@ -72,20 +73,20 @@ class Map:
         for consumable in all_consumables:
             valid_actions.append(Action('Item', consumable))
 
-        attackable_units = self.get_attackable_units(unit, all_units, x, y)
+        attackable_units = self.get_attackable_units(unit, enemy_units, x, y)
         for u in attackable_units:
             valid_actions.append(Action('Attack', u))
 
         return valid_actions
 
-    def get_attackable_units(self, unit, all_units: list, x = None, y = None):
+    def get_attackable_units(self, unit, enemy_units: list, x = None, y = None):
         """
         Gets all attackable units within range of unit.
 
         x and y are optional parameters. If specified, it will check if unit could attack any units at the
         given x and y. Otherwise, it defaults to the unit's current x and y
 
-        :param all_units: All the units currently in the game
+        :param enemy_units: All the units currently in the game
         :param unit: The unit whos attack range we are checking
         :param x: optional x to check from
         :param y: optional y to check from
@@ -97,12 +98,11 @@ class Map:
             x, y = unit.x, unit.y
 
         atk_range = unit.get_attack_range()
-        for candidate in all_units:
+        for candidate in enemy_units:
             # Checks to see if the candidate and unit are on opposing teams
-            if candidate.ally != unit.ally:
-                distance = self.manhattan_distance(x, y, candidate.x, candidate.y)
-                if distance in atk_range:
-                    attackable_units.append(candidate)
+            distance = self.manhattan_distance(x, y, candidate.x, candidate.y)
+            if distance in atk_range:
+                attackable_units.append(candidate)
 
         return attackable_units
 
