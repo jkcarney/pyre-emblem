@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     colormap = colors.ListedColormap(["green", "blue", "darkgreen", "brown"])
 
-    valids = fe_map.get_valid_move_coordinates(lyn, [lyn, bandit])
+    valids = fe_map.get_valid_move_coordinates(lyn, [lyn], [bandit])
 
     print(valids)
 

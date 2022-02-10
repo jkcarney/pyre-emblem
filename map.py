@@ -106,7 +106,7 @@ class Map:
 
         return attackable_units
 
-    def get_valid_move_coordinates(self, unit, all_units):
+    def get_valid_move_coordinates(self, unit, ally_units, enemy_units):
         """
         Retrieves all the tiles the unit could move to given their current position, movement stat, and movement class,
         as a set of tuples representing x y pairs
@@ -120,12 +120,12 @@ class Map:
         # The tile the unit is standing on is always assumed to be a valid move tile.
         valid_tiles = {(unit.x, unit.y)}
 
-        self.__calculate_tile__(unit.x + 1, unit.y, movement, terrain_group, 0, valid_tiles)
-        self.__calculate_tile__(unit.x - 1, unit.y, movement, terrain_group, 0, valid_tiles)
-        self.__calculate_tile__(unit.x, unit.y + 1, movement, terrain_group, 0, valid_tiles)
-        self.__calculate_tile__(unit.x, unit.y - 1, movement, terrain_group, 0, valid_tiles)
+        self.__calculate_tile__(unit.x + 1, unit.y, movement, terrain_group, 0, valid_tiles, enemy_units)
+        self.__calculate_tile__(unit.x - 1, unit.y, movement, terrain_group, 0, valid_tiles, enemy_units)
+        self.__calculate_tile__(unit.x, unit.y + 1, movement, terrain_group, 0, valid_tiles, enemy_units)
+        self.__calculate_tile__(unit.x, unit.y - 1, movement, terrain_group, 0, valid_tiles, enemy_units)
 
-        for u in all_units:
+        for u in ally_units + enemy_units:
             if u is not unit:
                 position = u.x,u.y
                 if position in valid_tiles:
@@ -133,7 +133,11 @@ class Map:
 
         return valid_tiles
 
-    def __calculate_tile__(self, x, y, movement, terrain_group, accumulated_cost, valid_tiles):
+    def __calculate_tile__(self, x, y, movement, terrain_group, accumulated_cost, valid_tiles, enemy_units):
+        for enemy in enemy_units:
+            if (enemy.x,enemy.y) == (x,y):
+                return
+
         accumulated_cost += self.grid[x][y].get_unit_cost(terrain_group)
 
         if accumulated_cost > movement:
@@ -147,7 +151,7 @@ class Map:
 
         valid_tiles.add((x, y))
 
-        self.__calculate_tile__(x + 1, y, movement, terrain_group, accumulated_cost, valid_tiles)
-        self.__calculate_tile__(x - 1, y, movement, terrain_group, accumulated_cost, valid_tiles)
-        self.__calculate_tile__(x, y + 1, movement, terrain_group, accumulated_cost, valid_tiles)
-        self.__calculate_tile__(x, y - 1, movement, terrain_group, accumulated_cost, valid_tiles)
+        self.__calculate_tile__(x + 1, y, movement, terrain_group, accumulated_cost, valid_tiles, enemy_units)
+        self.__calculate_tile__(x - 1, y, movement, terrain_group, accumulated_cost, valid_tiles, enemy_units)
+        self.__calculate_tile__(x, y + 1, movement, terrain_group, accumulated_cost, valid_tiles, enemy_units)
+        self.__calculate_tile__(x, y - 1, movement, terrain_group, accumulated_cost, valid_tiles, enemy_units)
