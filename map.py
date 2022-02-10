@@ -106,7 +106,7 @@ class Map:
 
         return attackable_units
 
-    def get_valid_move_coordinates(self, unit):
+    def get_valid_move_coordinates(self, unit, all_units):
         """
         Retrieves all the tiles the unit could move to given their current position, movement stat, and movement class,
         as a set of tuples representing x y pairs
@@ -124,6 +124,12 @@ class Map:
         self.__calculate_tile__(unit.x - 1, unit.y, movement, terrain_group, 0, valid_tiles)
         self.__calculate_tile__(unit.x, unit.y + 1, movement, terrain_group, 0, valid_tiles)
         self.__calculate_tile__(unit.x, unit.y - 1, movement, terrain_group, 0, valid_tiles)
+
+        for u in all_units:
+            if u is not unit:
+                position = u.x,u.y
+                if position in valid_tiles:
+                    valid_tiles.remove(position)
 
         return valid_tiles
 
