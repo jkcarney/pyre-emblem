@@ -131,9 +131,15 @@ class Map:
                 if position in valid_tiles:
                     valid_tiles.remove(position)
 
-        return valid_tiles
+        return list(valid_tiles)
 
     def __calculate_tile__(self, x, y, movement, terrain_group, accumulated_cost, valid_tiles, enemy_units):
+        if x < 0 or x >= self.x:
+            return
+
+        if y < 0 or y >= self.y:
+            return
+
         for enemy in enemy_units:
             if (enemy.x,enemy.y) == (x,y):
                 return
@@ -141,12 +147,6 @@ class Map:
         accumulated_cost += self.grid[x][y].get_unit_cost(terrain_group)
 
         if accumulated_cost > movement:
-            return
-
-        if x < 0 or x >= self.x:
-            return
-
-        if y < 0 or y >= self.y:
             return
 
         valid_tiles.add((x, y))

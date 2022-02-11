@@ -37,6 +37,9 @@ class Unit:
         else:
             self.con = feutils.job_constitution_table(self.job)
 
+    def __str__(self):
+        return self.name
+
     def equip_item(self, index):
         self.inventory[0], self.inventory[index] = self.inventory[index], self.inventory[0]
 
@@ -44,7 +47,7 @@ class Unit:
         atk_range = set()
 
         for i in self.inventory:
-            if item.item_type == ItemType.WEAPON or item.item_type == ItemType.TOME:
+            if i.item_type is ItemType.WEAPON or i.item_type is ItemType.TOME:
                 item_ranges = list(map(int, i.info['range'].split(',')))
                 for r in item_ranges:
                     atk_range.add(r)

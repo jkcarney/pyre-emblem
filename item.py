@@ -10,6 +10,9 @@ class Item:
 
         self.info = feutils.item_info_lookup(self.name, self.item_type)
 
+    def __str__(self):
+        return self.name
+
 
 def construct_unit_inventory(inventory_codes: list):
     inventory = []
