@@ -5,110 +5,122 @@ from map import Map
 from item import Item
 from player import Player, RandomPlayer
 from map_factory import OutdoorMapFactory
-import tkinter as tk
-import visual
+
+# Games will go up to not including TURN_LIMIT turns
+# (A turn is defined as one side moving all their units)
+TURN_LIMIT = 201
 
 
 class FireEmblem:
     def __init__(self, tile_map: Map, blue_team: list, red_team: list, blue_player: Player, red_player: Player):
         self.map = tile_map
-        self.allies = blue_team
-        self.enemies = red_team
-        self.ally_controller = blue_player
-        self.enemy_controller = red_player
+        self.blue_team = blue_team
+        self.red_team = red_team
+        self.blue_player = blue_player
+        self.red_player = red_player
+
         self.turn_count = 0
+        self.blue_victory = False
+        self.red_victory = False
 
-        self.loss_condition_encountered = False
-        self.win_condition_encountered = False
+        # Current unit is an index to the unit lists, not a unit object.
+        self.current_unit = 0
+        self.current_phase = 'Blue'
 
-    def player_phase(self):
-        for unit in self.allies:
-            new_coords = self.ally_controller.determine_move_coordinates(self.allies, self.enemies, self.map, unit)
-            unit.goto(new_coords[0], new_coords[1])
-            action_choice = self.ally_controller.determine_action(self.enemies, self.map, unit, unit.x, unit.y)
-            print(f"{unit.name} moved to coordinates {unit.x}, {unit.y} and chose {action_choice.name}")
-            if action_choice.is_attack():
-                # Defender in this case is from self.enemies
-                defender = action_choice.action_item
-                combat_stats = combat.get_combat_stats(unit, defender, self.map)
-                result = combat.simulate_combat(combat_stats)
-                print(f"\t {result.name}")
+    def step(self):
+        if self.current_phase == 'Blue':
+            self.__blue_phase()
+            self.current_unit += 1
 
-                if result is CombatResults.DEFENDER_DEATH:
-                    self.enemies.remove(defender)
-                    if not self.enemies:
-                        self.win_condition_encountered = True
+            if self.current_unit >= len(self.blue_team):
+                self.current_phase = 'Red'
+                self.current_unit = 0
+                self.turn_count += 1
 
-                elif result is CombatResults.ATTACKER_DEATH:
-                    if unit.terminal_condition:
-                        self.loss_condition_encountered = True
-                    self.allies.remove(unit)
+        elif self.current_phase == 'Red':
+            self.__red_phase()
+            self.current_unit += 1
 
-            elif action_choice.is_item():
-                item_to_use = action_choice.action_item
-                heal_amount = item_to_use.info['heal_amount']
-                unit.heal(heal_amount)
-                item_to_use.info['uses'] -= 1
-                if item_to_use.info['uses'] == 0:
-                    unit.inventory.remove(item_to_use)
+            if self.current_unit >= len(self.red_team):
+                self.current_phase = 'Blue'
+                self.current_unit = 0
+                self.turn_count += 1
 
-    def enemy_phase(self):
-        for unit in self.enemies:
-            new_coords = self.enemy_controller.determine_move_coordinates(self.enemies, self.allies, self.map, unit)
-            unit.goto(new_coords[0], new_coords[1])
-            action_choice = self.enemy_controller.determine_action(self.allies, self.map, unit, unit.x, unit.y)
-            print(f"{unit.name} moved to coordinates {unit.x}, {unit.y} and chose {action_choice.name}")
-            if action_choice.is_attack():
-                # Defender in this case is from self.allies
-                defender = action_choice.action_item
-                combat_stats = combat.get_combat_stats(unit, defender, self.map)
-                result = combat.simulate_combat(combat_stats)
-                print(f"\t {result.name}")
+        if self.turn_count == TURN_LIMIT:
+            self.red_victory = True
 
-                if result is CombatResults.DEFENDER_DEATH:
-                    if defender.terminal_condition:
-                        self.loss_condition_encountered = True
-                    self.allies.remove(defender)
+        if self.blue_victory:
+            return 1
+        if self.red_victory:
+            return -1
 
-                elif result is CombatResults.ATTACKER_DEATH:
-                    self.enemies.remove(unit)
-                    if not self.enemies:
-                        self.win_condition_encountered = True
+        return 0
 
-            elif action_choice.is_item():
-                item_to_use = action_choice.action_item
-                heal_amount = item_to_use.info['heal_amount']
-                unit.heal(heal_amount)
-                item_to_use.info['uses'] -= 1
-                if item_to_use.info['uses'] == 0:
-                    unit.inventory.remove(item_to_use)
+    def __blue_phase(self):
+        unit = self.blue_team[self.current_unit]
+        new_coords = self.blue_player.determine_move_coordinates(self.blue_team, self.red_team, self.map, unit)
+        unit.goto(new_coords[0], new_coords[1])
 
-            if self.win_condition_encountered:
-                return 1
-            elif self.loss_condition_encountered:
-                return -1
+        action_choice = self.blue_player.determine_action(self.red_team, self.map, unit, unit.x, unit.y)
+        print(f"{unit.name} moved to coordinates {unit.x}, {unit.y} and chose {action_choice.name}")
 
-    def run(self):
-        while not self.loss_condition_encountered and not self.win_condition_encountered:
-            self.turn_count += 1
-            print(f"Turn: {self.turn_count}")
+        if action_choice.is_attack():
+            # Defender in this case is from self.enemies
+            defender = action_choice.action_item
+            combat_stats = combat.get_combat_stats(unit, defender, self.map)
+            result = combat.simulate_combat(combat_stats)
+            print(f"\t {result.name}")
 
-            self.player_phase()
+            if result is CombatResults.DEFENDER_DEATH:
+                self.red_team.remove(defender)
+                if not self.red_team:
+                    self.blue_victory = True
 
-            if self.win_condition_encountered:
-                return 1
-            elif self.loss_condition_encountered:
-                return -1
+            elif result is CombatResults.ATTACKER_DEATH:
+                if unit.terminal_condition:
+                    self.red_victory = True
+                self.blue_team.remove(unit)
 
-            self.enemy_phase()
+        elif action_choice.is_item():
+            item_to_use = action_choice.action_item
+            heal_amount = item_to_use.info['heal_amount']
+            unit.heal(heal_amount)
+            item_to_use.info['uses'] -= 1
+            if item_to_use.info['uses'] == 0:
+                unit.inventory.remove(item_to_use)
 
-            if self.turn_count == 100:
-                self.loss_condition_encountered = True
+    def __red_phase(self):
+        unit = self.red_team[self.current_unit]
+        new_coords = self.red_player.determine_move_coordinates(self.red_team, self.blue_team, self.map, unit)
+        unit.goto(new_coords[0], new_coords[1])
 
-            if self.win_condition_encountered:
-                return 1
-            elif self.loss_condition_encountered:
-                return -1
+        action_choice = self.red_player.determine_action(self.blue_team, self.map, unit, unit.x, unit.y)
+        print(f"{unit.name} moved to coordinates {unit.x}, {unit.y} and chose {action_choice.name}")
+
+        if action_choice.is_attack():
+            # Defender in this case is from self.enemies
+            defender = action_choice.action_item
+            combat_stats = combat.get_combat_stats(unit, defender, self.map)
+            result = combat.simulate_combat(combat_stats)
+            print(f"\t {result.name}")
+
+            if result is CombatResults.DEFENDER_DEATH:
+                if unit.terminal_condition:
+                    self.red_victory = True
+                self.blue_team.remove(defender)
+
+            elif result is CombatResults.ATTACKER_DEATH:
+                self.red_team.remove(unit)
+                if not self.red_team:
+                    self.blue_victory = True
+
+        elif action_choice.is_item():
+            item_to_use = action_choice.action_item
+            heal_amount = item_to_use.info['heal_amount']
+            unit.heal(heal_amount)
+            item_to_use.info['uses'] -= 1
+            if item_to_use.info['uses'] == 0:
+                unit.inventory.remove(item_to_use)
 
 
 if __name__ == "__main__":
@@ -122,7 +134,11 @@ if __name__ == "__main__":
     allies = [lyn]
     enemies = [bandit]
 
+    result = 0
+
     game = FireEmblem(tile_map, allies, enemies, RandomPlayer(), RandomPlayer())
-    result = game.run()
+    while result == 0:
+        print(f'TURN {game.turn_count}')
+        result = game.step()
 
     print(f"Here's the result of the game: {result}")
