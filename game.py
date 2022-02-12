@@ -124,7 +124,6 @@ class FireEmblem:
 
 
 if __name__ == "__main__":
-
     map_factory = OutdoorMapFactory(10, 15, 10, 15)
     tile_map,number_tile_map = map_factory.generate_map()
 
