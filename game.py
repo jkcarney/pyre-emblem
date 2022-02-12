@@ -123,7 +123,6 @@ if __name__ == "__main__":
     enemies = [bandit]
 
     game = FireEmblem(tile_map, allies, enemies, RandomPlayer(), RandomPlayer())
-    viz = visual.BoardVisualization(tile_map.x, tile_map.y, number_tile_map, game)
     result = game.run()
 
     print(f"Here's the result of the game: {result}")
