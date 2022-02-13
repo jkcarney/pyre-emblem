@@ -8,7 +8,7 @@ from map_factory import OutdoorMapFactory
 
 # Games will go up to not including TURN_LIMIT turns
 # (A turn is defined as one side moving all their units)
-TURN_LIMIT = 201
+TURN_LIMIT = 101
 
 
 class FireEmblem:
@@ -35,7 +35,6 @@ class FireEmblem:
             if self.current_unit >= len(self.blue_team):
                 self.current_phase = 'Red'
                 self.current_unit = 0
-                self.turn_count += 1
 
         elif self.current_phase == 'Red':
             self.__red_phase()
