@@ -86,7 +86,7 @@ class BoardVisualization(tk.Tk):
 
 
 if __name__ == "__main__":
-    map_factory = OutdoorMapFactory(10, 15, 10, 15)
+    map_factory = OutdoorMapFactory(25, 25, 25, 25)
     tile_map,number_tile_map = map_factory.generate_map()
 
     lyn = Unit(0xceb4, 0, 0, 2, 0x0204, 17, 6, 8, 10, 6, 2, 0, 0, True, [0x1, 0x6b], True)
