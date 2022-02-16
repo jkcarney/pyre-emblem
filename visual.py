@@ -4,7 +4,7 @@ import time
 from map_factory import OutdoorMapFactory
 from unit import Unit
 from game import FireEmblem
-from player import Player, RandomPlayer
+from agent import Agent, RandomAgent
 
 
 class BoardVisualization(tk.Tk):
@@ -97,7 +97,7 @@ if __name__ == "__main__":
 
     result = 0
 
-    game = FireEmblem(tile_map, allies, enemies, RandomPlayer(), RandomPlayer())
+    game = FireEmblem(tile_map, allies, enemies, RandomAgent(), RandomAgent())
 
     board = BoardVisualization(tile_map.x, tile_map.y, number_tile_map, game)
     board.mainloop()

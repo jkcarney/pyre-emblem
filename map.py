@@ -51,7 +51,7 @@ class Map:
 
         return abs(x1 - x2) + abs(y1 - y2)
 
-    def valid_actions_at_position(self, unit, enemy_units, x, y):
+    def get_all_valid_actions(self, unit, enemy_units, all_move_coordinates):
         """
         Assuming unit was at coordinates x and y, what are the valid actions they could take?
 
@@ -63,23 +63,26 @@ class Map:
 
         :param enemy_units: The units who we will check to see if we can attack
         :param unit: The unit who's actions we are checking
-        :param x: The theoretical x position of the unit
-        :param y: The theoretical y position of the unit
-        :return: A list of actions the unit can take. ('Wait', and/or 'Item', and/or 'Attack')
+        :param all_move_coordinates: all the move coordinates the unit can move to
+        :return: A list of Actions the unit can take. ('Wait', and/or 'Item', and/or 'Attack'), with every
+        coordinate x and y
         """
-        valid_actions = [Action('Wait', None)]
+        valid_actions = []
 
-        all_consumables = unit.get_all_consumables()
-        for consumable in all_consumables:
-            valid_actions.append(Action('Item', consumable))
+        for x, y in all_move_coordinates:
+            valid_actions.append(Action('Wait', None, x, y))
 
-        attackable_units = self.get_attackable_units(unit, enemy_units, x, y)
-        for u in attackable_units:
-            valid_actions.append(Action('Attack', u))
+            all_consumables = unit.get_all_consumables()
+            for consumable in all_consumables:
+                valid_actions.append(Action('Item', consumable, x, y))
+
+            attackable_units = self.get_attackable_units(unit, enemy_units, x, y)
+            for u in attackable_units:
+                valid_actions.append(Action('Attack', u, x, y))
 
         return valid_actions
 
-    def get_attackable_units(self, unit, enemy_units: list, x = None, y = None):
+    def get_attackable_units(self, unit, enemy_units: list, x=None, y=None):
         """
         Gets all attackable units within range of unit.
 
@@ -111,6 +114,8 @@ class Map:
         Retrieves all the tiles the unit could move to given their current position, movement stat, and movement class,
         as a set of tuples representing x y pairs
 
+        :param enemy_units: list of Units that the unit is fighting (opposite team)
+        :param ally_units: list of Units that the unit is allied with (same team)
         :param unit: The unit who we are checking
         :return: A set of tuples that represent x y pairs
         """
@@ -127,7 +132,7 @@ class Map:
 
         for u in ally_units + enemy_units:
             if u is not unit:
-                position = u.x,u.y
+                position = u.x, u.y
                 if position in valid_tiles:
                     valid_tiles.remove(position)
 
@@ -141,7 +146,7 @@ class Map:
             return
 
         for enemy in enemy_units:
-            if (enemy.x,enemy.y) == (x,y):
+            if (enemy.x, enemy.y) == (x, y):
                 return
 
         accumulated_cost += self.grid[x][y].get_unit_cost(terrain_group)

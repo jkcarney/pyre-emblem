@@ -3,7 +3,7 @@ from unit import *
 from combat import *
 from map import Map
 from item import Item
-from player import Player, RandomPlayer
+from agent import Agent, RandomAgent
 from map_factory import OutdoorMapFactory
 
 # Games will go up to not including TURN_LIMIT turns
@@ -12,7 +12,7 @@ TURN_LIMIT = 101
 
 
 class FireEmblem:
-    def __init__(self, tile_map: Map, blue_team: list, red_team: list, blue_player: Player, red_player: Player):
+    def __init__(self, tile_map: Map, blue_team: list, red_team: list, blue_player: Agent, red_player: Agent):
         self.map = tile_map
         self.blue_team = blue_team
         self.red_team = red_team
@@ -57,10 +57,9 @@ class FireEmblem:
 
     def __blue_phase(self):
         unit = self.blue_team[self.current_unit]
-        new_coords = self.blue_player.determine_move_coordinates(self.blue_team, self.red_team, self.map, unit)
-        unit.goto(new_coords[0], new_coords[1])
-
-        action_choice = self.blue_player.determine_action(self.red_team, self.map, unit, unit.x, unit.y)
+        action_choice = self.blue_player.determine_action(self.blue_team, self.red_team, self.map, unit)
+        x, y = action_choice.x, action_choice.y
+        unit.goto(x, y)
         print(f"{unit.name} moved to coordinates {unit.x}, {unit.y} and chose {action_choice.name}")
 
         if action_choice.is_attack():
@@ -90,10 +89,9 @@ class FireEmblem:
 
     def __red_phase(self):
         unit = self.red_team[self.current_unit]
-        new_coords = self.red_player.determine_move_coordinates(self.red_team, self.blue_team, self.map, unit)
-        unit.goto(new_coords[0], new_coords[1])
-
-        action_choice = self.red_player.determine_action(self.blue_team, self.map, unit, unit.x, unit.y)
+        action_choice = self.red_player.determine_action(self.red_team, self.blue_team, self.map, unit)
+        x, y = action_choice.x, action_choice.y
+        unit.goto(x, y)
         print(f"{unit.name} moved to coordinates {unit.x}, {unit.y} and chose {action_choice.name}")
 
         if action_choice.is_attack():
@@ -134,7 +132,7 @@ if __name__ == "__main__":
 
     result = 0
 
-    game = FireEmblem(tile_map, allies, enemies, RandomPlayer(), RandomPlayer())
+    game = FireEmblem(tile_map, allies, enemies, RandomAgent(), RandomAgent())
     while result == 0:
         print(f'TURN {game.turn_count}')
         result = game.step()
