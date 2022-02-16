@@ -22,7 +22,7 @@ class FireEmblemEnvironment(gym.Env):
         self.map, self.number_map = self.map_factory.generate_map()
 
         self.turn_count = 0
-        self.turn_limit = 101
+        self.turn_limit = 100
         self.blue_victory = False
         self.red_victory = False
 
@@ -51,16 +51,16 @@ class FireEmblemEnvironment(gym.Env):
             self.red_victory = True
 
         done = False
-        reward = 0
+        reward = -self.turn_count
 
         # return observation, reward, done, info
         if self.red_victory:
             done = True
-            reward = -1
+            reward = -100
 
         if self.blue_victory:
             done = True
-            reward = 1
+            reward = 100
 
         return None, reward, done, {}
 
