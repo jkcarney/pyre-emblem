@@ -231,7 +231,7 @@ class FireEmblemEnvironment(gym.Env):
             # If the action is two, this represents the index of the enemy
             # unit to attack
         ])
-        self.observation_space = MultiDiscrete(self.map.x, self.map.y)
+        self.observation_space = MultiDiscrete([self.map.x, self.map.y])
 
     def render(self, mode="human"):
         pass
