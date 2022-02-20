@@ -101,7 +101,7 @@ class OutdoorMapFactory:
         self.x_min, self.x_max = x_min, x_max
         self.y_min, self.y_max = y_min, y_max
 
-        self.grass_water_factory = MapLayerFactory(5, 2, 7, 3, 8)
+        self.grass_water_factory = MapLayerFactory(3, 3, 7, 3, 7)
         self.forest_factory = MapLayerFactory(4, 2, 6, 4, 7)
         self.mountain_factory = MapLayerFactory(2, 3, 8, 3, 8)
 

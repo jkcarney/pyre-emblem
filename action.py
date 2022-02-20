@@ -4,9 +4,10 @@ class FEActionError(Exception):
 
 
 class Action:
-    def __init__(self, action_name, action_item):
+    def __init__(self, action_name, action_item, move_x, move_y):
         # if action_name != 'Attack' or action_name != 'Item' or action_name != 'Wait':
         #     raise FEActionError(f"Action was not of type Attack, Item, or Wait. Was: '{action_name}'")
+        # WHY DOES THIS BREAK EVERYTHING
 
         self.name = action_name
 
@@ -17,6 +18,8 @@ class Action:
             raise FEActionError('Item actions must also have an Item action item associated with them.')
 
         self.action_item = action_item
+        self.x = move_x
+        self.y = move_y
 
     def is_attack(self):
         return self.name == 'Attack'
@@ -30,5 +33,5 @@ class Action:
     def __str__(self):
         if self.action_item is None:
             return f"{self.name}"
-        return f"{self.name} - {self.action_item}"
+        return f"{self.x},{self.y} - {self.name} - {self.action_item}"
 

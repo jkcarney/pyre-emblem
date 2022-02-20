@@ -104,6 +104,9 @@ def calculate_triangle_bonus(attacker: Unit, defender: Unit):
         return weapon_triangle_bonus(attacker.inventory[0], defender.inventory[0])
     elif attacker.inventory[0].item_type == ItemType.TOME and defender.inventory[0].item_type == ItemType.TOME:
         return magic_triangle_bonus(attacker.inventory[0], defender.inventory[0])
+    else:
+        return 0, 0.0
+
 
 def calculate_crit_avoid(unit: Unit):
     """

@@ -3,8 +3,9 @@ from unit import *
 from combat import *
 from map import Map
 from item import Item
-from player import Player, RandomPlayer
+from agent import Agent, RandomAgent
 from map_factory import OutdoorMapFactory
+import unit_populator
 
 # Games will go up to not including TURN_LIMIT turns
 # (A turn is defined as one side moving all their units)
@@ -12,7 +13,7 @@ TURN_LIMIT = 101
 
 
 class FireEmblem:
-    def __init__(self, tile_map: Map, blue_team: list, red_team: list, blue_player: Player, red_player: Player):
+    def __init__(self, tile_map: Map, blue_team: list, red_team: list, blue_player: Agent, red_player: Agent):
         self.map = tile_map
         self.blue_team = blue_team
         self.red_team = red_team
@@ -33,6 +34,7 @@ class FireEmblem:
             self.current_unit += 1
 
             if self.current_unit >= len(self.blue_team):
+                print('-- RED PHASE --')
                 self.current_phase = 'Red'
                 self.current_unit = 0
 
@@ -44,6 +46,8 @@ class FireEmblem:
                 self.current_phase = 'Blue'
                 self.current_unit = 0
                 self.turn_count += 1
+                print('-- BLUE PHASE --')
+                print(f'-- TURN {self.turn_count} --')
 
         if self.turn_count == TURN_LIMIT:
             self.red_victory = True
@@ -57,10 +61,9 @@ class FireEmblem:
 
     def __blue_phase(self):
         unit = self.blue_team[self.current_unit]
-        new_coords = self.blue_player.determine_move_coordinates(self.blue_team, self.red_team, self.map, unit)
-        unit.goto(new_coords[0], new_coords[1])
-
-        action_choice = self.blue_player.determine_action(self.red_team, self.map, unit, unit.x, unit.y)
+        action_choice = self.blue_player.determine_action(self.blue_team, self.red_team, self.map, unit)
+        x, y = action_choice.x, action_choice.y
+        unit.goto(x, y)
         print(f"{unit.name} moved to coordinates {unit.x}, {unit.y} and chose {action_choice.name}")
 
         if action_choice.is_attack():
@@ -90,10 +93,9 @@ class FireEmblem:
 
     def __red_phase(self):
         unit = self.red_team[self.current_unit]
-        new_coords = self.red_player.determine_move_coordinates(self.red_team, self.blue_team, self.map, unit)
-        unit.goto(new_coords[0], new_coords[1])
-
-        action_choice = self.red_player.determine_action(self.blue_team, self.map, unit, unit.x, unit.y)
+        action_choice = self.red_player.determine_action(self.red_team, self.blue_team, self.map, unit)
+        x, y = action_choice.x, action_choice.y
+        unit.goto(x, y)
         print(f"{unit.name} moved to coordinates {unit.x}, {unit.y} and chose {action_choice.name}")
 
         if action_choice.is_attack():
@@ -123,20 +125,18 @@ class FireEmblem:
 
 
 if __name__ == "__main__":
-    map_factory = OutdoorMapFactory(10, 15, 10, 15)
+    map_factory = OutdoorMapFactory(15, 15, 15, 15)
     tile_map,number_tile_map = map_factory.generate_map()
 
-    lyn = Unit(0xceb4, 0, 0, 2, 0x0204, 17, 6, 8, 10, 6, 2, 0, 0, True, [0x1, 0x6b], True)
-    bandit = Unit(0xe9b8, 0, 1, 2, 0x1410, 21, 4, 1, 4, 0, 3, 0, 0, False, [0x1f], False)
+    print(tile_map)
 
-    allies = [lyn]
-    enemies = [bandit]
+    blue_team = unit_populator.generate_blue_team(tile_map)
+    red_team = unit_populator.generate_red_team(tile_map, blue_team)
 
     result = 0
 
-    game = FireEmblem(tile_map, allies, enemies, RandomPlayer(), RandomPlayer())
+    game = FireEmblem(tile_map, blue_team, red_team, RandomAgent(), RandomAgent())
     while result == 0:
-        print(f'TURN {game.turn_count}')
         result = game.step()
 
     print(f"Here's the result of the game: {result}")

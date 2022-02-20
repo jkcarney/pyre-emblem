@@ -1,3 +1,5 @@
+import random
+
 import feutils
 from action import Action
 
@@ -51,7 +53,7 @@ class Map:
 
         return abs(x1 - x2) + abs(y1 - y2)
 
-    def valid_actions_at_position(self, unit, enemy_units, x, y):
+    def get_all_valid_actions(self, unit, enemy_units, all_move_coordinates):
         """
         Assuming unit was at coordinates x and y, what are the valid actions they could take?
 
@@ -63,23 +65,26 @@ class Map:
 
         :param enemy_units: The units who we will check to see if we can attack
         :param unit: The unit who's actions we are checking
-        :param x: The theoretical x position of the unit
-        :param y: The theoretical y position of the unit
-        :return: A list of actions the unit can take. ('Wait', and/or 'Item', and/or 'Attack')
+        :param all_move_coordinates: all the move coordinates the unit can move to
+        :return: A list of Actions the unit can take. ('Wait', and/or 'Item', and/or 'Attack'), with every
+        coordinate x and y
         """
-        valid_actions = [Action('Wait', None)]
+        valid_actions = []
 
-        all_consumables = unit.get_all_consumables()
-        for consumable in all_consumables:
-            valid_actions.append(Action('Item', consumable))
+        for x, y in all_move_coordinates:
+            valid_actions.append(Action('Wait', None, x, y))
 
-        attackable_units = self.get_attackable_units(unit, enemy_units, x, y)
-        for u in attackable_units:
-            valid_actions.append(Action('Attack', u))
+            all_consumables = unit.get_all_consumables()
+            for consumable in all_consumables:
+                valid_actions.append(Action('Item', consumable, x, y))
+
+            attackable_units = self.get_attackable_units(unit, enemy_units, x, y)
+            for u in attackable_units:
+                valid_actions.append(Action('Attack', u, x, y))
 
         return valid_actions
 
-    def get_attackable_units(self, unit, enemy_units: list, x = None, y = None):
+    def get_attackable_units(self, unit, enemy_units: list, x=None, y=None):
         """
         Gets all attackable units within range of unit.
 
@@ -111,6 +116,8 @@ class Map:
         Retrieves all the tiles the unit could move to given their current position, movement stat, and movement class,
         as a set of tuples representing x y pairs
 
+        :param enemy_units: list of Units that the unit is fighting (opposite team)
+        :param ally_units: list of Units that the unit is allied with (same team)
         :param unit: The unit who we are checking
         :return: A set of tuples that represent x y pairs
         """
@@ -127,7 +134,7 @@ class Map:
 
         for u in ally_units + enemy_units:
             if u is not unit:
-                position = u.x,u.y
+                position = u.x, u.y
                 if position in valid_tiles:
                     valid_tiles.remove(position)
 
@@ -141,7 +148,7 @@ class Map:
             return
 
         for enemy in enemy_units:
-            if (enemy.x,enemy.y) == (x,y):
+            if (enemy.x, enemy.y) == (x, y):
                 return
 
         accumulated_cost += self.grid[x][y].get_unit_cost(terrain_group)
@@ -155,3 +162,87 @@ class Map:
         self.__calculate_tile__(x - 1, y, movement, terrain_group, accumulated_cost, valid_tiles, enemy_units)
         self.__calculate_tile__(x, y + 1, movement, terrain_group, accumulated_cost, valid_tiles, enemy_units)
         self.__calculate_tile__(x, y - 1, movement, terrain_group, accumulated_cost, valid_tiles, enemy_units)
+
+    def set_red_unit_start_coordinates(self, red_unit, red_team, blue_team):
+        candidate_coordinates = []
+        terrain_group = red_unit.terrain_group
+        for i in range(self.x):
+            for j in range(self.y):
+                terrain_cost = self.grid[i][j].get_unit_cost(terrain_group)
+                if terrain_cost != 999:
+                    candidate_coordinates.append((i, j))
+
+        for unit in red_team:
+            coords = (unit.x, unit.y)
+            if coords in candidate_coordinates:
+                candidate_coordinates.remove(coords)
+
+        for unit in blue_team:
+            coords = (unit.x, unit.y)
+            if coords in candidate_coordinates:
+                candidate_coordinates.remove(coords)
+
+        chosen_coord = random.choice(candidate_coordinates)
+        red_unit.goto(chosen_coord[0], chosen_coord[1])
+
+    def __get_valid_corners(self):
+        all_corners = [
+            (0, 0),
+            (0, self.y - 1),
+            (self.x - 1, self.y - 1),
+            (self.x - 1, 0)
+        ]
+
+        valid_corners = []
+
+        for coordinates in all_corners:
+            terrain_cost = self.grid[coordinates[0]][coordinates[1]].get_unit_cost("Foot")
+            if terrain_cost != 999:
+                valid_corners.append(coordinates)
+
+        return valid_corners
+
+    def __get_N_closest_tiles(self, starting_point, n):
+        closest = set()
+        x, y = starting_point
+
+        self.__recurse_on_tiles(x + 1, y, closest, n, 0)
+        self.__recurse_on_tiles(x - 1, y, closest, n, 0)
+        self.__recurse_on_tiles(x, y + 1, closest, n, 0)
+        self.__recurse_on_tiles(x, y - 1, closest, n, 0)
+
+        return list(closest)
+
+    def __recurse_on_tiles(self, x, y, closest_tiles, n, length):
+        if x < 0 or x >= self.x:
+            return
+
+        if y < 0 or y >= self.y:
+            return
+
+        if length >= n:
+            return
+
+        # Limit valid starting coordinates to standable tiles for any unit, aka foot units
+        cost = self.grid[x][y].get_unit_cost("Foot")
+        if cost == 999:
+            return
+
+        closest_tiles.add((x, y))
+        length += 1
+
+        self.__recurse_on_tiles(x + 1, y, closest_tiles, n, length)
+        self.__recurse_on_tiles(x - 1, y, closest_tiles, n, length)
+        self.__recurse_on_tiles(x, y + 1, closest_tiles, n, length)
+        self.__recurse_on_tiles(x, y - 1, closest_tiles, n, length)
+
+    def set_all_blue_start_coordinates(self, terminal_unit, blue_team):
+        starting_point = random.choice(self.__get_valid_corners())
+        print(f'---{starting_point[0]}, {starting_point[1]}---')
+        terminal_unit.goto(starting_point[0], starting_point[1])
+        starting_coordinates = self.__get_N_closest_tiles(starting_point, len(blue_team) + 2)
+
+        for unit in blue_team:
+            starting_x, starting_y = random.choice(starting_coordinates)
+            unit.goto(starting_x, starting_y)
+            starting_coordinates.remove((starting_x, starting_y))
