@@ -8,24 +8,34 @@ from map_factory import OutdoorMapFactory
 import combat
 import map
 import item
+import unit_populator
+
 
 def action_in_valids(action, valid_actions):
     return np.any(np.all(action == valid_actions, axis=1))
 
 
 if __name__ == "__main__":
-    lyn = Unit(0xceb4, 0, 0, 2, 0x0204, 17, 6, 8, 10, 6, 2, 0, 0, True, [0x1, 0x6b], True)
-    bandit = Unit(0xe9b8, 0, 1, 2, 0x1410, 21, 4, 1, 4, 0, 3, 0, 0, False, [0x1f], False)
-    env = gym.make('fe_env:fe-env-v0', blue_team=[lyn], red_team=[bandit])
-    for _ in range(1000):
+
+    env = gym.make('fe_env:fe-env-v0')
+    env.reset()
+
+    terminal = False
+
+    while not terminal:
         valid = False
         random_action = env.action_space.sample()
         all_valid_actions = env.unwrapped.get_valid_actions_in_state()
+
         while not valid:
             if action_in_valids(random_action, all_valid_actions):
                 valid = True
-            random_action = env.action_space.sample()
-        env.step(random_action)
+            else:
+                random_action = env.action_space.sample()
+
+
+        _, _, terminal, _ = env.step(random_action)
+
     env.close()
 
 

@@ -5,6 +5,7 @@ from map_factory import OutdoorMapFactory
 from unit import Unit
 from game import FireEmblem
 from agent import Agent, RandomAgent
+import unit_populator
 
 
 class BoardVisualization(tk.Tk):
@@ -89,11 +90,11 @@ if __name__ == "__main__":
     map_factory = OutdoorMapFactory(15, 15, 15, 15)
     tile_map,number_tile_map = map_factory.generate_map()
 
-    lyn = Unit(0xceb4, 0, 0, 2, 0x0204, 17, 6, 8, 10, 6, 2, 0, 0, True, [0x1, 0x6b], True)
-    bandit = Unit(0xe9b8, 0, 1, 2, 0x1410, 21, 4, 1, 4, 0, 3, 0, 0, False, [0x1f], False)
+    #lyn = Unit(0xceb4, 0, 0, 2, 0x0204, 17, 6, 8, 10, 6, 2, 0, 0, True, [0x1, 0x6b], True)
+    #bandit = Unit(0xe9b8, 0, 1, 2, 0x1410, 21, 4, 1, 4, 0, 3, 0, 0, False, [0x1f], False)
 
-    allies = [lyn]
-    enemies = [bandit]
+    allies = unit_populator.generate_blue_team(tile_map)
+    enemies = unit_populator.generate_red_team(tile_map, allies)
 
     result = 0
 

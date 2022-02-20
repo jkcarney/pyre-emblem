@@ -9,19 +9,20 @@ import map
 from action import Action
 import combat
 from combat import CombatResults, CombatSummary
+import unit_populator
 
 
 class FireEmblemEnvironment(gym.Env):
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, blue_team: list, red_team: list):
+    def __init__(self):
         super(FireEmblemEnvironment, self).__init__()
-
-        self.blue_team = blue_team
-        self.red_team = red_team
 
         self.map_factory = map_factory.OutdoorMapFactory(15, 20, 15, 20)
         self.map, self.number_map = self.map_factory.generate_map()
+
+        self.blue_team = unit_populator.generate_blue_team(self.map)
+        self.red_team = unit_populator.generate_red_team(self.map, self.blue_team)
 
         self.turn_count = 0
         self.turn_limit = 100
@@ -36,7 +37,7 @@ class FireEmblemEnvironment(gym.Env):
             self.map.x,  # represents x coordinate of move
             self.map.y,  # represents y coordinate of move
             3,  # represents either Wait(0), Item(1), or Attack(2)
-            max(5, len(blue_team), len(red_team))  # represents the action item of the action above.
+            max(5, len(self.blue_team), len(self.red_team))  # represents the action item of the action above.
             # if the action is zero, then this argument doesn't matter.
             # If the action is one, this represents the index of the item to use
             # If the action is two, this represents the index of the enemy
@@ -58,14 +59,14 @@ class FireEmblemEnvironment(gym.Env):
 
         if self.current_phase == 'Blue':
             if action_name == 'Attack':
-                action_item = self.blue_team[raw_action[3]]
+                action_item = self.red_team[raw_action[3]]
             elif action_name == 'Item':
                 action_item = self.blue_team[self.current_unit].inventory[raw_action[3]]
             else:
                 action_item = None
         else:
             if action_name == 'Attack':
-                action_item = self.red_team[raw_action[3]]
+                action_item = self.blue_team[raw_action[3]]
             elif action_name == 'Item':
                 action_item = self.red_team[self.current_unit].inventory[raw_action[3]]
             else:
@@ -151,6 +152,7 @@ class FireEmblemEnvironment(gym.Env):
         unit = self.blue_team[self.current_unit]
         x, y = action_choice.x, action_choice.y
         unit.goto(x, y)
+        print(f"{unit.name} moved to coordinates {unit.x}, {unit.y} and chose {action_choice.name}")
 
         if action_choice.is_attack():
             # Defender in this case is from self.enemies
@@ -181,6 +183,7 @@ class FireEmblemEnvironment(gym.Env):
         unit = self.red_team[self.current_unit]
         x, y = action_choice.x, action_choice.y
         unit.goto(x, y)
+        print(f"{unit.name} moved to coordinates {unit.x}, {unit.y} and chose {action_choice.name}")
 
         if action_choice.is_attack():
             # Defender in this case is from self.enemies
@@ -208,9 +211,11 @@ class FireEmblemEnvironment(gym.Env):
                 unit.inventory.remove(item_to_use)
 
     def reset(self):
-        super().reset()
-        # Units?
+        self.map_factory = map_factory.OutdoorMapFactory(15, 20, 15, 20)
         self.map, self.number_map = self.map_factory.generate_map()
+
+        self.blue_team = unit_populator.generate_blue_team(self.map)
+        self.red_team = unit_populator.generate_red_team(self.map, self.blue_team)
 
         self.turn_count = 0
         self.blue_victory = False

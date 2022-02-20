@@ -1,3 +1,5 @@
+import random
+
 import feutils
 from action import Action
 
@@ -160,3 +162,87 @@ class Map:
         self.__calculate_tile__(x - 1, y, movement, terrain_group, accumulated_cost, valid_tiles, enemy_units)
         self.__calculate_tile__(x, y + 1, movement, terrain_group, accumulated_cost, valid_tiles, enemy_units)
         self.__calculate_tile__(x, y - 1, movement, terrain_group, accumulated_cost, valid_tiles, enemy_units)
+
+    def set_red_unit_start_coordinates(self, red_unit, red_team, blue_team):
+        candidate_coordinates = []
+        terrain_group = red_unit.terrain_group
+        for i in range(self.x):
+            for j in range(self.y):
+                terrain_cost = self.grid[i][j].get_unit_cost(terrain_group)
+                if terrain_cost != 999:
+                    candidate_coordinates.append((i, j))
+
+        for unit in red_team:
+            coords = (unit.x, unit.y)
+            if coords in candidate_coordinates:
+                candidate_coordinates.remove(coords)
+
+        for unit in blue_team:
+            coords = (unit.x, unit.y)
+            if coords in candidate_coordinates:
+                candidate_coordinates.remove(coords)
+
+        chosen_coord = random.choice(candidate_coordinates)
+        red_unit.goto(chosen_coord[0], chosen_coord[1])
+
+    def __get_valid_corners(self):
+        all_corners = [
+            (0, 0),
+            (0, self.y - 1),
+            (self.x - 1, self.y - 1),
+            (self.x - 1, 0)
+        ]
+
+        valid_corners = []
+
+        for coordinates in all_corners:
+            terrain_cost = self.grid[coordinates[0]][coordinates[1]].get_unit_cost("Foot")
+            if terrain_cost != 999:
+                valid_corners.append(coordinates)
+
+        return valid_corners
+
+    def __get_N_closest_tiles(self, starting_point, n):
+        closest = set()
+        x, y = starting_point
+
+        self.__recurse_on_tiles(x + 1, y, closest, n, 0)
+        self.__recurse_on_tiles(x - 1, y, closest, n, 0)
+        self.__recurse_on_tiles(x, y + 1, closest, n, 0)
+        self.__recurse_on_tiles(x, y - 1, closest, n, 0)
+
+        return list(closest)
+
+    def __recurse_on_tiles(self, x, y, closest_tiles, n, length):
+        if x < 0 or x >= self.x:
+            return
+
+        if y < 0 or y >= self.y:
+            return
+
+        if length >= n:
+            return
+
+        # Limit valid starting coordinates to standable tiles for any unit, aka foot units
+        cost = self.grid[x][y].get_unit_cost("Foot")
+        if cost == 999:
+            return
+
+        closest_tiles.add((x, y))
+        length += 1
+
+        self.__recurse_on_tiles(x + 1, y, closest_tiles, n, length)
+        self.__recurse_on_tiles(x - 1, y, closest_tiles, n, length)
+        self.__recurse_on_tiles(x, y + 1, closest_tiles, n, length)
+        self.__recurse_on_tiles(x, y - 1, closest_tiles, n, length)
+
+    def set_all_blue_start_coordinates(self, terminal_unit, blue_team):
+        starting_point = random.choice(self.__get_valid_corners())
+        print(f'---{starting_point[0]}, {starting_point[1]}---')
+        terminal_unit.goto(starting_point[0], starting_point[1])
+        starting_coordinates = self.__get_N_closest_tiles(starting_point, len(blue_team) + 2)
+
+        for unit in blue_team:
+            starting_x, starting_y = random.choice(starting_coordinates)
+            unit.goto(starting_x, starting_y)
+            starting_coordinates.remove((starting_x, starting_y))

@@ -58,7 +58,7 @@
   "Flux": {
     "range": "1,2",
     "weight": 8,
-    "might": "7",
+    "might": 7,
     "hit": 0.80,
     "crit": 0.0,
     "enum_type": 2
@@ -66,7 +66,7 @@
   "Luna": {
     "range": "1,2",
     "weight": 12,
-    "might": "0",
+    "might": 0,
     "hit": 0.95,
     "crit": 0.20,
     "enum_type": 2
@@ -74,7 +74,7 @@
   "Nosferatu": {
     "range": "1,2",
     "weight": 14,
-    "might": "10",
+    "might": 10,
     "hit": 0.70,
     "crit": 0.0,
     "enum_type": 2
@@ -82,7 +82,7 @@
   "Fenrir": {
     "range": "1,2",
     "weight": 18,
-    "might": "15",
+    "might": 15,
     "hit": 0.70,
     "crit": 0.0,
     "enum_type": 2
@@ -90,7 +90,7 @@
   "Gespenst": {
     "range": "1,2",
     "weight": 20,
-    "might": "23",
+    "might": 23,
     "hit": 0.80,
     "crit": 0.0,
     "enum_type": 2
@@ -98,7 +98,7 @@
   "Ereshkigal": {
     "range": "1,2",
     "weight": 12,
-    "might": "20",
+    "might": 20,
     "hit": 0.95,
     "crit": 0.0,
     "enum_type": 2
