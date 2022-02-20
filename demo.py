@@ -33,7 +33,6 @@ if __name__ == "__main__":
             else:
                 random_action = env.action_space.sample()
 
-
         _, _, terminal, _ = env.step(random_action)
 
     env.close()

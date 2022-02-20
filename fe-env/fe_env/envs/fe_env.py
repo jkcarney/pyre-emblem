@@ -18,7 +18,7 @@ class FireEmblemEnvironment(gym.Env):
     def __init__(self):
         super(FireEmblemEnvironment, self).__init__()
 
-        self.map_factory = map_factory.OutdoorMapFactory(15, 20, 15, 20)
+        self.map_factory = map_factory.OutdoorMapFactory(15, 15, 15, 15)
         self.map, self.number_map = self.map_factory.generate_map()
 
         self.blue_team = unit_populator.generate_blue_team(self.map)
@@ -84,6 +84,7 @@ class FireEmblemEnvironment(gym.Env):
             if self.current_unit >= len(self.blue_team):
                 self.current_phase = 'Red'
                 self.current_unit = 0
+                print('-- RED PHASE --')
 
         elif self.current_phase == 'Red':
             self.__red_phase(action)
@@ -93,6 +94,8 @@ class FireEmblemEnvironment(gym.Env):
                 self.current_phase = 'Blue'
                 self.current_unit = 0
                 self.turn_count += 1
+                print(f'-- TURN {self.turn_count} --')
+                print('-- BLUE PHASE --')
 
         if self.turn_count == self.turn_limit:
             self.red_victory = True
@@ -193,7 +196,7 @@ class FireEmblemEnvironment(gym.Env):
             print(f"\t {result.name}")
 
             if result is CombatResults.DEFENDER_DEATH:
-                if unit.terminal_condition:
+                if defender.terminal_condition:
                     self.red_victory = True
                 self.blue_team.remove(defender)
 
