@@ -42,6 +42,18 @@ class BoardVisualization(tk.Tk):
         self.tiles = {}
         self.ovals = {}
 
+        self.reset_btn = tk.Button(self, text="Reset", command=self.reset_button_callback)
+        self.reset_btn.pack()
+
+    def reset_button_callback(self):
+        self.env.reset()
+        self.tile_map = self.env.unwrapped.number_map
+        self.rows = self.env.unwrapped.map.x
+        self.columns = self.env.unwrapped.map.y
+        self.redraw()
+        self.update()
+        self.advance.configure(state=tk.ACTIVE)
+
     def advance_button_callback(self):
         terminal = False
         if self.do_loop.get() == 1:

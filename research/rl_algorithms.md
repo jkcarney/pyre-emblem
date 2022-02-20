@@ -1,6 +1,6 @@
 # Enviornment
 
-> "god punished me by giving an important RL component the name 'environment' when i cannot f****** spell enviornment to save my life"
+> "god punished me by giving an important RL component the name 'environment' when i cannot spell enviornment to save my life"
 > 
 -me, 2022
 
@@ -21,6 +21,35 @@ There are a few components of the environment that we need to keep track of that
 5. **Misc**: The game also keeps track of misc things, such as which unit is next to act, which phase we are currently on (blue or red), and whether or not the blue or red team encountered their win condition. 
 
 
+---
+
+OpenAI Gym requires a few methods and fields be populated by subclasses of the Env, as well as some extra ones. 
+
+- `action_space` - defines the set of all valid actions within the enviornment. This is interesting because while all actions can be valid, certain actions are only valid in certain states (ie, a unit can only move to certain tiles given their movement and movement class). How do we define this?
+  - This is a bit of an open problem as is, but for now, let's just define the action_space as the set of *all* potential actions and then filter the ones that are not valid. 
+  
+  1. action_space[0] - represents the potential x coordinate that a unit can move to. Range varies per map; [0, map.x)
+  2. action_space[1] - represents the potential y coordinate that a unit can move to. Range varies per map; [0, map.y)
+  3. action_space[2] - represents the action that a unit could take. This is either Wait (0), Item (1), or Attack (2); [0, 3)
+  4. action_space[3] - represents the action item of the associated action. This one is the most complex.
+        - If action_space[2] is 0, then this number doesn't matter; will usually be 0.
+        - If action_space[2] is 1, this represents the index of an item in the current_unit's inventory to be used.
+        - If action_space[3] is 2, then this represents the index of the enemy unit that will be attacked. 
+
+
+```python
+self.action_space = MultiDiscrete([
+        self.map.x, 
+        self.map.y,
+        3,
+        max(5, len(self.blue_team), len(self.red_team))
+    ])
+```
+
+- `self.reward_range` - defines the range of poential rewards that an agent can receive from the enviornment. 
+- `def step(self, action)` - 'Steps' the environment through a timestep, with the given action from the agent. This represents one unit taking an action as defined above. 
+- `def reset(self)` - Resets the environment. This creates a new map, generates new units, and redefines the action space (since the map could have changed x and y)
+- There are optional methods, `close()` and `render()` We don't neccessaraily have to worry about these methods because any rendering will be handled in tkinter, and we don't have additional resources to close in close. 
 
 
 ### References
