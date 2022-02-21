@@ -18,24 +18,38 @@ def action_in_valids(action, valid_actions):
 if __name__ == "__main__":
 
     env = gym.make('fe_env:fe-env-v0')
-    env.reset()
 
-    terminal = False
+    reward = 0
 
-    while not terminal:
-        valid = False
-        random_action = env.action_space.sample()
-        all_valid_actions = env.unwrapped.get_valid_actions_in_state()
+    blue_wins = 0
+    red_wins = 0
 
-        while not valid:
-            if action_in_valids(random_action, all_valid_actions):
-                valid = True
-            else:
-                random_action = env.action_space.sample()
+    for x in range(100):
+        print(f'=== Game {x} ===')
+        env.reset()
 
-        _, _, terminal, _ = env.step(random_action)
+        terminal = False
+
+        while not terminal:
+            valid = False
+            random_action = env.action_space.sample()
+            all_valid_actions = env.unwrapped.get_valid_actions_in_state()
+
+            while not valid:
+                if action_in_valids(random_action, all_valid_actions):
+                    valid = True
+                else:
+                    random_action = env.action_space.sample()
+
+            _, reward, terminal, _ = env.step(random_action)
+
+        if reward == 100:
+            blue_wins += 1
+        elif reward == -100:
+            red_wins += 1
 
     env.close()
+    print(f'Blue Wins: {blue_wins} | Red Wins: {red_wins}')
 
 
 

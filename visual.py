@@ -5,6 +5,7 @@ import numpy as np
 from PIL import Image, ImageTk
 
 from map_factory import OutdoorMapFactory
+from item_type import WeaponType, ItemType, TomeType
 from unit import Unit
 from game import FireEmblem
 from agent import Agent, RandomAgent
@@ -14,6 +15,29 @@ import unit_populator
 def action_in_valids(action, valid_actions):
     return np.any(np.all(action == valid_actions, axis=1))
 
+
+def determine_weapon(team, item):
+    item_type = item.item_type
+
+    if item_type == ItemType.WEAPON:
+        item_enum = WeaponType(item.info['enum_type'])
+        if item_enum == WeaponType.SWORD:
+            return team + '_sword.png'
+        elif item_enum == WeaponType.LANCE:
+            return team + '_lance.png'
+        elif item_enum == WeaponType.AXE:
+            return team + '_axe.png'
+        elif item_enum == WeaponType.BOW:
+            return team + '_bow.png'
+
+    elif item_type == ItemType.TOME:
+        item_enum = TomeType(item.info['enum_type'])
+        if item_enum == TomeType.ANIMA:
+            return team + '_anima.png'
+        elif item_enum == TomeType.DARK:
+            return team + '_dark.png'
+        elif item_enum == TomeType.LIGHT:
+            return team + '_white.png'
 
 class BoardVisualization(tk.Tk):
     def __init__(self):
@@ -41,6 +65,8 @@ class BoardVisualization(tk.Tk):
         self.columns = self.env.unwrapped.map.y
         self.tiles = {}
         self.ovals = {}
+        self.photos = {}
+        self.images = {}
 
         self.reset_btn = tk.Button(self, text="Reset", command=self.reset_button_callback)
         self.reset_btn.pack()
@@ -94,8 +120,10 @@ class BoardVisualization(tk.Tk):
         self.canvas.delete("rect")
         self.canvas.delete("blueteam")
         self.canvas.delete("redteam")
+
         cellwidth = int(self.canvas.winfo_width()/self.columns/1.2)
         cellheight = int(self.canvas.winfo_height()/self.columns/1.2)
+
         for row in range(self.rows):
             for column in range(self.columns):
                 x1 = row * cellwidth
@@ -111,8 +139,16 @@ class BoardVisualization(tk.Tk):
             x2 = x1 + cellwidth
             y1 = y * cellheight
             y2 = y1 + cellheight
-            oval = self.canvas.create_oval(x1 + 5, y1 + 5, x2 - 5, y2 - 5, outline="navy", fill="cyan", tags="blueteam")
-            self.ovals[x, y] = oval
+
+            path = determine_weapon('images/icons/blue', blue_unit.inventory[0])
+            p = ImageTk.PhotoImage(Image.open(path).resize((cellwidth, cellheight), resample=Image.NEAREST))
+            i = self.canvas.create_image(x1, y1, anchor=tk.NW, image=p, tags="blueteam")
+            # if blue_unit.terminal_condition:
+            #     oval = self.canvas.create_oval(x1 + 5, y1 + 5, x2 - 5, y2 - 5, outline="orange", fill="cyan", tags="blueteam")
+            # else:
+            #     oval = self.canvas.create_oval(x1 + 5, y1 + 5, x2 - 5, y2 - 5, outline="navy", fill="cyan", tags="blueteam")
+            self.photos[x, y] = p
+            self.images[x, y] = i
 
         for red_unit in self.env.unwrapped.red_team:
             x, y = red_unit.x, red_unit.y
@@ -120,8 +156,14 @@ class BoardVisualization(tk.Tk):
             x2 = x1 + cellwidth
             y1 = y * cellheight
             y2 = y1 + cellheight
-            oval = self.canvas.create_oval(x1 + 5, y1 + 5, x2 - 5, y2 - 5, outline="maroon", fill="red", tags="redteam")
-            self.ovals[x, y] = oval
+
+            path = determine_weapon('images/icons/red', red_unit.inventory[0])
+            p = ImageTk.PhotoImage(Image.open(path).resize((cellwidth, cellheight), resample=Image.NEAREST))
+            i = self.canvas.create_image(x1, y1, anchor=tk.NW, image=p, tags="redteam")
+            # oval = self.canvas.create_oval(x1 + 5, y1 + 5, x2 - 5, y2 - 5, outline="maroon", fill="red", tags="redteam")
+            # self.ovals[x, y] = oval
+            self.photos[x, y] = p
+            self.images[x, y] = i
 
 
 if __name__ == "__main__":

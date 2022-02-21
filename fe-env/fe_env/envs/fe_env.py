@@ -101,7 +101,7 @@ class FireEmblemEnvironment(gym.Env):
             self.red_victory = True
 
         done = False
-        reward = -self.turn_count
+        reward = 0
 
         # return observation, reward, done, info
         if self.red_victory:
