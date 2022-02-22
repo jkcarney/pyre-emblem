@@ -7,7 +7,6 @@ from PIL import Image, ImageTk
 from map_factory import OutdoorMapFactory
 from item_type import WeaponType, ItemType, TomeType
 from unit import Unit
-from game import FireEmblem
 from agent import Agent, RandomAgent
 import unit_populator
 
@@ -38,6 +37,7 @@ def determine_weapon(team, item):
             return team + '_dark.png'
         elif item_enum == TomeType.LIGHT:
             return team + '_white.png'
+
 
 class BoardVisualization(tk.Tk):
     def __init__(self):
@@ -141,12 +141,8 @@ class BoardVisualization(tk.Tk):
             y2 = y1 + cellheight
 
             path = determine_weapon('images/icons/blue', blue_unit.inventory[0])
-            p = ImageTk.PhotoImage(Image.open(path).resize((cellwidth, cellheight), resample=Image.NEAREST))
+            p = ImageTk.PhotoImage(Image.open(path).resize((cellwidth, cellheight), resample=Image.BILINEAR))
             i = self.canvas.create_image(x1, y1, anchor=tk.NW, image=p, tags="blueteam")
-            # if blue_unit.terminal_condition:
-            #     oval = self.canvas.create_oval(x1 + 5, y1 + 5, x2 - 5, y2 - 5, outline="orange", fill="cyan", tags="blueteam")
-            # else:
-            #     oval = self.canvas.create_oval(x1 + 5, y1 + 5, x2 - 5, y2 - 5, outline="navy", fill="cyan", tags="blueteam")
             self.photos[x, y] = p
             self.images[x, y] = i
 
@@ -158,10 +154,8 @@ class BoardVisualization(tk.Tk):
             y2 = y1 + cellheight
 
             path = determine_weapon('images/icons/red', red_unit.inventory[0])
-            p = ImageTk.PhotoImage(Image.open(path).resize((cellwidth, cellheight), resample=Image.NEAREST))
+            p = ImageTk.PhotoImage(Image.open(path).resize((cellwidth, cellheight), resample=Image.BILINEAR))
             i = self.canvas.create_image(x1, y1, anchor=tk.NW, image=p, tags="redteam")
-            # oval = self.canvas.create_oval(x1 + 5, y1 + 5, x2 - 5, y2 - 5, outline="maroon", fill="red", tags="redteam")
-            # self.ovals[x, y] = oval
             self.photos[x, y] = p
             self.images[x, y] = i
 

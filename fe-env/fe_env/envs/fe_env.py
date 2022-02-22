@@ -114,7 +114,7 @@ class FireEmblemEnvironment(gym.Env):
 
         return None, reward, done, {}
 
-    def get_valid_actions_in_state(self):
+    def get_valid_actions_in_state(self, encode=True):
         if self.current_phase == 'Blue':
             unit = self.blue_team[self.current_unit]
             valid_coordinates = self.map.get_valid_move_coordinates(unit, self.blue_team, self.red_team)
@@ -124,32 +124,39 @@ class FireEmblemEnvironment(gym.Env):
             valid_coordinates = self.map.get_valid_move_coordinates(unit, self.red_team, self.blue_team)
             non_encoded_moves = self.map.get_all_valid_actions(unit, self.blue_team, valid_coordinates)
 
-        return self.encode_moves(non_encoded_moves)
+        if encode:
+            return self.encode_moves(non_encoded_moves)
+        else:
+            return non_encoded_moves
 
     def encode_moves(self, non_encoded_moves):
         encoded_moves = []
 
         for move in non_encoded_moves:
-            encoded_name = self.__action_name_to_num(move.name)
-            x, y = move.x, move.y
-            if move.name == 'Attack':
-                if self.current_phase == 'Blue':
-                    encoded_action_item = self.red_team.index(move.action_item)
-                else:
-                    encoded_action_item = self.blue_team.index(move.action_item)
-
-            elif move.name == 'Item':
-                if self.current_phase == 'Blue':
-                    encoded_action_item = self.blue_team[self.current_unit].inventory.index(move.action_item)
-                else:
-                    encoded_action_item = self.red_team[self.current_unit].inventory.index(move.action_item)
-
-            else:
-                encoded_action_item = 0
-
-            encoded_moves.append(np.array([x, y, encoded_name, encoded_action_item]))
+            encoded_move = self.encode_single_move(move)
+            encoded_moves.append(encoded_move)
 
         return encoded_moves
+
+    def encode_single_move(self, move):
+        encoded_name = self.__action_name_to_num(move.name)
+        x, y = move.x, move.y
+        if move.name == 'Attack':
+            if self.current_phase == 'Blue':
+                encoded_action_item = self.red_team.index(move.action_item)
+            else:
+                encoded_action_item = self.blue_team.index(move.action_item)
+
+        elif move.name == 'Item':
+            if self.current_phase == 'Blue':
+                encoded_action_item = self.blue_team[self.current_unit].inventory.index(move.action_item)
+            else:
+                encoded_action_item = self.red_team[self.current_unit].inventory.index(move.action_item)
+
+        else:
+            encoded_action_item = 0
+
+        return np.array([x, y, encoded_name, encoded_action_item])
 
     def __blue_phase(self, action_choice):
         unit = self.blue_team[self.current_unit]

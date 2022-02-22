@@ -335,3 +335,7 @@ def movement_table(job):
 
 def item_type_table(item_code):
     return _item_type_dict[item_code]
+
+
+def manhattan_distance(x1, y1, x2, y2):
+    return abs(x1 - x2) + abs(y1 - y2)
