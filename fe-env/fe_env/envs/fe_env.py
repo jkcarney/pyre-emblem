@@ -18,7 +18,7 @@ class FireEmblemEnvironment(gym.Env):
     def __init__(self):
         super(FireEmblemEnvironment, self).__init__()
 
-        self.map_factory = map_factory.OutdoorMapFactory(15, 15, 15, 15)
+        self.map_factory = map_factory.OutdoorMapFactory(15, 18, 15, 18)
         self.map, self.number_map = self.map_factory.generate_map()
 
         self.blue_team = unit_populator.generate_blue_team(self.map)

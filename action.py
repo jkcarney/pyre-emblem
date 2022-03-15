@@ -30,6 +30,18 @@ class Action:
     def is_wait(self):
         return self.name == 'Wait'
 
+    def action_index(self):
+        """
+        Gets what the index would be of the qtable entry of the action.
+        :return: 0 if 'Wait', 1 if 'Item', 2 if 'Attack'
+        """
+        if self.name == 'Wait':
+            return 0
+        elif self.name == 'Item':
+            return 1
+        else:
+            return 2
+
     def __str__(self):
         if self.action_item is None:
             return f"{self.name}"
