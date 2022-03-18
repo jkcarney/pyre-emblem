@@ -1,12 +1,15 @@
 import abc
 from abc import ABC
-
+import os
 import feutils
 import item
 from item import Item
 from item_type import *
 from map import Map
 import numpy as np
+import numpy.ma as npma
+
+from environment import Environment
 
 
 class Unit(ABC):
@@ -79,57 +82,58 @@ class Unit(ABC):
     def use_item(self, index):
         inventory_item = self.inventory[index]
         if inventory_item.item_type == ItemType.HEAL_CONSUMABLE:
-            self.heal(inventory_item.info['heal_amount'])
+            heal_total = self.heal(inventory_item.info['heal_amount'])
             inventory_item.info['uses'] -= 1
 
             if inventory_item.info['uses'] == 0:
-                del self.inventory[index]
+                self.inventory.remove(inventory_item)
 
-            return True
+            return heal_total
 
-        else:
-            return False
+        return None
 
     def heal(self, amount):
-        self.current_hp = min(self.current_hp + amount, self.hp_max)
+        heal_total = min(amount, self.hp_max - self.current_hp)
+        self.current_hp = heal_total
+        return heal_total
 
     def take_dmg(self, amount):
         self.current_hp -= amount
 
     @abc.abstractmethod
-    def determine_action(self, env, blue_agents, red_agents):
+    def determine_action(self, env, ally_team, enemy_team):
+        pass
+
+    @abc.abstractmethod
+    def determine_move(self, action, ally_team, enemy_team, env):
+        pass
+
+    @abc.abstractmethod
+    def determine_target(self, env, enemy_team):
+        pass
+
+    @abc.abstractmethod
+    def determine_item_to_use(self, env, enemy_team):
         pass
 
 
 class RedUnit(Unit):
-    def determine_action(self, env, blue_agents, red_agents):
-        unit = env.unwrapped.red_team[env.unwrapped.current_unit]
-        all_valid_actions = env.unwrapped.get_valid_actions_in_state(encode=False)
+    def determine_action(self, env, ally_team, enemy_team):
+        pass
 
-        low_health = unit.current_hp / unit.hp_max <= 0.35
+    def determine_move(self, action, ally_team, enemy_team, env):
+        pass
 
-        best_action_value = float('-inf')
-        best_action = None
+    def determine_target(self, env, enemy_team):
+        pass
 
-        for action in all_valid_actions:
-            if low_health:
-                action_value = self.low_health_heuristic(unit, action, env)
-                if action_value > best_action_value:
-                    best_action_value = action_value
-                    best_action = action
-            else:
-                action_value = self.attack_heuristic(unit, action, env)
-                if action_value > best_action_value:
-                    best_action_value = action_value
-                    best_action = action
+    def determine_item_to_use(self, env, enemy_team):
+        pass
 
-        return env.unwrapped.encode_single_move(best_action)
-
-    def low_health_heuristic(self, unit, action, env):
+    def low_health_heuristic(self, action, env):
         blue_units = env.unwrapped.blue_team
-        current_unit = env.unwrapped.red_team[env.unwrapped]
         x, y = action.x, action.y
-        closest_blue_unit = self.get_closest_blue_unit(blue_units, unit)
+        closest_blue_unit = self.get_closest_blue_unit(blue_units)
         distance = feutils.manhattan_distance(x, y, closest_blue_unit.x, closest_blue_unit.y)
 
         attack_factor = 0
@@ -138,18 +142,18 @@ class RedUnit(Unit):
 
         return (distance * 10) + attack_factor
 
-    def get_closest_blue_unit(self, blue_units, unit):
+    def get_closest_blue_unit(self, blue_units):
         closest_unit = None
         closest_distance = float('inf')
         for blue in blue_units:
             x, y = blue.x, blue.y
-            dis = feutils.manhattan_distance(x, y, unit.x, unit.y)
+            dis = feutils.manhattan_distance(x, y, self.x, self.y)
             if dis < closest_distance:
                 closest_distance = dis
                 closest_unit = blue
         return closest_unit
 
-    def attack_heuristic(self, unit, action, env):
+    def attack_heuristic(self, action, env):
         blue_units = env.unwrapped.blue_team
         current_unit = env.unwrapped.red_team[env.unwrapped]
 
@@ -157,7 +161,6 @@ class RedUnit(Unit):
 
 
 class BlueUnit(Unit):
-
     def __init__(self, character_code, x, y, level, job_code, hp_max, strength, skill, spd, luck, defense, res, magic,
                  ally, inventory_codes: list, terminal_condition):
         super().__init__(character_code, x, y, level, job_code, hp_max, strength, skill, spd, luck, defense, res, magic,
@@ -182,9 +185,46 @@ class BlueUnit(Unit):
         2 - Attack
         """
         self.action_space = np.array([3])
+        self._version = "1"
+        self.table_name = f'{self.name}_qtable_v{self._version}.npy'
 
-        self.q_table = np.zeros(np.concatenate((self.state_space, self.action_space)))
+        self.q_table = self.init_q_table()
 
-    def determine_action(self, env, blue_agents, red_agents):
+        self.alpha = 0.1
+        self.gamma = 0.6
+        self.epsilon = 0.5
+
+    def init_q_table(self):
+        if not os.path.exists(f'qtables/{self.table_name}'):
+            return np.zeros(np.concatenate((self.state_space, self.action_space)))
+        else:
+            return np.load(self.table_name)
+
+    def close(self):
+        np.save(f'qtables/{self.table_name}', self.q_table)
+
+    def update_qtable(self, state, reward, action):
         pass
 
+    def determine_action(self, env: Environment, ally_team, enemy_team):
+        action_mask = env.generate_action_mask(self, ally_team, enemy_team)
+        state = env.obtain_state(self, ally_team, enemy_team)
+        # copy so when we mask invalid actions it doesn't change q table
+        state_action_space = npma.masked_array(self.q_table[state], fill_value=float('-inf'), mask=action_mask,
+                                               copy=True)
+
+        if np.random.uniform(0, 1) < self.epsilon:
+            action = np.random.choice(state_action_space.count())
+        else:
+            action = np.argmax(state_action_space)  # Exploit learned value
+
+        return action
+
+    def determine_move(self, action, ally_team, enemy_team, env):
+        pass
+
+    def determine_target(self, env, enemy_team):
+        pass
+
+    def determine_item_to_use(self, env, enemy_team):
+        pass
