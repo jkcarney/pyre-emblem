@@ -1,8 +1,6 @@
 import random
 import numpy as np
 import feutils
-from action import Action
-
 
 class Tile:
     def __init__(self, tile_name):

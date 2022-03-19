@@ -7,7 +7,6 @@ from PIL import Image, ImageTk
 from map_factory import OutdoorMapFactory
 from item_type import WeaponType, ItemType, TomeType
 from unit import Unit
-from agent import Agent, RandomAgent
 import unit_populator
 
 

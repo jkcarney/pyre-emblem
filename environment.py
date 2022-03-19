@@ -18,11 +18,9 @@ class Environment:
         self.blue_victory = False
         self.red_victory = False
 
-        self.current_phase = 'Blue'
-
     def obtain_state(self, unit, ally_team, enemy_team):
         """
-        Obtains the state of the given unit, given the blue and red team
+        Obtains the state of the given unit, given the unit's allied and enemy team
 
         :param unit: The unit whose state we will check
         :param ally_team: The team allied to this unit
@@ -32,7 +30,7 @@ class Environment:
         state[1] (N) represents the % health of this enemy in increments of 10%
         """
         N = math.floor((unit.current_health / unit.hp_max) * 10)
-        if N == 10:  # State space is in the range [0, 10), so if it was 10 we'd go out of bounds, so clip it
+        if N == 10:  # State space for N is in the range [0, 10), so if it was 10 we'd go out of bounds, so clip it
             N = 9
 
         E = 0
@@ -44,7 +42,7 @@ class Environment:
                 attackable_units = self.map.get_attackable_units(enemy_unit, ally_team, x, y)
                 if unit in attackable_units:
                     E += 1
-                    break
+                    break  # Each enemy unit counts for, at most, ONE increment of E
 
         return E, N
 
@@ -75,20 +73,25 @@ class Environment:
 
         :param blue_team: The blue team
         :param red_team: The red team
-        :return: state, done
+        :return: state, done, info
             state -> the state of blue_team[0] after the red_team has finished executing its turn
             done -> whether or not the episode is done after the red team took their turn
+            info -> dictionary with information about the step:
+                info['winner'] -> if done is True, this will hold the team that won (blue or red)
+                info['method'] -> if done is True, this will hold how the winning team won
         """
         done = False
+        info = {}
+
         for red_unit in red_team:
             action = red_unit.determine_action(self, blue_team, red_team)
             move = red_unit.determine_move(action, blue_team, red_team, self)
-            _, _, done = self.step(red_unit, move, action, red_team, blue_team)
+            _, _, done, info = self.step(red_unit, move, action, red_team, blue_team)
 
             if done:
                 break
 
-        return self.obtain_state(blue_team[0], blue_team, red_team), done
+        return self.obtain_state(blue_team[0], blue_team, red_team), done, info
 
     def step(self, unit, move, action, ally_team, enemy_team):
         """
@@ -99,13 +102,17 @@ class Environment:
         :param unit: The unit who will affect the environment in some way
         :param move: The coordinates the unit will move to (tuple as x,y)
         :param action: The action the unit will take (attack, wait, item)
-        :return: next_state, reward, done
+        :return: next_state, reward, done, info
             next_state -> the unit's state given the action and move they just did
             reward -> The reward the environment gave the unit for taking said action
             done -> whether or not the episode is done after the action
+            info -> dictionary with information about the step:
+                        info['winner'] -> if done is True, this will hold the team that won (blue or red)
+                        info['method'] -> if done is True, this will hold how the winning team won
         """
         done = False
         heal_total = None
+        info = {}
 
         # Always move
         unit.goto(move[0], move[1])
@@ -131,10 +138,12 @@ class Environment:
             item_index = unit.determine_item_to_use(self, enemy_team)
             heal_total = unit.use_item(item_index)
 
+        # The other action is 0, but that is just wait, so don't do anything
+
         state = self.obtain_state(unit, ally_team, enemy_team)
         reward = self.reward(unit, action, heal_total)
 
-        return state, reward, done
+        return state, reward, done, info
 
     def reward(self, unit, action, heal_total=None):
         return 0.0
@@ -148,5 +157,4 @@ class Environment:
         self.turn_count = 0
         self.blue_victory = False
         self.red_victory = False
-        self.current_phase = 'Blue'
         self.map, self.number_map = self.map_factory.generate_map()

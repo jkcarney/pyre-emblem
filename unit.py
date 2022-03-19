@@ -103,7 +103,7 @@ class Unit(ABC):
         self.current_hp -= amount
 
     @abc.abstractmethod
-    def determine_action(self, env, ally_team, enemy_team):
+    def determine_action(self, state, env, ally_team, enemy_team):
         pass
 
     @abc.abstractmethod
@@ -120,7 +120,7 @@ class Unit(ABC):
 
 
 class RedUnit(Unit):
-    def determine_action(self, env, ally_team, enemy_team):
+    def determine_action(self, state, env, ally_team, enemy_team):
         pass
 
     def determine_move(self, action, ally_team, enemy_team, env):
@@ -209,11 +209,12 @@ class BlueUnit(Unit):
     def update_qtable(self, state, reward, action):
         pass
 
-    def determine_action(self, env: Environment, ally_team, enemy_team):
+    def determine_action(self, state, env: Environment, ally_team, enemy_team):
         action_mask = env.generate_action_mask(self, ally_team, enemy_team)
-        state = env.obtain_state(self, ally_team, enemy_team)
         # copy so when we mask invalid actions it doesn't change q table
-        state_action_space = npma.masked_array(self.q_table[state], fill_value=float('-inf'), mask=action_mask,
+        state_action_space = npma.masked_array(self.q_table[state],
+                                               fill_value=float('-inf'),
+                                               mask=action_mask,
                                                copy=True)
 
         if np.random.uniform(0, 1) < self.epsilon:
