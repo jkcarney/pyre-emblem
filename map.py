@@ -1,5 +1,5 @@
 import random
-
+import numpy as np
 import feutils
 from action import Action
 
@@ -66,21 +66,18 @@ class Map:
         :param enemy_units: The units who we will check to see if we can attack
         :param unit: The unit who's actions we are checking
         :param all_move_coordinates: all the move coordinates the unit can move to
-        :return: A list of Actions the unit can take. ('Wait', and/or 'Item', and/or 'Attack'), with every
-        coordinate x and y
+        :return: An action mask; a boolean array of size 3. False means the unit CAN take the action. True means the
+        unit CANNOT take the action, and will be masked ultimately.
         """
-        valid_actions = []
+        valid_actions = np.array([False, True, True])
+
+        if unit.has_consumable():
+            valid_actions[1] = False
 
         for x, y in all_move_coordinates:
-            valid_actions.append(Action('Wait', None, x, y))
-
-            all_consumables = unit.get_all_consumables()
-            for consumable in all_consumables:
-                valid_actions.append(Action('Item', consumable, x, y))
-
             attackable_units = self.get_attackable_units(unit, enemy_units, x, y)
-            for u in attackable_units:
-                valid_actions.append(Action('Attack', u, x, y))
+            if len(attackable_units) != 0:
+                valid_actions[2] = False
 
         return valid_actions
 

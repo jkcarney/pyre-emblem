@@ -1,4 +1,5 @@
 import abc
+import random
 from abc import ABC
 import os
 import feutils
@@ -8,6 +9,7 @@ from item_type import *
 from map import Map
 import numpy as np
 import numpy.ma as npma
+import feutils
 
 from environment import Environment
 
@@ -186,13 +188,14 @@ class BlueUnit(Unit):
         """
         self.action_space = np.array([3])
         self._version = "1"
-        self.table_name = f'{self.name}_qtable_v{self._version}.npy'
 
         self.q_table = self.init_q_table()
 
         self.alpha = 0.1
         self.gamma = 0.6
         self.epsilon = 0.5
+
+        self.table_name = f'{self.name}_qtable_v{self._version}_{self.alpha}-{self.gamma}-{self.epsilon}.npy'
 
     def init_q_table(self):
         if not os.path.exists(f'qtables/{self.table_name}'):
@@ -218,13 +221,16 @@ class BlueUnit(Unit):
         else:
             action = np.argmax(state_action_space)  # Exploit learned value
 
-        return action
+        return action  # 0, 1, or 2
 
     def determine_move(self, action, ally_team, enemy_team, env):
-        pass
+        valid_moves = env.generate_valid_moves(self, ally_team, enemy_team)
+        return random.choice(valid_moves)
 
     def determine_target(self, env, enemy_team):
-        pass
+        attackable_targets = feutils.attackable_units(self, enemy_team)
+        return random.choice(attackable_targets)
 
     def determine_item_to_use(self, env, enemy_team):
-        pass
+        usable_items = self.get_all_consumables()
+        return random.choice(usable_items)

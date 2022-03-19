@@ -1,3 +1,5 @@
+import math
+
 import map_factory
 import unit_populator
 from unit import Unit, BlueUnit, RedUnit
@@ -23,23 +25,38 @@ class Environment:
         Obtains the state of the given unit, given the blue and red team
 
         :param unit: The unit whose state we will check
-        :param ally_team: The blue team
-        :param enemy_team: The red team
-        :return: state -> a tuple that represents the state (ie, 5,6)
-        state[0] represents the number of enemies that can attack this unit if they wanted to
-        state[1] represents the % health of this enemy in increments of 10%
+        :param ally_team: The team allied to this unit
+        :param enemy_team: The adversarial team to this unit
+        :return: state -> a tuple that represents the state (ie, 5,6) (E,N)
+        state[0] (E) represents the number of enemies that can attack this unit if they wanted to
+        state[1] (N) represents the % health of this enemy in increments of 10%
         """
-        return 0, 0
+        N = math.floor((unit.current_health / unit.hp_max) * 10)
+        if N == 10:  # State space is in the range [0, 10), so if it was 10 we'd go out of bounds, so clip it
+            N = 9
 
-    def generate_valid_moves(self, unit, blue_team, red_team):
+        E = 0
+        for enemy_unit in enemy_team:
+            valid_moves = self.map.get_valid_move_coordinates(enemy_unit, enemy_team, ally_team)
+            for move in valid_moves:
+                x = move[0]
+                y = move[1]
+                attackable_units = self.map.get_attackable_units(enemy_unit, ally_team, x, y)
+                if unit in attackable_units:
+                    E += 1
+                    break
+
+        return E, N
+
+    def generate_valid_moves(self, unit, ally_team, enemy_team):
         """
 
         :param unit:
-        :param blue_team:
-        :param red_team:
+        :param ally_team:
+        :param enemy_team:
         :return:
         """
-        pass
+        return self.map.get_valid_move_coordinates(unit, ally_team, enemy_team)
 
     def generate_action_mask(self, unit, ally_team, enemy_team):
         """
@@ -49,7 +66,8 @@ class Environment:
         :param enemy_team:
         :return:
         """
-        return np.array([True, True, True])
+        valid_coords = self.map.get_valid_move_coordinates(unit, ally_team, enemy_team)
+        return self.map.get_all_valid_actions(unit, enemy_team, valid_coords)
 
     def execute_red_phase(self, blue_team, red_team):
         """
@@ -92,7 +110,7 @@ class Environment:
         # Always move
         unit.goto(move[0], move[1])
 
-        if action == 'Attack':
+        if action == 2:  # Attack
             target_unit = unit.determine_target(self, enemy_team)
             combat_stats = combat.get_combat_stats(unit, target_unit, self.map)
             result = combat.simulate_combat(combat_stats)
@@ -109,7 +127,7 @@ class Environment:
                 else:
                     ally_team.remove(unit)
 
-        elif action == 'Item':
+        elif action == 1:  # Item
             item_index = unit.determine_item_to_use(self, enemy_team)
             heal_total = unit.use_item(item_index)
 
