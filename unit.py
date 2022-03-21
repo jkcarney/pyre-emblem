@@ -11,8 +11,6 @@ import numpy as np
 import numpy.ma as npma
 import feutils
 
-from environment import Environment
-
 
 class Unit(ABC):
     def __init__(self, character_code, x, y, level, job_code, hp_max,
@@ -131,36 +129,7 @@ class RedUnit(Unit):
 
     def determine_item_to_use(self, env, enemy_team):
         pass
-
-    def low_health_heuristic(self, action, env):
-        blue_units = env.unwrapped.blue_team
-        x, y = action.x, action.y
-        closest_blue_unit = self.get_closest_blue_unit(blue_units)
-        distance = feutils.manhattan_distance(x, y, closest_blue_unit.x, closest_blue_unit.y)
-
-        attack_factor = 0
-        if action.is_attack():
-            attack_factor = distance * -9
-
-        return (distance * 10) + attack_factor
-
-    def get_closest_blue_unit(self, blue_units):
-        closest_unit = None
-        closest_distance = float('inf')
-        for blue in blue_units:
-            x, y = blue.x, blue.y
-            dis = feutils.manhattan_distance(x, y, self.x, self.y)
-            if dis < closest_distance:
-                closest_distance = dis
-                closest_unit = blue
-        return closest_unit
-
-    def attack_heuristic(self, action, env):
-        blue_units = env.unwrapped.blue_team
-        current_unit = env.unwrapped.red_team[env.unwrapped]
-
-        return 0
-
+    
 
 class BlueUnit(Unit):
     def __init__(self, character_code, x, y, level, job_code, hp_max, strength, skill, spd, luck, defense, res, magic,
@@ -189,13 +158,13 @@ class BlueUnit(Unit):
         self.action_space = np.array([3])
         self._version = "1"
 
-        self.q_table = self.init_q_table()
-
         self.alpha = 0.1
         self.gamma = 0.6
         self.epsilon = 0.5
 
         self.table_name = f'{self.name}_qtable_v{self._version}_{self.alpha}-{self.gamma}-{self.epsilon}.npy'
+
+        self.q_table = self.init_q_table()
 
     def init_q_table(self):
         if not os.path.exists(f'qtables/{self.table_name}'):
@@ -209,7 +178,7 @@ class BlueUnit(Unit):
     def update_qtable(self, state, reward, action):
         pass
 
-    def determine_action(self, state, env: Environment, ally_team, enemy_team):
+    def determine_action(self, state, env, ally_team, enemy_team):
         action_mask = env.generate_action_mask(self, ally_team, enemy_team)
         # copy so when we mask invalid actions it doesn't change q table
         state_action_space = npma.masked_array(self.q_table[state],
@@ -218,15 +187,19 @@ class BlueUnit(Unit):
                                                copy=True)
 
         if np.random.uniform(0, 1) < self.epsilon:
-            action = np.random.choice(state_action_space.count())
+            action = np.random.choice(state_action_space.count())  # Explore action space
         else:
             action = np.argmax(state_action_space)  # Exploit learned value
+
+        print(f'{self.name} chose {action}')
 
         return action  # 0, 1, or 2
 
     def determine_move(self, action, ally_team, enemy_team, env):
-        valid_moves = env.generate_valid_moves(self, ally_team, enemy_team)
-        return random.choice(valid_moves)
+        valid_moves = env.generate_valid_moves(action, self, ally_team, enemy_team)
+        choice = random.choice(valid_moves)
+        print(f'{self.name} is moving to {str(choice)}')
+        return choice
 
     def determine_target(self, env, enemy_team):
         attackable_targets = feutils.attackable_units(self, enemy_team)
@@ -234,4 +207,4 @@ class BlueUnit(Unit):
 
     def determine_item_to_use(self, env, enemy_team):
         usable_items = self.get_all_consumables()
-        return random.choice(usable_items)
+        return random.randrange(len(usable_items))

@@ -1,7 +1,4 @@
 import environment
-from environment import Environment
-import feutils
-import unit
 import unit_populator
 
 
@@ -42,6 +39,7 @@ def main():
             if done:
                 break
 
+            print('== RED PHASE ==')
             _, done, info = env.execute_red_phase(blue_team, red_team)
 
             if len(blue_team) == 0:

@@ -1,8 +1,7 @@
 import math
 
+import feutils
 import map_factory
-import unit_populator
-from unit import Unit, BlueUnit, RedUnit
 import combat
 from combat import CombatResults
 import numpy as np
@@ -29,7 +28,7 @@ class Environment:
         state[0] (E) represents the number of enemies that can attack this unit if they wanted to
         state[1] (N) represents the % health of this enemy in increments of 10%
         """
-        N = math.floor((unit.current_health / unit.hp_max) * 10)
+        N = math.floor((unit.current_hp / unit.hp_max) * 10)
         if N == 10:  # State space for N is in the range [0, 10), so if it was 10 we'd go out of bounds, so clip it
             N = 9
 
@@ -39,22 +38,37 @@ class Environment:
             for move in valid_moves:
                 x = move[0]
                 y = move[1]
-                attackable_units = self.map.get_attackable_units(enemy_unit, ally_team, x, y)
+                attackable_units = feutils.get_attackable_units(enemy_unit, ally_team, x, y)
                 if unit in attackable_units:
                     E += 1
                     break  # Each enemy unit counts for, at most, ONE increment of E
 
         return E, N
 
-    def generate_valid_moves(self, unit, ally_team, enemy_team):
+    def generate_valid_moves(self, action, unit, ally_team, enemy_team):
         """
+        Generates a list of valid move coordinates given an action. The unit will be able to do
+        that action at every coordinate in the returned list
 
-        :param unit:
-        :param ally_team:
-        :param enemy_team:
-        :return:
+        :param action: The action the user is attempting to do. (0 for Wait, 1 for Item, 2 for Attack)
+        :param unit: The unit we are checking
+        :param ally_team: The allied team to unit (blue or red)
+        :param enemy_team: The adversarial team to unit (blue or red)
+        :return: A list of tuples representing x,y pairs. The unit will be able to execute the action passed in
+        at every coordinate in the list.
         """
-        return self.map.get_valid_move_coordinates(unit, ally_team, enemy_team)
+        all_valid_move_coordinates = self.map.get_valid_move_coordinates(unit, ally_team, enemy_team)
+
+        if action == 0 or action == 1:  # The unit will be able to wait/use an item at every coordinate they can move to
+            return all_valid_move_coordinates
+
+        valid_move_actions = []
+        for x, y in all_valid_move_coordinates:
+            attackable = feutils.get_attackable_units(unit, enemy_team, x, y)
+            if len(attackable) > 0:
+                valid_move_actions.append((x,y))
+
+        return valid_move_actions
 
     def generate_action_mask(self, unit, ally_team, enemy_team):
         """
@@ -84,7 +98,7 @@ class Environment:
         info = {}
 
         for red_unit in red_team:
-            action = red_unit.determine_action(self, blue_team, red_team)
+            action = red_unit.determine_action(None, self, blue_team, red_team)
             move = red_unit.determine_move(action, blue_team, red_team, self)
             _, _, done, info = self.step(red_unit, move, action, red_team, blue_team)
 
@@ -95,7 +109,7 @@ class Environment:
 
     def step(self, unit, move, action, ally_team, enemy_team):
         """
-        Steps the environment given the unit and the move and action to be executed by said unit
+        Steps the environment given the unit, move, and action to be executed by said unit
 
         :param ally_team: The team allied to unit (blue or red)
         :param enemy_team: The adversarial team to unit (blue or red)

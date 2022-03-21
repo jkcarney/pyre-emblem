@@ -73,38 +73,12 @@ class Map:
             valid_actions[1] = False
 
         for x, y in all_move_coordinates:
-            attackable_units = self.get_attackable_units(unit, enemy_units, x, y)
+            attackable_units = feutils.get_attackable_units(unit, enemy_units, x, y)
             if len(attackable_units) != 0:
                 valid_actions[2] = False
+                break
 
         return valid_actions
-
-    def get_attackable_units(self, unit, enemy_units: list, x=None, y=None):
-        """
-        Gets all attackable units within range of unit.
-
-        x and y are optional parameters. If specified, it will check if unit could attack any units at the
-        given x and y. Otherwise, it defaults to the unit's current x and y
-
-        :param enemy_units: All the units currently in the game
-        :param unit: The unit whos attack range we are checking
-        :param x: optional x to check from
-        :param y: optional y to check from
-        :return:
-        """
-        attackable_units = []
-
-        if x is None or y is None:
-            x, y = unit.x, unit.y
-
-        atk_range = unit.get_attack_range()
-        for candidate in enemy_units:
-            # Checks to see if the candidate and unit are on opposing teams
-            distance = self.manhattan_distance(x, y, candidate.x, candidate.y)
-            if distance in atk_range:
-                attackable_units.append(candidate)
-
-        return attackable_units
 
     def get_valid_move_coordinates(self, unit, ally_units, enemy_units):
         """
