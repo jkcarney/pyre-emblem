@@ -1,7 +1,12 @@
 from item_type import ItemType, WeaponType, TomeType
 import json
 
+
 class FEActionError(Exception):
+    pass
+
+
+class FEAttackRangeError(Exception):
     pass
 
 _character_dict = {
