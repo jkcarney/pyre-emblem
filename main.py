@@ -1,12 +1,15 @@
 import environment
 import unit_populator
+from termcolor import colored
 
 
 def main():
     n = 100  # iterations
     env = environment.Environment()
 
-    for _ in range(n):
+    for x in range(n):
+        print(colored(f'================ GAME {x} ================', 'green', 'on_grey'))
+
         env.reset()
         blue_team = unit_populator.generate_blue_team(env.map)
         red_team = unit_populator.generate_red_team(env.map, blue_team)
@@ -14,6 +17,7 @@ def main():
         done = False
 
         while not done:
+            print(colored('== BLUE PHASE ==', 'blue', 'on_white'))
             for agent in blue_team:
                 state = env.obtain_state(agent, blue_team, red_team)
                 action = agent.determine_action(state, env, blue_team, red_team)
@@ -39,7 +43,7 @@ def main():
             if done:
                 break
 
-            print('== RED PHASE ==')
+            print(colored('== RED PHASE ==', 'red', 'on_white'))
             _, done, info = env.execute_red_phase(blue_team, red_team)
 
             if len(blue_team) == 0:
@@ -53,7 +57,8 @@ def main():
                 info['method'] = 'Killed all red units'
 
         # Save Q-Tables to disk after episode
-        map(lambda u: u.close(), blue_team)
+        for unit in blue_team:
+            unit.close()
 
 
 if __name__ == "__main__":

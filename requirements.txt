@@ -16,3 +16,4 @@ PyDirectInput==1.0.4
 PyGetWindow==0.0.9
 PyMsgBox==1.0.9
 gym~=0.21.0
+termcolor~=1.1.0

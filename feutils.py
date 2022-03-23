@@ -1,5 +1,7 @@
 from item_type import ItemType, WeaponType, TomeType
 import json
+import numpy as np
+import numpy.ma as npma
 
 
 class FEActionError(Exception):
@@ -8,6 +10,7 @@ class FEActionError(Exception):
 
 class FEAttackRangeError(Exception):
     pass
+
 
 _character_dict = {
     0xce4c: 'Eliwood', 0xce80: 'Hector', 0xceb4: 'Lyn', 0xcee8: 'Raven', 0xcf1c: 'Geitz',
@@ -393,4 +396,16 @@ def action_to_name(action_num):
         return "Attack"
     else:
         raise FEActionError(f'Action number must be 0, 1, or 2, not: [ {action_num} ]')
+
+
+def get_random_unmasked_action(masked_action_space):
+    i = np.random.choice(masked_action_space.size)
+    found = False
+    while not found:
+        if masked_action_space[i] is not npma.masked:
+            found = True
+        else:
+            i = np.random.choice(masked_action_space.size)
+
+    return i
 

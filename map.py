@@ -94,7 +94,7 @@ class Map:
         terrain_group = unit.terrain_group
 
         # The tile the unit is standing on is always assumed to be a valid move tile.
-        valid_tiles = {(unit.x, unit.y)}
+        valid_tiles = set()
 
         self.__calculate_tile__(unit.x + 1, unit.y, movement, terrain_group, 0, valid_tiles, enemy_units)
         self.__calculate_tile__(unit.x - 1, unit.y, movement, terrain_group, 0, valid_tiles, enemy_units)
@@ -106,6 +106,8 @@ class Map:
                 position = u.x, u.y
                 if position in valid_tiles:
                     valid_tiles.remove(position)
+
+        valid_tiles.add((unit.x, unit.y))
 
         return list(valid_tiles)
 
@@ -154,7 +156,7 @@ class Map:
         chosen_coord = random.choice(candidate_coordinates)
         red_unit.goto(chosen_coord[0], chosen_coord[1])
 
-    def __get_valid_corners(self):
+    def get_valid_corners(self):
         all_corners = [
             (0, 0),
             (0, self.y - 1),
@@ -206,7 +208,7 @@ class Map:
         self.__recurse_on_tiles(x, y - 1, closest_tiles, n, length)
 
     def set_all_blue_start_coordinates(self, terminal_unit, blue_team):
-        starting_point = random.choice(self.__get_valid_corners())
+        starting_point = random.choice(self.get_valid_corners())
         print(f'---{starting_point[0]}, {starting_point[1]}---')
         terminal_unit.goto(starting_point[0], starting_point[1])
         starting_coordinates = self.__get_N_closest_tiles(starting_point, len(blue_team) + 2)

@@ -110,35 +110,42 @@ class OutdoorMapFactory:
         Generates a new map according to the maplayerfactories
         :return: a tuple. the first item is a new grid of Tile objects, the 2nd is a grid of numbers
         """
-        x = random.randint(self.x_min, self.x_max)
-        y = random.randint(self.y_min, self.y_max)
 
-        grass_water_grid = self.grass_water_factory.generate_binary_map(x, y)
-        forest_grid = self.forest_factory.generate_binary_map(x, y)
-        mountain_grid = self.mountain_factory.generate_binary_map(x, y)
+        while True:
+            x = random.randint(self.x_min, self.x_max)
+            y = random.randint(self.y_min, self.y_max)
 
-        final_map = np.ndarray((x, y), dtype='<U8')
-        number_map = np.ndarray((x, y))
+            grass_water_grid = self.grass_water_factory.generate_binary_map(x, y)
+            forest_grid = self.forest_factory.generate_binary_map(x, y)
+            mountain_grid = self.mountain_factory.generate_binary_map(x, y)
 
-        for i in range(x):
-            for j in range(y):
-                #Alive represents lake, dead represents plains
-                if grass_water_grid[i, j]:
-                    final_map[i, j] = 'Lake'
-                    number_map[i, j] = 1
-                else:
-                    final_map[i, j] = 'Plain'
-                    number_map[i, j] = 0
+            final_map = np.ndarray((x, y), dtype='<U8')
+            number_map = np.ndarray((x, y))
 
-                if final_map[i, j] == 'Plain' and forest_grid[i, j]:
-                    final_map[i, j] = 'Forest'
-                    number_map[i, j] = 2
+            for i in range(x):
+                for j in range(y):
+                    # Alive represents lake, dead represents plains
+                    if grass_water_grid[i, j]:
+                        final_map[i, j] = 'Lake'
+                        number_map[i, j] = 1
+                    else:
+                        final_map[i, j] = 'Plain'
+                        number_map[i, j] = 0
 
-                if final_map[i, j] != 'Lake' and mountain_grid[i, j]:
-                    final_map[i, j] = 'Mountain'
-                    number_map[i, j] = 3
+                    if final_map[i, j] == 'Plain' and forest_grid[i, j]:
+                        final_map[i, j] = 'Forest'
+                        number_map[i, j] = 2
 
-        return Map(x, y, final_map), number_map
+                    if final_map[i, j] != 'Lake' and mountain_grid[i, j]:
+                        final_map[i, j] = 'Mountain'
+                        number_map[i, j] = 3
+
+            candidate_map = Map(x, y, final_map)
+            corners = candidate_map.get_valid_corners()
+            if len(corners) != 0:  # make sure that there are corners to place units at
+                return candidate_map, number_map
+
+
 
 
 if __name__ == '__main__':

@@ -43,6 +43,9 @@ class Environment:
                     E += 1
                     break  # Each enemy unit counts for, at most, ONE increment of E
 
+            if E == 15:
+                break
+
         return E, N
 
     def generate_valid_moves(self, action, unit, ally_team, enemy_team):
@@ -87,7 +90,7 @@ class Environment:
 
         :param blue_team: The blue team
         :param red_team: The red team
-        :return: state, done, info
+        :return: state, done, info\n
             state -> the state of blue_team[0] after the red_team has finished executing its turn
             done -> whether or not the episode is done after the red team took their turn
             info -> dictionary with information about the step:
@@ -98,8 +101,8 @@ class Environment:
         info = {}
 
         for red_unit in red_team:
-            action = red_unit.determine_action(None, self, blue_team, red_team)
-            move = red_unit.determine_move(action, blue_team, red_team, self)
+            action = red_unit.determine_action(None, self, red_team, blue_team)
+            move = red_unit.determine_move(action, red_team, blue_team, self)
             _, _, done, info = self.step(red_unit, move, action, red_team, blue_team)
 
             if done:
@@ -140,12 +143,14 @@ class Environment:
                 if target_unit.terminal_condition:
                     done = True
                 else:
+                    target_unit.close()
                     enemy_team.remove(target_unit)
 
             elif result is CombatResults.ATTACKER_DEATH:
                 if unit.terminal_condition:
                     done = True
                 else:
+                    unit.close()
                     ally_team.remove(unit)
 
         elif action == 1:  # Item
