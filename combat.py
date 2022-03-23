@@ -180,7 +180,7 @@ def calculate_might(attacker: Unit, defender: Unit, tile_map: Map):
         attack = attacker.magic + (attacker.inventory[0].info['might'] + triangle_bonus[0])
         defense = defender.res + tile_map.get_tile(defender.x, defender.y).defense
 
-    return attack - defense
+    return max(attack - defense, 0)
 
 
 def calculate_avoid(unit: Unit, tile_map: Map):

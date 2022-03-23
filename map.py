@@ -1,8 +1,6 @@
 import random
-
+import numpy as np
 import feutils
-from action import Action
-
 
 class Tile:
     def __init__(self, tile_name):
@@ -66,50 +64,21 @@ class Map:
         :param enemy_units: The units who we will check to see if we can attack
         :param unit: The unit who's actions we are checking
         :param all_move_coordinates: all the move coordinates the unit can move to
-        :return: A list of Actions the unit can take. ('Wait', and/or 'Item', and/or 'Attack'), with every
-        coordinate x and y
+        :return: An action mask; a boolean array of size 3. False means the unit CAN take the action. True means the
+        unit CANNOT take the action, and will be masked ultimately.
         """
-        valid_actions = []
+        valid_actions = np.array([False, True, True])
+
+        if unit.has_consumable():
+            valid_actions[1] = False
 
         for x, y in all_move_coordinates:
-            valid_actions.append(Action('Wait', None, x, y))
-
-            all_consumables = unit.get_all_consumables()
-            for consumable in all_consumables:
-                valid_actions.append(Action('Item', consumable, x, y))
-
-            attackable_units = self.get_attackable_units(unit, enemy_units, x, y)
-            for u in attackable_units:
-                valid_actions.append(Action('Attack', u, x, y))
+            attackable_units = feutils.get_attackable_units(unit, enemy_units, x, y)
+            if len(attackable_units) != 0:
+                valid_actions[2] = False
+                break
 
         return valid_actions
-
-    def get_attackable_units(self, unit, enemy_units: list, x=None, y=None):
-        """
-        Gets all attackable units within range of unit.
-
-        x and y are optional parameters. If specified, it will check if unit could attack any units at the
-        given x and y. Otherwise, it defaults to the unit's current x and y
-
-        :param enemy_units: All the units currently in the game
-        :param unit: The unit whos attack range we are checking
-        :param x: optional x to check from
-        :param y: optional y to check from
-        :return:
-        """
-        attackable_units = []
-
-        if x is None or y is None:
-            x, y = unit.x, unit.y
-
-        atk_range = unit.get_attack_range()
-        for candidate in enemy_units:
-            # Checks to see if the candidate and unit are on opposing teams
-            distance = self.manhattan_distance(x, y, candidate.x, candidate.y)
-            if distance in atk_range:
-                attackable_units.append(candidate)
-
-        return attackable_units
 
     def get_valid_move_coordinates(self, unit, ally_units, enemy_units):
         """
@@ -125,7 +94,7 @@ class Map:
         terrain_group = unit.terrain_group
 
         # The tile the unit is standing on is always assumed to be a valid move tile.
-        valid_tiles = {(unit.x, unit.y)}
+        valid_tiles = set()
 
         self.__calculate_tile__(unit.x + 1, unit.y, movement, terrain_group, 0, valid_tiles, enemy_units)
         self.__calculate_tile__(unit.x - 1, unit.y, movement, terrain_group, 0, valid_tiles, enemy_units)
@@ -137,6 +106,8 @@ class Map:
                 position = u.x, u.y
                 if position in valid_tiles:
                     valid_tiles.remove(position)
+
+        valid_tiles.add((unit.x, unit.y))
 
         return list(valid_tiles)
 
@@ -185,7 +156,7 @@ class Map:
         chosen_coord = random.choice(candidate_coordinates)
         red_unit.goto(chosen_coord[0], chosen_coord[1])
 
-    def __get_valid_corners(self):
+    def get_valid_corners(self):
         all_corners = [
             (0, 0),
             (0, self.y - 1),
@@ -237,7 +208,7 @@ class Map:
         self.__recurse_on_tiles(x, y - 1, closest_tiles, n, length)
 
     def set_all_blue_start_coordinates(self, terminal_unit, blue_team):
-        starting_point = random.choice(self.__get_valid_corners())
+        starting_point = random.choice(self.get_valid_corners())
         print(f'---{starting_point[0]}, {starting_point[1]}---')
         terminal_unit.goto(starting_point[0], starting_point[1])
         starting_coordinates = self.__get_N_closest_tiles(starting_point, len(blue_team) + 2)

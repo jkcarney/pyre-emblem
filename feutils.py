@@ -1,5 +1,16 @@
 from item_type import ItemType, WeaponType, TomeType
 import json
+import numpy as np
+import numpy.ma as npma
+
+
+class FEActionError(Exception):
+    pass
+
+
+class FEAttackRangeError(Exception):
+    pass
+
 
 _character_dict = {
     0xce4c: 'Eliwood', 0xce80: 'Hector', 0xceb4: 'Lyn', 0xcee8: 'Raven', 0xcf1c: 'Geitz',
@@ -324,11 +335,6 @@ def character_name_table(character_code):
     return _character_dict[character_code]
 
 
-def item_table(item_code):
-    # TODO: may need to make this more robust, ie it can accept hex code as string, int, w/e
-    return _item_dict[item_code]
-
-
 def movement_table(job):
     return _movement_dict[job]
 
@@ -339,3 +345,67 @@ def item_type_table(item_code):
 
 def manhattan_distance(x1, y1, x2, y2):
     return abs(x1 - x2) + abs(y1 - y2)
+
+
+def attackable_units(unit, opposing_units):
+    attackables = []
+    attack_range = unit.get_attack_range()
+
+    for enemy_unit in opposing_units:
+        distance = manhattan_distance(unit.x, unit.y, enemy_unit.x, enemy_unit.y)
+        if distance in attack_range:
+            attackables.append(enemy_unit)
+
+    return attackables
+
+
+def get_attackable_units(unit, enemy_units: list, x=None, y=None):
+    """
+    Gets all attackable units within range of unit.
+
+    x and y are optional parameters. If specified, it will check if unit could attack any units at the
+    given x and y. Otherwise, it defaults to the unit's current x and y
+
+    :param enemy_units: All the units currently in the game
+    :param unit: The unit whose attack range we are checking
+    :param x: optional x to check from
+    :param y: optional y to check from
+    :return: A list of attackable Unit objects
+    """
+    all_attackable_units = []
+
+    if x is None or y is None:
+        x, y = unit.x, unit.y
+
+    atk_range = unit.get_attack_range()
+    for candidate in enemy_units:
+        # Checks to see if the candidate and unit are on opposing teams
+        distance = manhattan_distance(x, y, candidate.x, candidate.y)
+        if distance in atk_range:
+            all_attackable_units.append(candidate)
+
+    return all_attackable_units
+
+
+def action_to_name(action_num):
+    if action_num == 0:
+        return "Wait"
+    elif action_num == 1:
+        return "Item"
+    elif action_num == 2:
+        return "Attack"
+    else:
+        raise FEActionError(f'Action number must be 0, 1, or 2, not: [ {action_num} ]')
+
+
+def get_random_unmasked_action(masked_action_space):
+    i = np.random.choice(masked_action_space.size)
+    found = False
+    while not found:
+        if masked_action_space[i] is not npma.masked:
+            found = True
+        else:
+            i = np.random.choice(masked_action_space.size)
+
+    return i
+
