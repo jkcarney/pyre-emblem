@@ -214,16 +214,24 @@ class BlueUnit(Unit):
         """
         np.save(f'qtables/{self.table_name}', self.q_table)
 
-    def update_qtable(self, state, reward, action):
+    def update_qtable(self, state, next_state, reward, action):
         """
-        Updates q-table by some magical formula I have not figured out :)
+        Updates q-table greedily using q-learning algorithm.
+        Q(s,a) <- Q(s,a) + α[R + 𝛾 max(Q(s, a)) - Q(s,a)]
 
+        :param next_state:
         :param state:
         :param reward:
         :param action:
         :return:
         """
-        pass
+        state_action = state + (action,)
+
+        qmax = np.max(self.q_table[next_state])
+        current = self.q_table[state_action]
+
+        new_value = current + self.alpha * (reward + (self.gamma * qmax) - current)
+        self.q_table[state_action] = new_value
 
     def determine_action(self, state, env, ally_team, enemy_team):
         """
@@ -283,7 +291,6 @@ class BlueUnit(Unit):
         Determine which unit to attack in this unit's attack range.\n
         NOTE: when this method is called it is assumed the unit is already moved to the tile that they will attack from
         If they are at a tile where they can attack no enemy units, an FEAttackRangeError will be thrown.
-
 
         :param env:
         :param enemy_team:

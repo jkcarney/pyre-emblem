@@ -10,9 +10,22 @@ def main():
     for x in range(n):
         print(colored(f'================ GAME {x} ================', 'green', 'on_grey'))
 
-        env.reset()
-        blue_team = unit_populator.generate_blue_team(env.map)
-        red_team = unit_populator.generate_red_team(env.map, blue_team)
+        # Environment resetting has a (small) probabilistic chance to fail; mainly just when generating maps.
+        # For example, if there are no valid corners.
+        # Or if the corner chosen only has a grass tile and water surrounding
+        # This is a bit of a hack, but given my limited timeframe, heck it :)
+        valid = False
+        blue_team = []
+        red_team = []
+
+        while not valid:
+            try:
+                env.reset()
+                blue_team = unit_populator.generate_blue_team(env.map)
+                red_team = unit_populator.generate_red_team(env.map, blue_team)
+                valid = True
+            except:
+                pass
 
         done = False
 
@@ -25,7 +38,7 @@ def main():
 
                 next_state, reward, done, info = env.step(agent, move, action, blue_team, red_team)
 
-                agent.update_qtable(state, reward, action)
+                agent.update_qtable(state, next_state, reward, action)
 
                 if len(blue_team) == 0:
                     done = True
@@ -59,6 +72,8 @@ def main():
         # Save Q-Tables to disk after episode
         for unit in blue_team:
             unit.close()
+
+    print('Done!')
 
 
 if __name__ == "__main__":

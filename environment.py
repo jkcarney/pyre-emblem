@@ -108,6 +108,10 @@ class Environment:
             if done:
                 break
 
+        self.turn_count += 1
+        if self.turn_count >= self.turn_limit:
+            done = True
+
         return self.obtain_state(blue_team[0], blue_team, red_team), done, info
 
     def step(self, unit, move, action, ally_team, enemy_team):
@@ -129,6 +133,7 @@ class Environment:
         """
         done = False
         heal_total = None
+        killed_enemy = False
         info = {}
 
         # Always move
@@ -145,6 +150,7 @@ class Environment:
                 else:
                     target_unit.close()
                     enemy_team.remove(target_unit)
+                    killed_enemy = True
 
             elif result is CombatResults.ATTACKER_DEATH:
                 if unit.terminal_condition:
@@ -160,12 +166,25 @@ class Environment:
         # The other action is 0, but that is just wait, so don't do anything
 
         state = self.obtain_state(unit, ally_team, enemy_team)
-        reward = self.reward(unit, action, heal_total)
+        reward = self.reward(unit, action, killed_enemy, heal_total)
 
         return state, reward, done, info
 
-    def reward(self, unit, action, heal_total=None):
-        return 0.0
+    def reward(self, unit, action, killed_enemy, heal_total=None):
+        if unit.current_hp <= 0:
+            return -20.0
+
+        if killed_enemy:
+            return 10.0
+
+        if action == 0:
+            return 1.0  # Not dying is still technically good
+
+        if action == 1:
+            return 1.0  # temporary
+
+        return 0.0  # temporary
+
 
     def reset(self):
         """
@@ -177,3 +196,4 @@ class Environment:
         self.blue_victory = False
         self.red_victory = False
         self.map, self.number_map = self.map_factory.generate_map()
+
