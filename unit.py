@@ -159,7 +159,7 @@ class RedUnit(Unit):
         return random.randrange(len(usable_items))
 
     def close(self):
-        pass
+        return False
 
 
 class BlueUnit(Unit):
@@ -176,7 +176,7 @@ class BlueUnit(Unit):
             E : number of enemy units that can attack this unit
             N : health percentage encoded as an integer. 
         """
-        self.state_space = np.array([15, 10])
+        self.state_space = np.array([10, 10])
 
         """
         VERSION_1
@@ -187,13 +187,13 @@ class BlueUnit(Unit):
         2 - Attack
         """
         self.action_space = np.array([3])
-        self._version = "1"
+        self._version = "2"
 
         self.alpha = 0.1
         self.gamma = 0.6
-        self.epsilon = 0.5
+        self.epsilon = 0.1
 
-        self.table_name = f'{self.name}_qtable_v{self._version}_{self.alpha}-{self.gamma}-{self.epsilon}.npy'
+        self.table_name = f'{self.name}_qtable_v{self._version}_{self.alpha}-{self.gamma}.npy'
 
         self.q_table = self.init_q_table()
 
@@ -216,6 +216,7 @@ class BlueUnit(Unit):
         :return:
         """
         np.save(f'qtables/{self.table_name}', self.q_table)
+        return True
 
     def update_qtable(self, state, next_state, reward, action):
         """

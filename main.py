@@ -17,6 +17,7 @@ def main():
         valid = False
         blue_team = []
         red_team = []
+        info = {}
 
         while not valid:
             try:
@@ -44,11 +45,13 @@ def main():
                     done = True
                     info['winner'] = 'Red'
                     info['method'] = 'Killed all blue units'
+                    env.red_victory = True
 
                 if len(red_team) == 0:
                     done = True
                     info['winner'] = 'Blue'
                     info['method'] = 'Killed all red units'
+                    env.blue_victory = True
 
                 if done:
                     break
@@ -63,11 +66,21 @@ def main():
                 done = True
                 info['winner'] = 'Red'
                 info['method'] = 'Killed all blue units'
+                env.red_victory = True
 
             if len(red_team) == 0:
                 done = True
                 info['winner'] = 'Blue'
                 info['method'] = 'Killed all red units'
+                env.blue_victory = True
+
+        overall, ranks = env.obtain_metrics()
+        print(colored('VICTORY RANK: ', 'yellow') + ranks[0])
+        print(colored('COMBAT RANK: ', 'yellow') + ranks[1])
+        print(colored('SURVIVAL RANK: ', 'yellow') + ranks[2])
+        print(colored('TACTIC RANK: ', 'yellow') + ranks[3])
+
+        print(colored('OVERALL RANK: ', 'green') + overall)
 
         # Save Q-Tables to disk after episode
         for unit in blue_team:

@@ -408,3 +408,119 @@ def get_random_unmasked_action(masked_action_space):
             i = np.random.choice(masked_action_space.size)
 
     return i
+
+
+def rank_to_number(rank):
+    if rank == 'S':
+        return 100
+    if rank == 'A':
+        return 90
+    if rank == 'B':
+        return 80
+    if rank == 'C':
+        return 70
+    if rank == 'D':
+        return 60
+    if rank == 'F':
+        return 0
+
+
+def average_ranks(rank_list):
+    count = len(rank_list)
+    total = 0
+    for rank in rank_list:
+        total += rank_to_number(rank)
+
+    return total / count
+
+
+def overall_rank(rank_list):
+    score = average_ranks(rank_list)
+    if score >= 95:
+        return 'S'
+    if score >= 90:
+        return 'A'
+    if score >= 80:
+        return 'B'
+    if score >= 70:
+        return 'C'
+    if score >= 60:
+        return 'D'
+    if score < 60:
+        return 'F'
+
+
+def tactics_rank(turn_count, turn_limit):
+    """
+    Returns a ranking based on how many turns it took to beat the map,
+    given the turn limit
+
+    :param turn_limit:
+    :param turn_count:
+    :return: 'S', 'A', 'B', 'C', 'D', 'F'
+    """
+    percentage = turn_count / turn_limit
+
+    if percentage <= 0.10:
+        return 'S'
+    if percentage <= 0.15:
+        return 'A'
+    if percentage <= 0.30:
+        return 'B'
+    if percentage <= 0.45:
+        return 'C'
+    if percentage <= 0.60:
+        return 'D'
+    return 'F'
+
+
+def survival_rank(dead_units):
+    """
+    Returns a ranking based on how many units died in the episode
+
+    :param dead_units:
+    :return:
+    """
+
+    if dead_units == 0:
+        return 'S'
+    if dead_units == 1:
+        return 'A'
+    if dead_units == 2:
+        return 'B'
+    if dead_units == 4:
+        return 'C'
+    if dead_units == 5:
+        return 'D'
+
+    return 'F'
+
+
+def combat_rank(total_battles, victory_battles):
+    """
+    Returns the ranking based on battles that ended in victories vs total battles
+
+    :param total_battles:
+    :param victory_battles:
+    :return:
+    """
+    percentage = victory_battles / total_battles
+
+    if percentage <= 0.10:
+        return 'S'
+    if percentage <= 0.20:
+        return 'A'
+    if percentage <= 0.35:
+        return 'B'
+    if percentage <= 0.50:
+        return 'C'
+    if percentage <= 0.65:
+        return 'D'
+    return 'F'
+
+
+def blue_victory(blue_win):
+    if blue_win:
+        return 'S'
+    else:
+        return 'F'

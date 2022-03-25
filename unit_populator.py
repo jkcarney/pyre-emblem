@@ -137,7 +137,7 @@ def generate_blue_team(tile_map: Map):
     all_terminal_units = ['Lyn', 'Eliwood', 'Hector']
     deploy = []
 
-    for _ in range(random.randint(5, 6)):
+    for _ in range(random.randint(6, 7)):
         unit_name = random.choice(all_non_terminal_units)
         all_non_terminal_units.remove(unit_name)
         deploy.append(get_nonterminal_unit_base_stats(unit_name))
@@ -153,7 +153,7 @@ def generate_blue_team(tile_map: Map):
 
 def generate_red_team(tile_map: Map, blue_team):
     deploy = []
-    for _ in range(random.randint(12, 15)):
+    for _ in range(random.randint(14, 18)):
         deploy.append(generate_random_enemy())
 
     for red_unit in deploy:

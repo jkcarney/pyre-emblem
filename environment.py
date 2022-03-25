@@ -16,6 +16,9 @@ class Environment:
         self.turn_limit = 100
         self.blue_victory = False
         self.red_victory = False
+        self.dead_blue_units = 0
+        self.total_battles = 0
+        self.blue_victory_battles = 0
 
     def obtain_state(self, unit, ally_team, enemy_team):
         """
@@ -143,20 +146,32 @@ class Environment:
             target_unit = unit.determine_target(self, enemy_team)
             combat_stats = combat.get_combat_stats(unit, target_unit, self.map)
             result = combat.simulate_combat(combat_stats)
-
+            self.total_battles += 1
             if result is CombatResults.DEFENDER_DEATH:
                 if target_unit.terminal_condition:
                     done = True
+                    info['method'] = 'Killed terminal condition unit'
+                    info['winner'] = 'Red'
                 else:
-                    target_unit.close()
+                    if target_unit.close():
+                        self.dead_blue_units += 1
+                    else:
+                        self.blue_victory_battles += 1
+
                     enemy_team.remove(target_unit)
                     killed_enemy = True
 
             elif result is CombatResults.ATTACKER_DEATH:
                 if unit.terminal_condition:
                     done = True
+                    info['method'] = 'Killed terminal condition unit'
+                    info['winner'] = 'Red'
                 else:
-                    unit.close()
+                    if unit.close():
+                        self.dead_blue_units += 1
+                    else:
+                        self.blue_victory_battles += 1
+
                     ally_team.remove(unit)
 
         elif action == 1:  # Item
@@ -195,4 +210,17 @@ class Environment:
         self.blue_victory = False
         self.red_victory = False
         self.map, self.number_map = self.map_factory.generate_map()
+        self.dead_blue_units = 0
+        self.total_battles = 0
+        self.blue_victory_battles = 0
+
+    def obtain_metrics(self):
+        victory_rank = feutils.blue_victory(self.blue_victory)
+        combat_rank = feutils.combat_rank(self.total_battles, self.blue_victory_battles)
+        survival_rank = feutils.survival_rank(self.dead_blue_units)
+        tactic_rank = feutils.tactics_rank(self.turn_count, self.turn_limit)
+        ranks = [victory_rank, combat_rank, survival_rank, tactic_rank]
+        overall_rank = feutils.overall_rank(ranks)
+
+        return overall_rank, ranks
 
