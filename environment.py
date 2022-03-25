@@ -9,7 +9,7 @@ import numpy as np
 
 class Environment:
     def __init__(self):
-        self.map_factory = map_factory.OutdoorMapFactory(15, 20, 15, 20)
+        self.map_factory = map_factory.OutdoorMapFactory(6, 7, 6, 7)
         self.map, self.number_map = self.map_factory.generate_map()
 
         self.turn_count = 0
@@ -187,7 +187,10 @@ class Environment:
 
     def reward(self, unit, action, killed_enemy, heal_total=None):
         if unit.current_hp <= 0:
-            return -50.0
+            if unit.terminal_condition:
+                return -75.0
+            else:  # Dying is extremely bad!
+                return -50.0
 
         if killed_enemy:
             return 5.0
@@ -196,7 +199,7 @@ class Environment:
             return 0.5  # Not dying is still technically good
 
         if action == 1:
-            return heal_total / 1.5
+            return heal_total  # Give a reward directly proportional to the healing done
 
         return 0.0
 

@@ -504,6 +504,9 @@ def combat_rank(total_battles, victory_battles):
     :param victory_battles:
     :return:
     """
+    if total_battles == 0:
+        return 'F'
+
     percentage = victory_battles / total_battles
 
     if percentage <= 0.10:
