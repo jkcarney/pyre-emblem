@@ -4,7 +4,7 @@ from termcolor import colored
 
 
 def main():
-    n = 100  # iterations
+    n = 10000  # iterations
     env = environment.Environment()
 
     for x in range(n):

@@ -408,4 +408,3 @@ def get_random_unmasked_action(masked_action_space):
             i = np.random.choice(masked_action_space.size)
 
     return i
-

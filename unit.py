@@ -84,21 +84,24 @@ class Unit(ABC):
     def use_item(self, index):
         inventory_item = self.inventory[index]
         if inventory_item.item_type == ItemType.HEAL_CONSUMABLE:
-            self.heal(inventory_item.info['heal_amount'])
+            heal_total = self.heal(inventory_item.info['heal_amount'])
             inventory_item.info['uses'] -= 1
 
             if inventory_item.info['uses'] == 0:
                 self.inventory.remove(inventory_item)
 
-            return None
+            return heal_total
 
         return None
 
     def heal(self, amount):
+        heal_total = min(self.hp_max - self.current_hp, amount)
+
         self.current_hp += amount
         if self.current_hp > self.hp_max:
             self.current_hp = self.hp_max
-        return None
+
+        return heal_total
 
     def take_dmg(self, amount):
         if amount < 0:

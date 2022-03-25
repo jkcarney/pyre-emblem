@@ -172,19 +172,18 @@ class Environment:
 
     def reward(self, unit, action, killed_enemy, heal_total=None):
         if unit.current_hp <= 0:
-            return -20.0
+            return -50.0
 
         if killed_enemy:
-            return 10.0
+            return 5.0
 
         if action == 0:
-            return 1.0  # Not dying is still technically good
+            return 0.5  # Not dying is still technically good
 
         if action == 1:
-            return 1.0  # temporary
+            return heal_total / 1.5
 
-        return 0.0  # temporary
-
+        return 0.0
 
     def reset(self):
         """
