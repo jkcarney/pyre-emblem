@@ -1,11 +1,22 @@
 import environment
 import unit_populator
 from termcolor import colored
+import sys
+
+n = 10000  # iterations
 
 
-def main():
-    n = 10000  # iterations
-    env = environment.Environment()
+class FESimulationTypeError(Exception):
+    pass
+
+
+def main(simulation_mode):
+    if simulation_mode == 'big':
+        env = environment.Environment(18, 20, 18, 20)
+        unit_factory = unit_populator.UnitFactory(5, 6, 15, 18)
+    else:
+        env = environment.Environment(6, 7, 6, 7)
+        unit_factory = unit_populator.UnitFactory(2, 2, 5, 5)
 
     for x in range(n):
         print(colored(f'================ GAME {x} ================', 'green', 'on_grey'))
@@ -22,8 +33,8 @@ def main():
         while not valid:
             try:
                 env.reset()
-                blue_team = unit_populator.generate_blue_team(env.map)
-                red_team = unit_populator.generate_red_team(env.map, blue_team)
+                blue_team = unit_factory.generate_blue_team(env.map)
+                red_team = unit_factory.generate_red_team(env.map, blue_team)
                 valid = True
             except:
                 pass
@@ -76,6 +87,7 @@ def main():
 
         overall, ranks = env.obtain_metrics()
         print(colored('VICTORY RANK: ', 'yellow') + ranks[0])
+        print('\t' + info['method'])
         print(colored('COMBAT RANK: ', 'yellow') + ranks[1])
         print(colored('SURVIVAL RANK: ', 'yellow') + ranks[2])
         print(colored('TACTIC RANK: ', 'yellow') + ranks[3])
@@ -90,4 +102,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) != 2:
+        raise FESimulationTypeError(f'Incorrect usage. Correct usage: python {sys.argv[0]} <mini or big>')
+
+    arg = sys.argv[1].strip().lower()
+
+    main(arg)
