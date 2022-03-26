@@ -88,9 +88,8 @@ def main(simulation_mode):
         overall, ranks = env.obtain_metrics()
         print(colored('VICTORY RANK: ', 'yellow') + ranks[0])
         print('\t' + info['method'])
-        print(colored('COMBAT RANK: ', 'yellow') + ranks[1])
-        print(colored('SURVIVAL RANK: ', 'yellow') + ranks[2])
-        print(colored('TACTIC RANK: ', 'yellow') + ranks[3])
+        print(colored('SURVIVAL RANK: ', 'yellow') + ranks[1])
+        print(colored('TACTIC RANK: ', 'yellow') + ranks[2])
 
         print(colored('OVERALL RANK: ', 'green') + overall)
 

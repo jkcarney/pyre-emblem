@@ -219,10 +219,9 @@ class Environment:
 
     def obtain_metrics(self):
         victory_rank = feutils.blue_victory(self.blue_victory)
-        combat_rank = feutils.combat_rank(self.total_battles, self.blue_victory_battles)
         survival_rank = feutils.survival_rank(self.dead_blue_units)
         tactic_rank = feutils.tactics_rank(self.turn_count, self.turn_limit)
-        ranks = [victory_rank, combat_rank, survival_rank, tactic_rank]
+        ranks = [victory_rank, survival_rank, tactic_rank]
         overall_rank = feutils.overall_rank(ranks)
 
         return overall_rank, ranks
