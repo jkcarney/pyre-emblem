@@ -8,8 +8,8 @@ import numpy as np
 
 
 class Environment:
-    def __init__(self):
-        self.map_factory = map_factory.OutdoorMapFactory(6, 7, 6, 7)
+    def __init__(self, x_min, x_max, y_min, y_max):
+        self.map_factory = map_factory.OutdoorMapFactory(x_min, x_max, y_min, y_max)
         self.map, self.number_map = self.map_factory.generate_map()
 
         self.turn_count = 0
