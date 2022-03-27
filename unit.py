@@ -2,6 +2,8 @@ import abc
 import random
 from abc import ABC
 import os
+
+import combat
 import feutils
 import item
 from item import Item
@@ -189,9 +191,13 @@ class BlueUnit(Unit):
         self.action_space = np.array([3])
         self._version = "2"
 
-        self.alpha = 0.1
-        self.gamma = 0.6
-        self.epsilon = 0.1
+        # RL hyper-parameters
+        self.alpha = 0.1    # Learning rate
+        self.gamma = 0.6    # Discount rate
+        self.epsilon = 0.1  # Exploration rate; how often do we explore vs exploit
+
+        # Heuristic hyper-parameters
+        self.tau = 0.9      # Used in combat heuristic: how much do we care about enemy combat stats vs our own?
 
         self.table_name = f'{self.name}_qtable_v{self._version}_{self.alpha}-{self.gamma}.npy'
 
@@ -221,7 +227,7 @@ class BlueUnit(Unit):
     def update_qtable(self, state, next_state, reward, action):
         """
         Updates q-table greedily using q-learning algorithm.
-        Q(s,a) <- Q(s,a) + α[R + 𝛾 max(Q(s, a)) - Q(s,a)]
+        Q(s,a) <- Q(s,a) + α[R + γ max(Q(s, a)) - Q(s,a)]
 
         :param next_state:
         :param state:
@@ -292,20 +298,43 @@ class BlueUnit(Unit):
 
     def determine_target(self, env, enemy_team):
         """
-        Determine which unit to attack in this unit's attack range.\n
+        Determine which unit to attack in this unit's attack range.
         NOTE: when this method is called it is assumed the unit is already moved to the tile that they will attack from
-        If they are at a tile where they can attack no enemy units, an FEAttackRangeError will be thrown.
+        If they are at a tile where they can attack no enemy units, an FEAttackRangeError will be raised.
 
         :param env:
         :param enemy_team:
         :except FEAttackRangeError if no enemy units could be attacked from the current position
         :return: A Unit object that self will attack
         """
+        def combat_heuristic(enemy_unit):
+            """
+            A justification for this algorithm will be found in 'research/algorithms.md'
+            :param enemy_unit:
+            :return: A heuristic of self fighting enemy_unit
+            """
+            summary = combat.get_combat_stats(self, enemy_unit, env.map)
+            ha, hd = summary.attacker_summary.hit_chance, summary.defender_summary.hit_chance
+            ma, md = summary.attacker_summary.might, summary.defender_summary.might
+            ca, cd = summary.attacker_summary.crit_chance, summary.defender_summary.crit_chance
+
+            if summary.attacker_summary.doubling:
+                da = 1
+            else:
+                da = 1/2
+
+            if summary.defender_summary.doubling:
+                dd = 1
+            else:
+                dd = 1/2
+
+            return 2 * da * (ma * ha + ma * ca) - self.tau * (2 * dd * (md * hd + md * cd))
+
         attackable_targets = feutils.attackable_units(self, enemy_team)
         if len(attackable_targets) == 0:
             raise FEAttackRangeError(f"No units were in attack range of {self.name} at coordinate {self.x},{self.y}")
-
-        return random.choice(attackable_targets)
+        attackable_targets.sort(key=combat_heuristic, reverse=True)  # Sort list based on heuristic
+        return attackable_targets[0]  # Get biggest value from that heuristic sort
 
     def determine_item_to_use(self, env, enemy_team):
         usable_items = self.get_all_consumables()
