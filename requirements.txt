@@ -9,5 +9,4 @@ matplotlib==3.5.1
 numpy==1.22.1
 packaging==21.3
 pandas==1.4.0
-gym~=0.21.0
 termcolor~=1.1.0

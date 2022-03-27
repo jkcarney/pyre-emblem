@@ -1,5 +1,4 @@
 import feutils
-import item_type
 
 
 class Item:

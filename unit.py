@@ -4,11 +4,8 @@ from abc import ABC
 import os
 
 import combat
-import feutils
 import item
-from item import Item
 from item_type import *
-from map import Map
 import numpy as np
 import numpy.ma as npma
 import feutils

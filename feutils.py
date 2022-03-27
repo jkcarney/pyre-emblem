@@ -1,4 +1,4 @@
-from item_type import ItemType, WeaponType, TomeType
+from item_type import ItemType
 import json
 import numpy as np
 import numpy.ma as npma

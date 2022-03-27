@@ -1,7 +1,7 @@
 import random
 
-from unit import Unit, BlueUnit, RedUnit
-from map import Map, Tile
+from unit import BlueUnit, RedUnit
+from map import Map
 import numpy as np
 
 

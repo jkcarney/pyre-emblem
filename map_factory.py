@@ -2,11 +2,7 @@ import random
 import numpy as np
 from matplotlib import pyplot, colors
 import copy
-
-from numpy import arange
-
-import feutils
-from map import Map, Tile
+from map import Map
 
 
 class MapLayerFactory:

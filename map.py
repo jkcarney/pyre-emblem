@@ -1,7 +1,7 @@
 import random
 import numpy as np
 import feutils
-import json
+
 
 class Tile:
     def __init__(self, tile_name):
