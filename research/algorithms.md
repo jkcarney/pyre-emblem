@@ -77,7 +77,7 @@ We define the "attacker" as the unit who is initiating combat. This is the unit 
 | h<sub>a</sub> | h<sub>d</sub> | [0.0 - 1.0] | The percent chance for the unit to hit the other unit with their attack. |
 | m<sub>a</sub> | m<sub>d</sub> | an int | How much damage this unit will do to the other unit if their attack lands |
 | c<sub>a</sub> | c<sub>d</sub> | [0.0 - 1.0] | The percent chance for the unit deal a critical hit (x3 might) |
-| d<sub>a</sub> | d<sub>d</sub> | 1 (True) or 1/2 (False) | Whether or not the unit will hit the other unit twice or not.  |
+| d<sub>a</sub> | d<sub>d</sub> | 1 (True) or 0 (False) | Whether or not the unit will hit the other unit twice or not.  |
 
 | Hyperparameter | Value Range | Description |
 | ----- | ----- | ----- |
@@ -86,4 +86,4 @@ We define the "attacker" as the unit who is initiating combat. This is the unit 
 Given these parameters, the heuristic for combat is:
 
 
-<b><p align="center">H<sub>a,d</sub> = 2d<sub>a</sub>(m<sub>a</sub>h<sub>a</sub> + m<sub>a</sub>c<sub>a</sub>) - τ[2d<sub>d</sub>(m<sub>d</sub>h<sub>d</sub> + m<sub>d</sub>c<sub>d</sub>)]</p></b>
+<b><p align="center">H<sub>a,d</sub> = (d<sub>a</sub> + 1) (m<sub>a</sub>h<sub>a</sub> + m<sub>a</sub>c<sub>a</sub>) - τ [(d<sub>a</sub> + 1) (m<sub>d</sub>h<sub>d</sub> + m<sub>d</sub>c<sub>d</sub>)]</p></b>

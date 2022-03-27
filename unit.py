@@ -170,26 +170,10 @@ class BlueUnit(Unit):
         super().__init__(character_code, x, y, level, job_code, hp_max, strength, skill, spd, luck, defense, res, magic,
                          ally, inventory_codes, terminal_condition)
 
-        """
-        VERSION_1
-
-        State space is E * N
-        where:     
-            E : number of enemy units that can attack this unit
-            N : health percentage encoded as an integer. 
-        """
-        self.state_space = np.array([10, 10])
-
-        """
-        VERSION_1
-
-        Action space is simply either [0, 1, 2]
-        0 - Wait
-        1 - Item
-        2 - Attack
-        """
-        self.action_space = np.array([3])
         self._version = "2"
+
+        self.state_space = np.array([10, 10])
+        self.action_space = np.array([3])
 
         # RL hyper-parameters
         self.alpha = 0.1    # Learning rate
@@ -317,18 +301,9 @@ class BlueUnit(Unit):
             ha, hd = summary.attacker_summary.hit_chance, summary.defender_summary.hit_chance
             ma, md = summary.attacker_summary.might, summary.defender_summary.might
             ca, cd = summary.attacker_summary.crit_chance, summary.defender_summary.crit_chance
+            da, dd = int(summary.attacker_summary.doubling), int(summary.defender_summary.doubling)
 
-            if summary.attacker_summary.doubling:
-                da = 1
-            else:
-                da = 1/2
-
-            if summary.defender_summary.doubling:
-                dd = 1
-            else:
-                dd = 1/2
-
-            return 2 * da * (ma * ha + ma * ca) - self.tau * (2 * dd * (md * hd + md * cd))
+            return (da + 1) * (ma * ha + ma * ca) - self.tau * ((da + 1) * (md * hd + md * cd))
 
         attackable_targets = feutils.attackable_units(self, enemy_team)
         if len(attackable_targets) == 0:
