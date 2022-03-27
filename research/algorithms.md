@@ -81,7 +81,7 @@ We define the "attacker" as the unit who is initiating combat. This is the unit 
 
 | Hyperparameter | Value Range | Description |
 | ----- | ----- | ----- |
-| τ (tau) | [0.0 - 1.0] | How much do we value the defender's combat stats compared to the attackers. Values closer to 0.0 mean we do not care at all what the enemy's combat stats are against us (agent is aggressive at the expense of their own health). Values closer to 1.0 mean we value enemy combat stats exactly the same as we value our own (agent is conservative, is very cautious about enemy attack stats).
+| τ (tau) | [0.0 - 1.0] | How much do we value the defender's combat stats compared to the attackers. Values closer to 0.0 mean we do not care at all what the enemy's combat stats are against us (agent is aggressive and greedy at the potential expense of their own health). Values closer to 1.0 mean we value enemy combat stats exactly the same as we value our own (agent is conservative, is very cautious about enemy attack stats).
 
 Given these parameters, the heuristic for combat is:
 
