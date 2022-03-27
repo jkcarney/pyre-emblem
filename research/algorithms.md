@@ -47,7 +47,7 @@ self.q_table = np.zeros(np.concatenate((self.state_space, self.action_space)))  
 
 ### Q-Learning
 
-Agents learn with greedy-Q. This means they do not consider previous actions when updating their table's q-values. This is subject to change; this approach was simply chosen for now because it is easy to implement.
+Agents learn with greedy-Q. <sub>[1]</sub> This means they do not consider previous actions when updating their table's q-values. This is subject to change; this approach was simply chosen for now because it is easy to implement.
 
 | Parameter | Description |
 | ----- | ----- |
@@ -60,7 +60,7 @@ Agents learn with greedy-Q. This means they do not consider previous actions whe
 | Q(s<sub>t</sub>, a) | The q-value given state we were in and action we took |
 | max(Q(s<sub>t + 1</sub>, )) | The highest Q-Value given next state (this is what makes it Q-Learning as opposed to something like sarsa) |
 
-<b><p align="center">Q(s,a) = Q(s,a) + α[R + γ max(Q(s<sub>t + 1</sub>, )) - Q(s,a)]</p></b>
+<b><p align="center">Q(s,a) = Q(s,a) + α[R + γ max(Q(s<sub>t + 1</sub>, )) - Q(s,a)]
 
 ---
 
@@ -87,3 +87,10 @@ Given these parameters, the heuristic for combat is:
 
 
 <b><p align="center">H<sub>a,d</sub> = (d<sub>a</sub> + 1) (m<sub>a</sub>h<sub>a</sub> + m<sub>a</sub>c<sub>a</sub>) - τ [(d<sub>a</sub> + 1) (m<sub>d</sub>h<sub>d</sub> + m<sub>d</sub>c<sub>d</sub>)]</p></b>
+
+
+### References
+
+---
+
+[1] - Richard S. Sutton and Andrew G. Barto. 2018. Reinforcement Learning: An Introduction. A Bradford Book, Cambridge, MA, USA.
