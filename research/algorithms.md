@@ -47,7 +47,7 @@ self.q_table = np.zeros(np.concatenate((self.state_space, self.action_space)))  
 
 ### Q-Learning
 
-Agents learn with greedy-Q. This means they do not consider previous actions when deciding a reward. This is subject to change; this approach was simply chosen for now because it is easy to implement.
+Agents learn with greedy-Q. This means they do not consider previous actions when updating their table's q-values. This is subject to change; this approach was simply chosen for now because it is easy to implement.
 
 | Parameter | Description |
 | ----- | ----- |
