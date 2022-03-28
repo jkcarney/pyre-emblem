@@ -60,7 +60,7 @@ Agents learn with greedy-Q. <sub>[1]</sub> This means they do not consider previ
 | Q(s<sub>t</sub>, a) | The q-value given state we were in and action we took |
 | max(Q(s<sub>t + 1</sub>)) | The highest Q-Value given next state (this is what makes it Q-Learning as opposed to something like sarsa) |
 
-<b><p align="center">Q(s,a) = Q(s,a) + α[R + γ max(Q(s<sub>t + 1</sub>)) - Q(s,a)]
+<b><p align="center">Q(s<sub>t</sub>,a) = Q(s<sub>t</sub>,a) + α[R + γ max(Q(s<sub>t + 1</sub>)) - Q(s<sub>t</sub>,a)]
 
 ---
 
