@@ -60,7 +60,7 @@ Agents learn with greedy-Q. <sub>[1]</sub> This means they do not consider previ
 | Q(s<sub>t</sub>, a) | The q-value given state we were in and action we took |
 | max(Q(s<sub>t + 1</sub>)) | The highest Q-Value given next state (this is what makes it Q-Learning as opposed to something like sarsa) |
 
-<b><p align="center">Q(s<sub>t</sub>, a) = Q(s<sub>t</sub>, a) + α[R + γ max(Q(s<sub>t + 1</sub>)) - Q(s<sub>t</sub>, a)]
+<b><p align="center">Q(s<sub>t</sub>, a) = Q(s<sub>t</sub>, a) + α[R + γ max(Q(s<sub>t + 1</sub>)) - Q(s<sub>t</sub>, a)]</b>
 
 ---
 
@@ -88,6 +88,38 @@ Given these parameters, the heuristic for combat is:
 
 <b><p align="center">H<sub>a,d</sub> = (d<sub>a</sub> + 1) (m<sub>a</sub>h<sub>a</sub> + m<sub>a</sub>c<sub>a</sub>) - τ [(d<sub>a</sub> + 1) (m<sub>d</sub>h<sub>d</sub> + m<sub>d</sub>c<sub>d</sub>)]</p></b>
 
+### Movement Heuristics 
+
+Once an action has been determined from the Q-Table, we need to determine which tile to move to based on some heuristic
+
+Which tile to move to cannot be a part of the reinforcement learning process, and must instead be a heuristic. There are a few reasons for this:
+
+- If we were to consider the tiles to move to as part of the action set, our action space would grow exponentially. For example, if we consider the max size of the game can have a tile map of size 30 x 30, and 30 x 30 tiles we can execute our action on, then the size of our action space would grow to 30<sup>4</sup> * 3 (2,430,000). Multiply that by the state space (10 * 10 = 100) to get 2,430,000 * 100 = 243,000,000 state-action pairs. This is a massive problem in a few ways:
+  - Memory considerations; A test of this with NumPy, creating a 2,430,000 * 100 matrix of floats (ignoring how long this operation takes, which was a while), is roughly ***10 GB*** in size. Also consider this is a q-table on a per unit basis. 
+  - Sampling size; Filling a 2,430,000 * 100 matrix with q-values would take an infeasible amount of computational power and time. There are not enough simulations you could do to fill up the matrix with values in a reasonable manner before learning occurs.
+- Besides all this, *there is nothing to learn from the grid anyways*. The grid changes randomly on a per game basis, so getting a good reward from tile 2,4 and choosing attack on tile 2,5 in one game doesn't mean you will get the same reward for choosing the same action the next game; the tiles you're standing on may be completely different; the unit you're attacking may be completely different, which would lead to massively inconsistent rewards and confusion with learning. 
+
+Because of this, it's much better to use reinforcement learning for action selection and pure heuristics for target/tile selection. 
+
+What is interesting about the movement heuristic is that it can change depending on the HP percent of the unit. If they're at low HP, a tile that is close to the enemy must be way less valuable than a tile that is farther away from the enemy. The formula must reflect this in some way. 
+
+| Variable | Values Range | Description |
+| --- | ---- | ---- |
+| e<sub>d<sub>c</sub></sub>| a positive int | The manhattan distance of the closest enemy unit at the current tile the unit is standing at|
+| e<sub>d<sub>xy</sub></sub>| a positive int | The manhattan distance of the closest enemy unit at the current tile the unit is standing at|
+| h | [0.0, 1.0] | The percentage of the current unit's HP |
+| d<sub>xy</sub> | a positive int | The defense granted to this unit at tile x,y |
+| a<sub>xy</sub> | [0.0, 1.0] | Avoidance granted to this unit at tile x,y |
+
+| Hyperparameter | Value Range | Description |
+| ----- | ----- | ----- |
+| Ζ (zeta) | [0.0 - 1.0] | A threshold that is considered "low" HP percentage for the unit
+| φ (phi) | an int | How much the unit values tiles that grant terrain bonuses
+
+Given these parameters, the heuristic for tiles is:
+
+
+<b><p align="center">H<sub>x,y</sub> = (e<sub>d<sub>c</sub></sub> - e<sub>d<sub>xy</sub></sub>)(h - Z) + φd<sub>xy</sub>a<sub>xy</sub>
 
 ### References
 
