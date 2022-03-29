@@ -46,7 +46,7 @@ class Environment:
                     E += 1
                     break  # Each enemy unit counts for, at most, ONE increment of E
 
-            if E == 15:
+            if E == 10:
                 break
 
         return E, N
@@ -114,6 +114,8 @@ class Environment:
         self.turn_count += 1
         if self.turn_count >= self.turn_limit:
             done = True
+            info['method'] = 'Turn limit exceeded'
+            info['winner'] = 'Red'
 
         return self.obtain_state(blue_team[0], blue_team, red_team), done, info
 

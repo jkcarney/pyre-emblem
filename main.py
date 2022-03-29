@@ -1,6 +1,7 @@
 import environment
 import unit_populator
 from termcolor import colored
+import fedata
 import sys
 
 n = 10000  # iterations
@@ -10,13 +11,15 @@ class FESimulationTypeError(Exception):
     pass
 
 
-def main(simulation_mode):
+def main(simulation_mode, run_name):
     if simulation_mode == 'big':
         env = environment.Environment(18, 20, 18, 20)
         unit_factory = unit_populator.UnitFactory(5, 6, 15, 18)
     else:
         env = environment.Environment(6, 7, 6, 7)
         unit_factory = unit_populator.UnitFactory(2, 2, 5, 5)
+
+    data_aggregator = fedata.FEData(run_name)
 
     for x in range(n):
         print(colored(f'================ GAME {x} ================', 'green', 'on_grey'))
@@ -40,6 +43,9 @@ def main(simulation_mode):
                 pass
 
         done = False
+        blue_team_names = []
+        for unit in blue_team:
+            blue_team_names.append(unit.name)
 
         while not done:
             print(colored('== BLUE PHASE ==', 'blue', 'on_white'))
@@ -93,17 +99,21 @@ def main(simulation_mode):
 
         print(colored('OVERALL RANK: ', 'green') + overall)
 
+        data_aggregator.add_entry(x, ranks[0], ranks[1], ranks[2], overall, blue_team_names)
+
         # Save Q-Tables to disk after episode
         for unit in blue_team:
             unit.close()
 
+    data_aggregator.save()
     print('Done!')
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        raise FESimulationTypeError(f'Incorrect usage. Correct usage: python {sys.argv[0]} <mini or big>')
+    if len(sys.argv) != 3:
+        raise FESimulationTypeError(f'Incorrect usage. Correct usage: python {sys.argv[0]} <mini or big> <run name>')
 
-    arg = sys.argv[1].strip().lower()
+    mini_arg = sys.argv[1].strip().lower()
+    run_name_arg = sys.argv[2].strip().lower()
 
-    main(arg)
+    main(mini_arg, run_name_arg)

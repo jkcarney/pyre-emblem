@@ -2,6 +2,7 @@ import abc
 import random
 from abc import ABC
 import os
+from functools import partial
 
 import combat
 import item
@@ -273,9 +274,26 @@ class BlueUnit(Unit):
         :return: A tuple representing a x,y pair to move to on the grid.
         """
         valid_moves = env.generate_valid_moves(action, self, ally_team, enemy_team)
-        choice = random.choice(valid_moves)
-        print(f'{self.name} is moving to {str(choice)}')
-        return choice
+        if action == 2:
+            return self.move_attack_heuristic(valid_moves, enemy_team, env)
+        elif action == 1:
+            return random.choice(valid_moves)
+        else:
+            return random.choice(valid_moves)
+
+    def move_attack_heuristic(self, valid_moves, enemy_units, env):
+        best_coords = self.x, self.y
+        best_h = float('-inf')
+
+        for x, y in valid_moves:
+            attackables = feutils.get_attackable_units(self, enemy_units, x, y)
+            for unit in attackables:
+                h = self.combat_heuristic(unit, env)
+                if h > best_h:
+                    best_h = h
+                    best_coords = x, y
+
+        return best_coords
 
     def determine_target(self, env, enemy_team):
         """
@@ -288,25 +306,35 @@ class BlueUnit(Unit):
         :except FEAttackRangeError if no enemy units could be attacked from the current position
         :return: A Unit object that self will attack
         """
-        def combat_heuristic(enemy_unit):
-            """
-            A justification for this algorithm will be found in 'research/algorithms.md'
-            :param enemy_unit:
-            :return: A heuristic of self fighting enemy_unit
-            """
-            summary = combat.get_combat_stats(self, enemy_unit, env.map)
-            ha, hd = summary.attacker_summary.hit_chance, summary.defender_summary.hit_chance
-            ma, md = summary.attacker_summary.might, summary.defender_summary.might
-            ca, cd = summary.attacker_summary.crit_chance, summary.defender_summary.crit_chance
-            da, dd = int(summary.attacker_summary.doubling), int(summary.defender_summary.doubling)
-
-            return (da + 1) * (ma * ha + ma * ca) - self.tau * ((da + 1) * (md * hd + md * cd))
 
         attackable_targets = feutils.attackable_units(self, enemy_team)
         if len(attackable_targets) == 0:
             raise FEAttackRangeError(f"No units were in attack range of {self.name} at coordinate {self.x},{self.y}")
-        attackable_targets.sort(key=combat_heuristic, reverse=True)  # Sort list based on heuristic
-        return attackable_targets[0]  # Get biggest value from that heuristic sort
+
+        enemy_choice = None
+        h_best = float('-inf')
+        for target in attackable_targets:
+            h = self.combat_heuristic(target, env)
+            if h > h_best:
+                enemy_choice = target
+                h_best = h
+
+        return enemy_choice
+
+    def combat_heuristic(self, enemy_unit, env):
+        """
+        A justification for this algorithm will be found in 'research/algorithms.md'
+        :param env:
+        :param enemy_unit:
+        :return: A heuristic of self fighting enemy_unit
+        """
+        summary = combat.get_combat_stats(self, enemy_unit, env.map)
+        ha, hd = summary.attacker_summary.hit_chance, summary.defender_summary.hit_chance
+        ma, md = summary.attacker_summary.might, summary.defender_summary.might
+        ca, cd = summary.attacker_summary.crit_chance, summary.defender_summary.crit_chance
+        da, dd = int(summary.attacker_summary.doubling), int(summary.defender_summary.doubling)
+
+        return (da + 1) * (ma * ha + ma * ca) - self.tau * ((da + 1) * (md * hd + md * cd))
 
     def determine_item_to_use(self, env, enemy_team):
         usable_items = self.get_all_consumables()
