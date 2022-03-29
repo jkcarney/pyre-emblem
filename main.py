@@ -4,7 +4,7 @@ from termcolor import colored
 import fedata
 import sys
 
-n = 10000  # iterations
+n = 100000  # iterations
 
 
 class FESimulationTypeError(Exception):
