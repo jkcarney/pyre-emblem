@@ -166,7 +166,7 @@ class BlueUnit(Unit):
         super().__init__(character_code, x, y, level, job_code, hp_max, strength, skill, spd, luck, defense, res, magic,
                          ally, inventory_codes, terminal_condition)
 
-        self._version = "2"
+        self._version = "3"
 
         self.state_space = np.array([10, 10])
         self.action_space = np.array([3])
