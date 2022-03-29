@@ -347,6 +347,17 @@ def manhattan_distance(x1, y1, x2, y2):
     return abs(x1 - x2) + abs(y1 - y2)
 
 
+def get_closest_unit_manhattan(x, y, units_list):
+    smallest_distance = float('inf')
+
+    for unit in units_list:
+        dis = manhattan_distance(x, y, unit.x, unit.y)
+        if dis < smallest_distance:
+            smallest_distance = dis
+
+    return smallest_distance
+
+
 def attackable_units(unit, opposing_units):
     attackables = []
     attack_range = unit.get_attack_range()

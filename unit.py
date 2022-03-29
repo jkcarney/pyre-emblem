@@ -2,8 +2,6 @@ import abc
 import random
 from abc import ABC
 import os
-from functools import partial
-
 import combat
 import item
 from item_type import *
@@ -180,6 +178,8 @@ class BlueUnit(Unit):
 
         # Heuristic hyper-parameters
         self.tau = 0.9      # Used in combat heuristic: how much do we care about enemy combat stats vs our own?
+        self.zeta = 0.3     # HP threshold for low HP; used in movement heuristic
+        self.phi = 3        # Valuation constant for movement heuristic
 
         self.table_name = f'{self.name}_qtable_v{self._version}_{self.alpha}-{self.gamma}.npy'
 
@@ -276,10 +276,35 @@ class BlueUnit(Unit):
         valid_moves = env.generate_valid_moves(action, self, ally_team, enemy_team)
         if action == 2:
             return self.move_attack_heuristic(valid_moves, enemy_team, env)
-        elif action == 1:
-            return random.choice(valid_moves)
-        else:
-            return random.choice(valid_moves)
+        else:  # We can treat both 1 (Item) and 0 (Wait) pretty similarly heuristic-wise
+            return self.move_wait_heuristic(valid_moves, enemy_team, ally_team, env)
+
+    def move_wait_heuristic(self, valid_moves, enemy_units, ally_team, env):
+        """
+        Justification for this algorithm will be found in 'research/algorithms.md'
+        :param valid_moves:
+        :param enemy_units:
+        :param ally_team:
+        :param env:
+        :return:
+        """
+        best_coords = self.x, self.y
+        best_h = float('-inf')
+
+        edc = feutils.get_closest_unit_manhattan(self.x, self.y, enemy_units)
+        health = self.current_hp / self.hp_max
+
+        for x, y in valid_moves:
+            edxy = feutils.get_closest_unit_manhattan(x, y, enemy_units)
+            tile = env.map.get_tile(x, y)
+            dxy = tile.defense
+            axy = tile.avoid
+            h = ((edc - edxy) * (health - self.zeta)) + self.phi * dxy * axy
+            if h > best_h:
+                best_h = h
+                best_coords = x, y
+
+        return best_coords
 
     def move_attack_heuristic(self, valid_moves, enemy_units, env):
         best_coords = self.x, self.y
