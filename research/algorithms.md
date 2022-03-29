@@ -106,10 +106,10 @@ What is interesting about the movement heuristic is that it can change depending
 | Variable | Values Range | Description |
 | --- | ---- | ---- |
 | e<sub>d<sub>c</sub></sub>| a positive int | The manhattan distance of the closest enemy unit at the current tile the unit is standing at|
-| e<sub>d<sub>xy</sub></sub>| a positive int | The manhattan distance of the closest enemy unit at the current tile the unit is standing at|
+| e<sub>d<sub>xy</sub></sub>| a positive int | The manhattan distance of the closest enemy unit at the x, y coordinate we are executing the heuristic for|
 | h | [0.0, 1.0] | The percentage of the current unit's HP |
-| d<sub>xy</sub> | a positive int | The defense granted to this unit at tile x,y |
-| a<sub>xy</sub> | [0.0, 1.0] | Avoidance granted to this unit at tile x,y |
+| d<sub>xy</sub> | a positive int | The defense granted to this unit at tile x, y |
+| a<sub>xy</sub> | [0.0, 1.0] | Avoidance granted to this unit at tile x, y |
 
 | Hyperparameter | Value Range | Description |
 | ----- | ----- | ----- |
