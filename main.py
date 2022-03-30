@@ -3,8 +3,9 @@ import unit_populator
 from termcolor import colored
 import fedata
 import sys
+from datetime import datetime
 
-n = 100000  # iterations
+n = 30  # iterations
 
 
 class FESimulationTypeError(Exception):
@@ -14,15 +15,15 @@ class FESimulationTypeError(Exception):
 def main(simulation_mode, run_name):
     if simulation_mode == 'big':
         env = environment.Environment(18, 20, 18, 20)
-        unit_factory = unit_populator.UnitFactory(5, 6, 15, 18)
+        unit_factory = unit_populator.UnitFactory(5, 6, 15, 18, run_name)
     else:
         env = environment.Environment(6, 7, 6, 7)
-        unit_factory = unit_populator.UnitFactory(2, 2, 5, 5)
+        unit_factory = unit_populator.UnitFactory(2, 2, 5, 5, run_name)
 
     data_aggregator = fedata.FEData(run_name)
 
     for x in range(n):
-        print(colored(f'================ GAME {x} ================', 'green', 'on_grey'))
+        print(colored(f'================ GAME {x + 1} ================', 'green', 'on_grey'))
 
         # Environment resetting has a (small) probabilistic chance to fail; mainly just when generating maps.
         # For example, if there are no valid corners.
@@ -116,4 +117,11 @@ if __name__ == "__main__":
     mini_arg = sys.argv[1].strip().lower()
     run_name_arg = sys.argv[2].strip().lower()
 
+    start = datetime.now()
+
     main(mini_arg, run_name_arg)
+
+    end = datetime.now()
+    diff = end - start
+    seconds = diff.total_seconds()
+    print(f"{n} iterations took {seconds} seconds \n(or {seconds / 60} minutes) \n(or {seconds / 60 / 60} hours)")

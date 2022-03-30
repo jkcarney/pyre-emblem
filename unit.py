@@ -15,7 +15,7 @@ from termcolor import colored
 class Unit(ABC):
     def __init__(self, character_code, x, y, level, job_code, hp_max,
                  strength, skill, spd, luck, defense, res, magic, ally,
-                 inventory_codes: list, terminal_condition):
+                 inventory_codes: list, terminal_condition, run_name):
         self.terminal_condition = terminal_condition
 
         self.character_code = character_code
@@ -43,6 +43,8 @@ class Unit(ABC):
             self.con = feutils.character_constitution_table(self.name)
         else:
             self.con = feutils.job_constitution_table(self.job)
+
+        self.run_name = run_name
 
     def __str__(self):
         return self.name
@@ -162,9 +164,9 @@ class RedUnit(Unit):
 
 class BlueUnit(Unit):
     def __init__(self, character_code, x, y, level, job_code, hp_max, strength, skill, spd, luck, defense, res, magic,
-                 ally, inventory_codes: list, terminal_condition):
+                 ally, inventory_codes: list, terminal_condition, run_name):
         super().__init__(character_code, x, y, level, job_code, hp_max, strength, skill, spd, luck, defense, res, magic,
-                         ally, inventory_codes, terminal_condition)
+                         ally, inventory_codes, terminal_condition, run_name)
 
         self._version = "3"
 
@@ -181,7 +183,7 @@ class BlueUnit(Unit):
         self.zeta = 0.3     # HP threshold for low HP; used in movement heuristic
         self.phi = 3        # Valuation constant for movement heuristic
 
-        self.table_name = f'{self.name}_qtable_v{self._version}_{self.alpha}-{self.gamma}.npy'
+        self.table_name = f'{self.name}_qtable_v{self._version}_{self.run_name}_{self.alpha}-{self.gamma}.npy'
 
         self.q_table = self.init_q_table()
 
