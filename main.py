@@ -5,7 +5,7 @@ import fedata
 import sys
 from datetime import datetime
 
-n = 30  # iterations
+n = 100000  # iterations
 
 
 class FESimulationTypeError(Exception):
