@@ -119,6 +119,10 @@ class Map:
         if y < 0 or y >= self.y:
             return
 
+        for enemy in enemy_units:
+            if (enemy.x, enemy.y) == (x, y):
+                return
+
         accumulated_cost += self.grid[x][y].get_unit_cost(terrain_group)
 
         if accumulated_cost > movement:

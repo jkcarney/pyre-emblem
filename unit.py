@@ -177,6 +177,7 @@ class BlueUnit(Unit):
         self.alpha = 0.1    # Learning rate
         self.gamma = 0.6    # Discount rate
         self.epsilon = 0.1  # Exploration rate; how often do we explore vs exploit
+        self.td_lambda = 1  # Temporal difference count
 
         # Heuristic hyper-parameters
         self.tau = 0.9      # Used in combat heuristic: how much do we care about enemy combat stats vs our own?
@@ -191,7 +192,7 @@ class BlueUnit(Unit):
         """
         Either loads q-table on disk if it exists or creates a new one
 
-        :return: a q-table (nd array that is 15x10x3)
+        :return: a q-table (nd array that is 10x10x3)
         """
         if not os.path.exists(f'qtables/{self.table_name}'):
             return np.zeros(np.concatenate((self.state_space, self.action_space)))
