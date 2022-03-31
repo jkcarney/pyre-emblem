@@ -109,7 +109,7 @@ def main(simulation_mode, run_name, iterations):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 4:
         raise FESimulationTypeError(f'Incorrect usage. Correct usage: python {sys.argv[0]} <mini or big> <run name>')
 
     mini_arg = sys.argv[1].strip().lower()
