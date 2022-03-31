@@ -5,14 +5,12 @@ import fedata
 import sys
 from datetime import datetime
 
-n = 100000  # iterations
-
 
 class FESimulationTypeError(Exception):
     pass
 
 
-def main(simulation_mode, run_name):
+def main(simulation_mode, run_name, iterations):
     if simulation_mode == 'big':
         env = environment.Environment(18, 20, 18, 20)
         unit_factory = unit_populator.UnitFactory(5, 6, 15, 18, run_name)
@@ -22,7 +20,7 @@ def main(simulation_mode, run_name):
 
     data_aggregator = fedata.FEData(run_name)
 
-    for x in range(n):
+    for x in range(iterations):
         print(colored(f'================ GAME {x + 1} ================', 'green', 'on_grey'))
 
         # Environment resetting has a (small) probabilistic chance to fail; mainly just when generating maps.
@@ -116,12 +114,13 @@ if __name__ == "__main__":
 
     mini_arg = sys.argv[1].strip().lower()
     run_name_arg = sys.argv[2].strip().lower()
+    iterations = int(sys.argv[3])
 
     start = datetime.now()
 
-    main(mini_arg, run_name_arg)
+    main(mini_arg, run_name_arg, iterations)
 
     end = datetime.now()
     diff = end - start
     seconds = diff.total_seconds()
-    print(f"{n} iterations took {seconds} seconds \n(or {seconds / 60} minutes) \n(or {seconds / 60 / 60} hours)")
+    print(f"{iterations} iterations took {seconds} seconds \n(or {seconds / 60} minutes) \n(or {seconds / 60 / 60} hours)")
