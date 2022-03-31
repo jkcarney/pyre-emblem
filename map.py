@@ -1,6 +1,7 @@
 import random
 import numpy as np
 import feutils
+import math
 
 
 class Tile:
@@ -11,6 +12,7 @@ class Tile:
         self.defense = tile_data['def']
         del tile_data['avoid']
         del tile_data['def']
+        self.min_cost = math.inf
 
         self.movement_costs = tile_data
 
@@ -37,6 +39,12 @@ class Map:
                 result += str(self.grid[i][j]) + ' '
             result += '\n'
         return result
+
+    def reset_visited(self):
+        for i in range(self.x):
+            for j in range(self.y):
+                tile = self.get_tile(i, j)
+                tile.min_cost = math.inf
 
     def get_tile(self, x, y) -> Tile:
         return self.grid[x][y]
@@ -91,11 +99,13 @@ class Map:
         :param unit: The unit who we are checking
         :return: A set of tuples that represent x y pairs
         """
+        self.reset_visited()
         movement = unit.move
         terrain_group = unit.terrain_group
 
         # The tile the unit is standing on is always assumed to be a valid move tile.
         valid_tiles = set()
+        valid_tiles.add((unit.x, unit.y))
 
         self.__calculate_tile__(unit.x + 1, unit.y, movement, terrain_group, 0, valid_tiles, enemy_units)
         self.__calculate_tile__(unit.x - 1, unit.y, movement, terrain_group, 0, valid_tiles, enemy_units)
@@ -108,8 +118,6 @@ class Map:
                 if position in valid_tiles:
                     valid_tiles.remove(position)
 
-        valid_tiles.add((unit.x, unit.y))
-
         return list(valid_tiles)
 
     def __calculate_tile__(self, x, y, movement, terrain_group, accumulated_cost, valid_tiles, enemy_units):
@@ -119,14 +127,20 @@ class Map:
         if y < 0 or y >= self.y:
             return
 
-        for enemy in enemy_units:
-            if (enemy.x, enemy.y) == (x, y):
-                return
+        current_tile = self.get_tile(x, y)
+        accumulated_cost += current_tile.get_unit_cost(terrain_group)
 
-        accumulated_cost += self.grid[x][y].get_unit_cost(terrain_group)
+        if accumulated_cost > current_tile.min_cost:
+            return
+        else:
+            current_tile.min_cost = accumulated_cost
 
         if accumulated_cost > movement:
             return
+
+        for enemy in enemy_units:
+            if (enemy.x, enemy.y) == (x, y):
+                return
 
         valid_tiles.add((x, y))
 
