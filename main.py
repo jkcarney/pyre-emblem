@@ -10,6 +10,22 @@ class FESimulationTypeError(Exception):
     pass
 
 
+def game_over_check(blue_length, red_length, info, env):
+    if blue_length == 0:
+        info['winner'] = 'Red'
+        info['method'] = 'Killed all blue units'
+        env.red_victory = True
+        return True  # Done?
+
+    if red_length == 0:
+        info['winner'] = 'Blue'
+        info['method'] = 'Killed all red units'
+        env.blue_victory = True
+        return True  # Done?
+
+    return False
+
+
 def main(simulation_mode, run_name, iterations):
     if simulation_mode == 'big':
         env = environment.Environment(18, 20, 18, 20)
@@ -22,6 +38,7 @@ def main(simulation_mode, run_name, iterations):
 
     for x in range(iterations):
         print(colored(f'================ GAME {x + 1} ================', 'green', 'on_grey'))
+        start = datetime.now()
 
         # Environment resetting has a (small) probabilistic chance to fail; mainly just when generating maps.
         # For example, if there are no valid corners.
@@ -57,17 +74,7 @@ def main(simulation_mode, run_name, iterations):
 
                 agent.update_qtable(state, next_state, reward, action)
 
-                if len(blue_team) == 0:
-                    done = True
-                    info['winner'] = 'Red'
-                    info['method'] = 'Killed all blue units'
-                    env.red_victory = True
-
-                if len(red_team) == 0:
-                    done = True
-                    info['winner'] = 'Blue'
-                    info['method'] = 'Killed all red units'
-                    env.blue_victory = True
+                done = game_over_check(len(blue_team), len(red_team), info, env)
 
                 if done:
                     break
@@ -78,17 +85,10 @@ def main(simulation_mode, run_name, iterations):
             print(colored('== RED PHASE ==', 'red', 'on_white'))
             _, done, info = env.execute_red_phase(blue_team, red_team)
 
-            if len(blue_team) == 0:
-                done = True
-                info['winner'] = 'Red'
-                info['method'] = 'Killed all blue units'
-                env.red_victory = True
+            if done:
+                break
 
-            if len(red_team) == 0:
-                done = True
-                info['winner'] = 'Blue'
-                info['method'] = 'Killed all red units'
-                env.blue_victory = True
+            done = game_over_check(len(blue_team), len(red_team), info, env)
 
         overall, ranks = env.obtain_metrics()
         print(colored('VICTORY RANK: ', 'yellow') + ranks[0])
@@ -104,6 +104,11 @@ def main(simulation_mode, run_name, iterations):
         for unit in blue_team:
             unit.close()
 
+        end = datetime.now()
+        diff = end - start
+        seconds = diff.total_seconds()
+        print(colored(f"\nGame {x} took {seconds} seconds"), 'yellow')
+
     data_aggregator.save()
     print('Done!')
 
@@ -116,11 +121,11 @@ if __name__ == "__main__":
     run_name_arg = sys.argv[2].strip().lower()
     iterations = int(sys.argv[3])
 
-    start = datetime.now()
+    simu_start = datetime.now()
 
     main(mini_arg, run_name_arg, iterations)
 
-    end = datetime.now()
-    diff = end - start
-    seconds = diff.total_seconds()
-    print(f"{iterations} iterations took {seconds} seconds \n(or {seconds / 60} minutes) \n(or {seconds / 60 / 60} hours)")
+    simu_end = datetime.now()
+    simu_diff = simu_end - simu_start
+    simu_seconds = simu_diff.total_seconds()
+    print(f"{iterations} iterations took {simu_seconds} seconds \n(or {simu_seconds / 60} minutes) \n(or {simu_seconds / 60 / 60} hours)")

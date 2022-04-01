@@ -125,7 +125,7 @@ class Unit(ABC):
         pass
 
     @abc.abstractmethod
-    def close(self):
+    def close(self, reward=None):
         pass
 
 
@@ -158,7 +158,7 @@ class RedUnit(Unit):
         usable_items = self.get_all_consumables()
         return random.randrange(len(usable_items))
 
-    def close(self):
+    def close(self, reward=None):
         return False
 
 
@@ -199,7 +199,7 @@ class BlueUnit(Unit):
         else:
             return np.load(f'qtables/{self.table_name}')
 
-    def close(self):
+    def close(self, reward=None):
         """
         Saves the current state of the q-table to disk.
         Call this AFTER LEARNING!
