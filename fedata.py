@@ -23,6 +23,7 @@ class FEData:
                   }
         df = pd.DataFrame(pddict)
         self.data_frame = pd.concat([self.data_frame, df], ignore_index=True, axis=0)
+        self.save()
 
     def save(self):
         self.data_frame.to_csv(f'data/{self.data_name}.csv')

@@ -226,7 +226,7 @@ class Map:
         starting_point = random.choice(self.get_valid_corners())
         print(f'---{starting_point[0]}, {starting_point[1]}---')
         terminal_unit.goto(starting_point[0], starting_point[1])
-        starting_coordinates = self.__get_N_closest_tiles(starting_point, len(blue_team) + 2)
+        starting_coordinates = self.__get_N_closest_tiles(starting_point, len(blue_team))
 
         for unit in blue_team:
             starting_x, starting_y = random.choice(starting_coordinates)
