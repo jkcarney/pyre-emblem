@@ -114,6 +114,7 @@ def main(simulation_mode, run_name, iterations):
 
 
 if __name__ == "__main__":
+    sys.stderr = sys.stdout
     if len(sys.argv) != 4:
         raise FESimulationTypeError(f'Correct usage: python {sys.argv[0]} <mini or big> <run name> <iterations>')
 
