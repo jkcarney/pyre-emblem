@@ -4,7 +4,15 @@ from termcolor import colored
 import fedata
 import sys
 from datetime import datetime
+import syslog
+import traceback
 
+
+def syslog_trace(trace):
+    log_lines = trace.split('\n')
+    for line in log_lines:
+        if len(line):
+            syslog.syslog(line)
 
 class FESimulationTypeError(Exception):
     pass
@@ -124,7 +132,10 @@ if __name__ == "__main__":
 
     simu_start = datetime.now()
 
-    main(mini_arg, run_name_arg, iterations)
+    try:
+        main(mini_arg, run_name_arg, iterations)
+    except:
+        syslog_trace(traceback.format_exc())
 
     simu_end = datetime.now()
     simu_diff = simu_end - simu_start
