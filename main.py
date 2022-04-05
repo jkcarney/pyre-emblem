@@ -42,7 +42,7 @@ def main(simulation_mode, run_name, iterations):
         env = environment.Environment(6, 7, 6, 7)
         unit_factory = unit_populator.UnitFactory(2, 2, 5, 5, run_name)
 
-    data_aggregator = fedata.FEData(run_name)
+    #data_aggregator = fedata.FEData(run_name)
 
     for x in range(iterations):
         print(colored(f'================ GAME {x + 1} ================', 'green', 'on_grey'))
@@ -106,7 +106,7 @@ def main(simulation_mode, run_name, iterations):
 
         print(colored('OVERALL RANK: ', 'green') + overall)
 
-        data_aggregator.add_entry(x, ranks[0], ranks[1], ranks[2], overall, blue_team_names)
+        #data_aggregator.add_entry(x, ranks[0], ranks[1], ranks[2], overall, blue_team_names)
 
         # Save Q-Tables to disk after episode
         for unit in blue_team:
@@ -115,9 +115,9 @@ def main(simulation_mode, run_name, iterations):
         end = datetime.now()
         diff = end - start
         seconds = diff.total_seconds()
-        print(colored(f"\nGame {x} took {seconds} seconds"), 'yellow')
+        print(colored(f"\nGame {x} took {seconds} seconds", 'yellow'))
 
-    data_aggregator.save()
+    #data_aggregator.save()
     print('Done!')
 
 
