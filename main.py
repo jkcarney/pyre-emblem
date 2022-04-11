@@ -131,7 +131,10 @@ if __name__ == "__main__":
 
     simu_start = datetime.now()
 
-    main(mini_arg, run_name_arg, iterations)
+    try:
+        main(mini_arg, run_name_arg, iterations)
+    except:
+        syslog_trace(traceback.format_exc())
 
     simu_end = datetime.now()
     simu_diff = simu_end - simu_start
