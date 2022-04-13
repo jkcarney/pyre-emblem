@@ -11,20 +11,19 @@ class FEData:
         c.execute('''CREATE TABLE FEstats (
                     game_number integer,
                     victory_rank text,
-                    survival_rank text,
-                    tactic_rank text,
-                    overall_rank text,
+                    survival_rank integer,
+                    tactic_rank integer,
                     units text
                     )''')
         self.conn.commit()
         c.close()
         self.data_name = data_name
 
-    def add_entry(self, game_num, victory_rank, survival_rank, tactic_rank, overall_rank, unit_names: list):
+    def add_entry(self, game_num, victory_rank, survival_rank, tactic_rank, unit_names: list):
         unit_entry = '-'.join(unit_names)
         c = self.conn.cursor()
-        c.execute('INSERT INTO FEstats VALUES (?, ?, ?, ?, ?, ?)',
-                  (game_num, victory_rank, survival_rank, tactic_rank, overall_rank, unit_entry))
+        c.execute('INSERT INTO FEstats VALUES (?, ?, ?, ?, ?)',
+                  (game_num, victory_rank, survival_rank, tactic_rank, unit_entry))
         self.conn.commit()
         c.close()
 

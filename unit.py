@@ -168,7 +168,7 @@ class BlueUnit(Unit):
         super().__init__(character_code, x, y, level, job_code, hp_max, strength, skill, spd, luck, defense, res, magic,
                          ally, inventory_codes, terminal_condition, run_name)
 
-        self._version = "4"
+        self._version = "5"
 
         self.state_space = np.array([10, 10])
         self.action_space = np.array([3])
@@ -183,6 +183,8 @@ class BlueUnit(Unit):
         self.tau = 0.9      # Used in combat heuristic: how much do we care about enemy combat stats vs our own?
         self.zeta = 0.3     # HP threshold for low HP; used in movement heuristic
         self.phi = 3        # Valuation constant for movement heuristic
+
+        self.state_action_history = []
 
         self.table_name = f'{self.name}_qtable_v{self._version}_{self.run_name}_{self.alpha}-{self.gamma}.npy'
 
@@ -206,6 +208,15 @@ class BlueUnit(Unit):
 
         :return:
         """
+        if reward is not None:
+            # Grab last state action if unit incurred negative reward for episode ending
+            last_state_action = self.state_action_history[-1]
+            dummy = 0
+            current = self.q_table[last_state_action]
+
+            new_value = current + self.alpha * (reward + (self.gamma * dummy) - current)
+            self.q_table[last_state_action] = new_value
+
         np.save(f'qtables/{self.table_name}', self.q_table)
         return True
 
@@ -227,6 +238,7 @@ class BlueUnit(Unit):
 
         new_value = current + self.alpha * (reward + (self.gamma * qmax) - current)
         self.q_table[state_action] = new_value
+        self.state_action_history.append(state_action)
 
     def determine_action(self, state, env, ally_team, enemy_team):
         """
