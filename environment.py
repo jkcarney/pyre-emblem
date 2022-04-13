@@ -5,6 +5,7 @@ import map_factory
 import combat
 from combat import CombatResults
 import numpy as np
+from unit import BlueUnit, RedUnit
 
 
 class Environment:
@@ -12,13 +13,12 @@ class Environment:
         self.map_factory = map_factory.OutdoorMapFactory(x_min, x_max, y_min, y_max)
         self.map, self.number_map = self.map_factory.generate_map()
 
-        self.turn_count = 0
+        self.turn_count = 1
         self.turn_limit = 100
         self.blue_victory = False
         self.red_victory = False
         self.dead_blue_units = 0
         self.total_battles = 0
-        self.blue_victory_battles = 0
 
     def obtain_state(self, unit, ally_team, enemy_team):
         """
@@ -117,7 +117,7 @@ class Environment:
             info['method'] = 'Turn limit exceeded'
             info['winner'] = 'Red'
 
-        return self.obtain_state(blue_team[0], blue_team, red_team), done, info
+        return None, done, info
 
     def step(self, unit, move, action, ally_team, enemy_team):
         """
@@ -150,30 +150,41 @@ class Environment:
             result = combat.simulate_combat(combat_stats)
             self.total_battles += 1
             if result is CombatResults.DEFENDER_DEATH:
-                if target_unit.terminal_condition:
-                    done = True
-                    info['method'] = 'Killed terminal condition unit'
-                    info['winner'] = 'Red'
-                else:
-                    if target_unit.close():
-                        self.dead_blue_units += 1
+                print(f"{unit.name} killed {target_unit.name}")
+                # Defender is a blue unit that is dying (defender is enemy team)
+                if isinstance(target_unit, BlueUnit):
+                    if target_unit.terminal_condition:
+                        done = True
+                        info['method'] = 'Killed terminal condition unit'
+                        info['winner'] = 'Red'
+                        reward = -75
                     else:
-                        self.blue_victory_battles += 1
-
+                        reward = -50
+                    self.dead_blue_units += 1
+                    target_unit.close(reward)
                     enemy_team.remove(target_unit)
+                # Defender is a red unit that is dying (defender is enemy team)
+                else:
                     killed_enemy = True
+                    enemy_team.remove(target_unit)
 
             elif result is CombatResults.ATTACKER_DEATH:
-                if unit.terminal_condition:
-                    done = True
-                    info['method'] = 'Killed terminal condition unit'
-                    info['winner'] = 'Red'
-                else:
-                    if unit.close():
-                        self.dead_blue_units += 1
+                print(f"{target_unit.name} killed {unit.name}")
+                # Attacker is a blue unit that is dying (attacker is ally team)
+                if isinstance(unit, BlueUnit):
+                    if target_unit.terminal_condition:
+                        done = True
+                        info['method'] = 'Killed terminal condition unit'
+                        info['winner'] = 'Red'
+                        reward = -75
                     else:
-                        self.blue_victory_battles += 1
-
+                        reward = -50
+                    self.dead_blue_units += 1
+                    unit.close(reward)
+                    ally_team.remove(unit)
+                # Attacker is a red unit that is dying (attacker is ally team)
+                else:
+                    killed_enemy = True
                     ally_team.remove(unit)
 
         elif action == 1:  # Item
@@ -217,14 +228,12 @@ class Environment:
         self.map, self.number_map = self.map_factory.generate_map()
         self.dead_blue_units = 0
         self.total_battles = 0
-        self.blue_victory_battles = 0
 
     def obtain_metrics(self):
         victory_rank = feutils.blue_victory(self.blue_victory)
-        survival_rank = feutils.survival_rank(self.dead_blue_units)
-        tactic_rank = feutils.tactics_rank(self.turn_count, self.turn_limit)
-        ranks = [victory_rank, survival_rank, tactic_rank]
-        overall_rank = feutils.overall_rank(ranks)
+        survival_rank = self.dead_blue_units
+        tactic_rank = self.turn_count + 1
 
-        return overall_rank, ranks
+        ranks = [victory_rank, survival_rank, tactic_rank]
+        return ranks
 

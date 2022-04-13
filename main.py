@@ -5,14 +5,6 @@ import fedata
 import sys
 from datetime import datetime
 import syslog
-import traceback
-
-
-def syslog_trace(trace):
-    log_lines = trace.split('\n')
-    for line in log_lines:
-        if len(line):
-            syslog.syslog(line)
 
 class FESimulationTypeError(Exception):
     pass
@@ -98,15 +90,13 @@ def main(simulation_mode, run_name, iterations):
 
             done = game_over_check(len(blue_team), len(red_team), info, env)
 
-        overall, ranks = env.obtain_metrics()
+        ranks = env.obtain_metrics()
         print(colored('VICTORY RANK: ', 'yellow') + ranks[0])
         print('\t' + info['method'])
-        print(colored('SURVIVAL RANK: ', 'yellow') + ranks[1])
-        print(colored('TACTIC RANK: ', 'yellow') + ranks[2])
+        print(colored('SURVIVAL RANK: ', 'yellow') + str(ranks[1]))
+        print(colored('TACTIC RANK: ', 'yellow') + str(ranks[2]))
 
-        print(colored('OVERALL RANK: ', 'green') + overall)
-
-        data_aggregator.add_entry(x, ranks[0], ranks[1], ranks[2], overall, blue_team_names)
+        data_aggregator.add_entry(x, ranks[0], ranks[1], ranks[2], blue_team_names)
 
         # Save Q-Tables to disk after episode
         for unit in blue_team:
@@ -131,10 +121,7 @@ if __name__ == "__main__":
 
     simu_start = datetime.now()
 
-    try:
-        main(mini_arg, run_name_arg, iterations)
-    except:
-        syslog_trace(traceback.format_exc())
+    main(mini_arg, run_name_arg, iterations)
 
     simu_end = datetime.now()
     simu_diff = simu_end - simu_start
