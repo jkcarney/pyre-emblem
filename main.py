@@ -26,8 +26,18 @@ def game_over_check(blue_length, red_length, info, env):
     return False
 
 
-def main(simulation_mode, run_name, iterations):
+def configure_logger():
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s')
+    file_handler = logging.FileHandler('exceptions.log')
+    file_handler.setLevel(logging.DEBUG)
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+    return logger
 
+
+def main(simulation_mode, run_name, iterations):
     if simulation_mode == 'big':
         env = environment.Environment(18, 20, 18, 20)
         unit_factory = unit_populator.UnitFactory(5, 6, 15, 18, run_name)
@@ -113,8 +123,7 @@ def main(simulation_mode, run_name, iterations):
 
 if __name__ == "__main__":
     sys.stderr = sys.stdout
-    logging.basicConfig(level=logging.DEBUG)
-    logger = logging.getLogger(__name__)
+    logger = configure_logger()
     if len(sys.argv) != 4:
         raise FESimulationTypeError(f'Correct usage: python {sys.argv[0]} <mini or big> <run name> <iterations>')
 
