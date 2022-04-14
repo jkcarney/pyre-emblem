@@ -4,7 +4,7 @@ from termcolor import colored
 import fedata
 import sys
 from datetime import datetime
-import syslog
+import logging
 
 class FESimulationTypeError(Exception):
     pass
@@ -27,6 +27,7 @@ def game_over_check(blue_length, red_length, info, env):
 
 
 def main(simulation_mode, run_name, iterations):
+
     if simulation_mode == 'big':
         env = environment.Environment(18, 20, 18, 20)
         unit_factory = unit_populator.UnitFactory(5, 6, 15, 18, run_name)
@@ -112,6 +113,8 @@ def main(simulation_mode, run_name, iterations):
 
 if __name__ == "__main__":
     sys.stderr = sys.stdout
+    logging.basicConfig(level=logging.DEBUG)
+    logger = logging.getLogger(__name__)
     if len(sys.argv) != 4:
         raise FESimulationTypeError(f'Correct usage: python {sys.argv[0]} <mini or big> <run name> <iterations>')
 
@@ -120,8 +123,10 @@ if __name__ == "__main__":
     iterations = int(sys.argv[3])
 
     simu_start = datetime.now()
-
-    main(mini_arg, run_name_arg, iterations)
+    try:
+        main(mini_arg, run_name_arg, iterations)
+    except Exception as e:
+        logger.exception(e)
 
     simu_end = datetime.now()
     simu_diff = simu_end - simu_start
