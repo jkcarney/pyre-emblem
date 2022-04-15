@@ -238,7 +238,6 @@ class BlueUnit(Unit):
 
         new_value = current + self.alpha * (reward + (self.gamma * qmax) - current)
         self.q_table[state_action] = new_value
-        self.state_action_history.append(state_action)
 
     def determine_action(self, state, env, ally_team, enemy_team):
         """

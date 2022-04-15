@@ -80,6 +80,7 @@ def main(simulation_mode, run_name, iterations):
                 state = env.obtain_state(agent, blue_team, red_team)
                 action = agent.determine_action(state, env, blue_team, red_team)
                 move = agent.determine_move(action, blue_team, red_team, env)
+                agent.state_action_history.append(state + (action,))
 
                 next_state, reward, done, info = env.step(agent, move, action, blue_team, red_team)
 
