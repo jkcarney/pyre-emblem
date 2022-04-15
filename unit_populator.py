@@ -137,11 +137,9 @@ class UnitFactory:
         :param tile_map:
         :return:
         """
-        #all_non_terminal_units = ['Sain', 'Kent', 'Florina', 'Wil', 'Dorcas', 'Erk', 'Rath', 'Matthew', 'Lucius', 'Marcus',
-        #                          'Lowen', 'Rebecca', 'Bartre', 'Oswin', 'Guy', 'Raven', 'Canas', 'Dart', 'Heath']
-        #all_terminal_units = ['Lyn', 'Eliwood', 'Hector']
-        all_non_terminal_units = ['Sain', 'Kent']
-        all_terminal_units = ['Lyn']
+        all_non_terminal_units = ['Sain', 'Kent', 'Florina', 'Wil', 'Dorcas', 'Erk', 'Rath', 'Matthew', 'Lucius', 'Marcus',
+                                  'Lowen', 'Rebecca', 'Bartre', 'Oswin', 'Guy', 'Raven', 'Canas', 'Dart', 'Heath']
+        all_terminal_units = ['Lyn', 'Eliwood', 'Hector']
         deploy = []
 
         for _ in range(random.randint(self.blue_low, self.blue_high)):

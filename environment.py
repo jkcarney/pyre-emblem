@@ -14,7 +14,7 @@ class Environment:
         self.map, self.number_map = self.map_factory.generate_map()
 
         self.turn_count = 1
-        self.turn_limit = 100
+        self.turn_limit = 65
         self.blue_victory = False
         self.red_victory = False
         self.dead_blue_units = 0
