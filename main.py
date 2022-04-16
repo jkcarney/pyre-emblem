@@ -86,6 +86,9 @@ def main(simulation_mode, run_name, iterations):
 
                 agent.update_qtable(state, next_state, reward, action)
 
+                if done:
+                    break
+
                 done = game_over_check(len(blue_team), len(red_team), info, env)
 
                 if done:
