@@ -13,6 +13,12 @@ from termcolor import colored
 
 
 class Unit(ABC):
+    """
+    The base class for the Unit, used primarily as a data holder for the BlueUnit and RedUnit classes
+
+    Unit primarily functions as a data holding class. There is not much/any functionality regarding actual
+    learning; that is relegated to the BlueUnit class.
+    """
     def __init__(self, character_code, x, y, level, job_code, hp_max,
                  strength, skill, spd, luck, defense, res, magic, ally,
                  inventory_codes: list, terminal_condition, run_name):
@@ -130,6 +136,11 @@ class Unit(ABC):
 
 
 class RedUnit(Unit):
+    """
+    A class that represents the units that oppose the agent units (or blue units)
+
+    These units are considered "dumb" in that they never learn anything.
+    """
     def determine_action(self, state, env, ally_team, enemy_team):
         health_percent = self.current_hp / self.hp_max
         consumable_count = len(self.get_all_consumables())
@@ -163,6 +174,12 @@ class RedUnit(Unit):
 
 
 class BlueUnit(Unit):
+    """
+    Class that represents the reinforcement learning agents.
+
+    This class implements the abstract methods in the Unit class that allow for learning to take place.
+    To find justifications for some algorithms here, see 'research/algorithms.md'
+    """
     def __init__(self, character_code, x, y, level, job_code, hp_max, strength, skill, spd, luck, defense, res, magic,
                  ally, inventory_codes: list, terminal_condition, run_name):
         super().__init__(character_code, x, y, level, job_code, hp_max, strength, skill, spd, luck, defense, res, magic,
@@ -184,6 +201,7 @@ class BlueUnit(Unit):
         self.zeta = 0.3     # HP threshold for low HP; used in movement heuristic
         self.phi = 3        # Valuation constant for movement heuristic
 
+        # Maintain a history of state-action pairs. We use this if the unit dies on the enemy turn
         self.state_action_history = []
 
         self.table_name = f'{self.name}_qtable_v{self._version}_{self.run_name}_{self.alpha}-{self.gamma}.npy'
@@ -206,7 +224,7 @@ class BlueUnit(Unit):
         Saves the current state of the q-table to disk.
         Call this AFTER LEARNING!
 
-        :return:
+        :return: True in all cases
         """
         if reward is not None:
             # Grab last state action if unit incurred negative reward for episode ending
@@ -321,6 +339,15 @@ class BlueUnit(Unit):
         return best_coords
 
     def move_attack_heuristic(self, valid_moves, enemy_units, env):
+        """
+        Determine which tile to move to, given that we want to attack.
+        This is accomplished by simply finding the tile where the combat heuristic is maximized
+
+        :param valid_moves:
+        :param enemy_units:
+        :param env:
+        :return:
+        """
         best_coords = self.x, self.y
         best_h = float('-inf')
 
@@ -376,6 +403,13 @@ class BlueUnit(Unit):
         return (da + 1) * (ma * ha + ma * ca) - self.tau * ((da + 1) * (md * hd + md * cd))
 
     def determine_item_to_use(self, env, enemy_team):
+        """
+        Allied units have one item for simplification anyways, so lets not complicate this heuristic
+
+        :param env:
+        :param enemy_team:
+        :return:
+        """
         usable_items = self.get_all_consumables()
         i = random.choice(usable_items)
         return self.inventory.index(i)

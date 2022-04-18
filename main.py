@@ -45,6 +45,7 @@ def main(simulation_mode, run_name, iterations):
         env = environment.Environment(20, 20, 20, 20)
         unit_factory = unit_populator.UnitFactory(2, 2, 5, 5, run_name)
 
+    # Establish SQLite database
     data_aggregator = fedata.FEData(run_name)
 
     for x in range(iterations):
@@ -54,7 +55,7 @@ def main(simulation_mode, run_name, iterations):
         # Environment resetting has a (small) probabilistic chance to fail; mainly just when generating maps.
         # For example, if there are no valid corners.
         # Or if the corner chosen only has a grass tile and water surrounding
-        # This is a bit of a hack, but given my limited timeframe, heck it :)
+        # This is a bit of a hack, but given my limited timeframe its a quick fix
         valid = False
         blue_team = []
         red_team = []
@@ -80,6 +81,8 @@ def main(simulation_mode, run_name, iterations):
                 state = env.obtain_state(agent, blue_team, red_team)
                 action = agent.determine_action(state, env, blue_team, red_team)
                 move = agent.determine_move(action, blue_team, red_team, env)
+
+                # Save the history of state-actions in case of unit death
                 agent.state_action_history.append(state + (action,))
 
                 next_state, reward, done, info = env.step(agent, move, action, blue_team, red_team)
@@ -131,9 +134,9 @@ if __name__ == "__main__":
     if len(sys.argv) != 4:
         raise FESimulationTypeError(f'Correct usage: python {sys.argv[0]} <mini or big> <run name> <iterations>')
 
-    mini_arg = sys.argv[1].strip().lower()
-    run_name_arg = sys.argv[2].strip().lower()
-    iterations = int(sys.argv[3])
+    mini_arg = sys.argv[1].strip().lower()      # mini or big
+    run_name_arg = sys.argv[2].strip().lower()  # run name
+    iterations = int(sys.argv[3])               # how many iterations to do (usually 200,000 is a decent starting point)
 
     simu_start = datetime.now()
     try:
