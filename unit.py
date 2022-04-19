@@ -192,7 +192,7 @@ class BlueUnit(Unit):
 
         # RL hyper-parameters
         self.alpha = 0.1    # Learning rate
-        self.gamma = 0.6    # Discount rate
+        self.gamma = 0.6    # Discount rate (how important the next move is when calculating expected value) (0 underplanning, 1 overplanning)
         self.epsilon = 0.1  # Exploration rate; how often do we explore vs exploit
         self.td_lambda = 1  # Temporal difference count
 

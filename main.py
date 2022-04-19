@@ -135,7 +135,7 @@ if __name__ == "__main__":
         raise FESimulationTypeError(f'Correct usage: python {sys.argv[0]} <mini or big> <run name> <iterations>')
 
     mini_arg = sys.argv[1].strip().lower()      # mini or big
-    run_name_arg = sys.argv[2].strip().lower()  # run name
+    run_name_arg = sys.argv[2].strip().lower()  # run name (qtable and db file get the name)
     iterations = int(sys.argv[3])               # how many iterations to do (usually 200,000 is a decent starting point)
 
     simu_start = datetime.now()
