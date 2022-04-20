@@ -46,8 +46,11 @@ class Environment:
                     E += 1
                     break  # Each enemy unit counts for, at most, ONE increment of E
 
-            if E == 10:
+            if E == 9:
                 break
+
+        if N < 0:
+            return 0,0
 
         return E, N
 
