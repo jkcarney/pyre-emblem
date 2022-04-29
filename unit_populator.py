@@ -76,13 +76,13 @@ class UnitFactory:
     def generate_random_enemy(self):
         character_code = 0xdab0
         level = random.randint(1, 3)
-        hp = random.randint(20, 26)
-        power = random.randint(4, 7)
-        skill = random.randint(3, 5)
-        spd = random.randint(3, 5)
-        reduction = random.randint(2, 4)
-        secondary_reduction = random.randint(1, 3)
-        luck = random.randint(2, 4)
+        hp = random.randint(23, 28)
+        power = random.randint(5, 7)
+        skill = random.randint(4, 5)
+        spd = random.randint(4, 5)
+        reduction = random.randint(3, 5)
+        secondary_reduction = random.randint(2, 3)
+        luck = random.randint(2, 5)
 
         return random.choice([
             # Mercenary
