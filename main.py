@@ -42,7 +42,7 @@ def main(simulation_mode, run_name, iterations):
         env = environment.Environment(18, 20, 18, 20)
         unit_factory = unit_populator.UnitFactory(5, 6, 15, 18, run_name)
     else:
-        env = environment.Environment(6, 7, 6, 7)
+        env = environment.Environment(15, 15, 15, 15)
         unit_factory = unit_populator.UnitFactory(2, 2, 5, 5, run_name)
 
     # Establish SQLite database
