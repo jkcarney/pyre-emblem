@@ -26,7 +26,7 @@ class UnitFactory:
             'Lucius': BlueUnit(0xd158, 0, 0, 3, 0xa8c, 18, 0, 6, 10, 2, 1, 6, 7, True, [0x3e, 0x6b], False, self.run_name),
             'Marcus': BlueUnit(0xd360, 0, 0, 1, 0xf24, 31, 15, 15, 11, 8, 10, 8, 0, True, [0x17, 0x6b], False, self.run_name),
             'Lowen': BlueUnit(0xd32c, 0, 0, 2, 0xe7c, 23, 7, 5, 7, 3, 7, 0, 0, True, [0x1c, 0x6b], False, self.run_name),
-            'Rebecca': BlueUnit(0xd0f0, 0, 0, 1, 0x990, 19, 5, 6, 6, 6, 3, 1, 0, True, [0x2c, 0x6b], False, self.run_name),
+            'Rebecca': BlueUnit(0xd0f0, 0, 0, 1, 0x990, 20, 6, 7, 6, 6, 3, 1, 0, True, [0x2c, 0x6b], False, self.run_name),
             'Bartre': BlueUnit(0xcfec, 0, 0, 2, 0x744, 29, 9, 5, 3, 4, 4, 0, 0, True, [0x1f, 0x6b], False, self.run_name),
             'Oswin': BlueUnit(0xd054, 0, 0, 9, 0x7ec, 29, 13, 9, 5, 3, 13, 3, 0, True, [0x14, 0x6c], False, self.run_name),
             'Guy': BlueUnit(0xcf50, 0, 0, 3, 0x5f4, 21, 6, 11, 11, 5, 5, 0, 0, True, [0xd, 0x6c], False, self.run_name),
