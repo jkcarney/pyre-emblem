@@ -212,7 +212,7 @@ class Environment:
             return 5.0
 
         if action == 0:
-            return 0.5  # Not dying is still technically good
+            return 0.0
 
         if action == 1:
             return heal_total  # Give a reward directly proportional to the healing done
